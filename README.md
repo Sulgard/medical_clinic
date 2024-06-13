@@ -3,4 +3,4 @@ Pracownia dyplomowa - Praca Inżynierska
 
 ### Model bazy danych
 
-![Schemat Bazy danych](db_scheema.png)
+![Schemat Bazy danych](medical_clinic.png)
