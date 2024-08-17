@@ -8,7 +8,7 @@ import uwm.backend.medicalclinic.enums.GenderEnum;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User extends BaseEntity implements UserDetails {
     @Column(name = "first_name")
     private String firstName;
@@ -36,16 +37,46 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDate birthDate;
 
     @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
     private GenderEnum gender;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return role.getPermissions().stream()
+                .collect(Collectors.toSet());
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

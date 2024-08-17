@@ -1,0 +1,32 @@
+databaseType = "PostgreSql"
+id = "579db39a-bd89-431b-a5e0-8a49057ff55e"
+name = "medical_clinic"
+
+[flyway]
+locations = [ "filesystem:migrations" ]
+mixed = true
+outOfOrder = true
+schemaModelLocation = "schema-model"
+validateMigrationNaming = true
+
+  [flyway.check]
+  majorTolerance = 0
+
+[flywayDesktop]
+developmentEnvironment = "development"
+schemaModel = "schema-model"
+shadowEnvironment = "shadow"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.postgresql.options.ignores]
+ignoreNewlinesInTextObjects = "off"
+
+[environments.target1]
+url = "jdbc:postgresql://localhost:5432/medicalclinic"
+schemas = [ "medicalclinic" ]
+
+[environments.target2]
+url = "jdbc:postgresql://localhost:5432/medical"
+schemas = [ "public", "medical" ]
