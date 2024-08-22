@@ -16,9 +16,9 @@ import lombok.Setter;
 @Table(name = "doctors")
 public class Doctor extends User{
 
-    @Column(name = "medical_license", unique = true)
+    @Column(name = "medical_license", unique = true, nullable = false)
     private String medicalLicense;
 
-    @Column(name = "specialization")
+    @Column(name = "specialization", nullable = false)
     private String specialization;
 }
