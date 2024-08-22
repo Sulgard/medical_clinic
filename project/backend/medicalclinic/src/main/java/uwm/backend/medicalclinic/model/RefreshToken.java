@@ -1,7 +1,6 @@
 package uwm.backend.medicalclinic.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,13 @@ import java.time.Instant;
 @Entity
 @Table(name = "refresh_token")
 public class RefreshToken extends BaseEntity {
-    private String token;
+    @Column(name = "token")
+    private String refreshToken;
 
-    private Instant expiryDate;
+    @Column(name = "expires_at")
+    private Instant expiresAt;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
