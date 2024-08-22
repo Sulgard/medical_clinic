@@ -1,6 +1,9 @@
 package uwm.backend.medicalclinic.dto;
 
-public record LoginUserDto(
+import lombok.Builder;
+
+@Builder
+public record AuthRequestDTO(
         String email,
         String password
 ) {

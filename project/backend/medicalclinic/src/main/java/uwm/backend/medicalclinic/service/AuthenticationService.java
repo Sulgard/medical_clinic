@@ -4,12 +4,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uwm.backend.medicalclinic.dto.LoginUserDto;
+import uwm.backend.medicalclinic.dto.AuthRequestDTO;
 import uwm.backend.medicalclinic.dto.RegisterPatientDto;
 import uwm.backend.medicalclinic.enums.RoleEnum;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.Role;
-import uwm.backend.medicalclinic.model.User;
 import uwm.backend.medicalclinic.repository.RoleRepository;
 import uwm.backend.medicalclinic.repository.UserRepository;
 
@@ -34,18 +33,15 @@ public class AuthenticationService {
     }
 
     public Patient signup(RegisterPatientDto input) {
-        Optional<Role> patientRole = roleRepository.findByName(RoleEnum.PATIENT.name());
-
-        if (patientRole.isEmpty()) {
-            return null;
-        }
+        Role patientRole = roleRepository.findByName("PATIENT")
+                .orElseThrow(() -> new RuntimeException("Patient Role not found"));
 
         Patient patient = new Patient();
         patient.setFirstName(input.firstName());
         patient.setLastName(input.lastName());
         patient.setEmail(input.email());
         patient.setPassword(passwordEncoder.encode(input.password()));
-        patient.setRole(patientRole.get());
+        patient.setRole(patientRole);
         patient.setPhoneNumber(input.phoneNumber());
         patient.setInsuranceNumber(input.insuranceNumber());
         patient.setGender(input.gender());
@@ -54,7 +50,7 @@ public class AuthenticationService {
         return userRepository.save(patient);
     }
 
-    public Patient authenticate(LoginUserDto input) {
+    public Patient authenticate(AuthRequestDTO input) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 input.email(),
                 input.password()

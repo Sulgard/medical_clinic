@@ -13,7 +13,7 @@ import lombok.*;
 @Table(name = "patients")
 public class Patient extends User{
 
-    @Column(name = "insurance_number")
+    @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
 
 }
