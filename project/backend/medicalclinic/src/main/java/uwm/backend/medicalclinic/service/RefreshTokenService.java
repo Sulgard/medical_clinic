@@ -2,7 +2,6 @@ package uwm.backend.medicalclinic.service;
 
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.model.RefreshToken;
-import uwm.backend.medicalclinic.model.User;
 import uwm.backend.medicalclinic.repository.RefreshTokenRepository;
 import uwm.backend.medicalclinic.repository.UserRepository;
 

@@ -16,8 +16,8 @@ import java.util.Date;
 @Entity
 @Table(name = "appointments")
 public class Appointment extends BaseEntity {
-    @Column(name = "notes", nullable = false)
-    private String notes;
+    @Column(name = "diagnosis", nullable = true)
+    private String diagnosis;
 
     @Column(name = "appointment_description", nullable = false)
     private String appointmentDescription;
