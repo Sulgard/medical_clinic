@@ -6,30 +6,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.AuthRequestDTO;
 import uwm.backend.medicalclinic.dto.RegisterPatientDto;
-import uwm.backend.medicalclinic.enums.RoleEnum;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.Role;
+import uwm.backend.medicalclinic.repository.PatientRepository;
 import uwm.backend.medicalclinic.repository.RoleRepository;
-import uwm.backend.medicalclinic.repository.UserRepository;
 
-import java.util.Optional;
 
 @Service
 public class AuthenticationService {
-    private final UserRepository userRepository;
+    private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
 
     public AuthenticationService(
-            UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            RoleRepository roleRepository) {
-        this.userRepository = userRepository;
+            RoleRepository roleRepository,
+            PatientRepository patientRepository) {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.roleRepository = roleRepository;
+        this.patientRepository = patientRepository;
     }
 
     public Patient signup(RegisterPatientDto input) {
@@ -47,7 +45,7 @@ public class AuthenticationService {
         patient.setGender(input.gender());
         patient.setBirthDate(input.birthDate());
 
-        return userRepository.save(patient);
+        return patientRepository.save(patient);
     }
 
     public Patient authenticate(AuthRequestDTO input) {
@@ -56,7 +54,7 @@ public class AuthenticationService {
                 input.password()
                 ));
 
-        return (Patient) userRepository.findByEmail(input.email())
+        return patientRepository.findByEmail(input.email())
                 .orElseThrow();
     }
 
