@@ -16,17 +16,21 @@ import java.util.Date;
 @Entity
 @Table(name = "appointments")
 public class Appointment extends BaseEntity {
-    @Column(name = "diagnosis", nullable = true)
-    private String diagnosis;
+    @Column(name = "notes", nullable = true)
+    private String notes;
 
     @Column(name = "appointment_description", nullable = false)
     private String appointmentDescription;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private StatusType status;
 
     @Column(name = "appointment_date", nullable = false)
     private Date appointmentDate;
+
+    @Column(name = "appointment_time", nullable = false)
+    private Date appointmentTime;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")

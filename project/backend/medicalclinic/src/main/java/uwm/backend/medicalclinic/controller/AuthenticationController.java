@@ -49,6 +49,7 @@ public class AuthenticationController {
     public JwtResponseDTO AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequestDTO.email(), authRequestDTO.password()));
+
         if(authentication.isAuthenticated()) {
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.email());
             return JwtResponseDTO.builder()

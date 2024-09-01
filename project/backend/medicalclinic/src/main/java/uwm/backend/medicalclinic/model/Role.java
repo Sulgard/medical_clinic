@@ -16,7 +16,6 @@ import java.util.Set;
 public class Role extends BaseEntity {
 
     @Column(unique = true, nullable = false)
-    //@Enumerated(EnumType.STRING)
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
