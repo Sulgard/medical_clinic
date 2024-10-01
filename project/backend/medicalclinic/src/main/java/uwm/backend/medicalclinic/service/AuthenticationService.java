@@ -1,5 +1,6 @@
 package uwm.backend.medicalclinic.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,7 +12,7 @@ import uwm.backend.medicalclinic.model.Role;
 import uwm.backend.medicalclinic.repository.PatientRepository;
 import uwm.backend.medicalclinic.repository.RoleRepository;
 
-
+@AllArgsConstructor
 @Service
 public class AuthenticationService {
     private final PatientRepository patientRepository;
@@ -19,16 +20,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
 
-    public AuthenticationService(
-            PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager,
-            RoleRepository roleRepository,
-            PatientRepository patientRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.roleRepository = roleRepository;
-        this.patientRepository = patientRepository;
-    }
 
     public Patient signup(RegisterPatientDto input) {
         Role patientRole = roleRepository.findByName("PATIENT")

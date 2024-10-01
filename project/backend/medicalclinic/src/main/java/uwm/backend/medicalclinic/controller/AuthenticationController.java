@@ -1,5 +1,6 @@
 package uwm.backend.medicalclinic.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import uwm.backend.medicalclinic.service.AuthenticationService;
 import uwm.backend.medicalclinic.service.JwtService;
 import uwm.backend.medicalclinic.service.RefreshTokenService;
 
+@AllArgsConstructor
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
@@ -27,16 +29,6 @@ public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
-
-    public AuthenticationController(
-            AuthenticationService authenticationService,
-            JwtService jwtService,
-            AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService) {
-        this.authenticationService = authenticationService;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-        this.refreshTokenService = refreshTokenService;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<Patient> registerPatient(@RequestBody RegisterPatientDto registerPatientDto) {
@@ -50,7 +42,7 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequestDTO.email(), authRequestDTO.password()));
 
-        if(authentication.isAuthenticated()) {
+        if (authentication.isAuthenticated()) {
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.email());
             return JwtResponseDTO.builder()
                     .accessToken(jwtService.generateToken(authRequestDTO.email()))
@@ -60,6 +52,7 @@ public class AuthenticationController {
             throw new UsernameNotFoundException("Invalid email or password");
         }
     }
+
 
     @PostMapping("/refreshToken")
     public JwtResponseDTO refreshToken(@RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO) {

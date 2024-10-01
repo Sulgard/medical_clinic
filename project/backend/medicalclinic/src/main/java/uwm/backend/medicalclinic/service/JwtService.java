@@ -2,32 +2,36 @@ package uwm.backend.medicalclinic.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.AeadAlgorithm;
 
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.AeadAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import uwm.backend.medicalclinic.model.Role;
 import uwm.backend.medicalclinic.repository.UserRepository;
 
 import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+//@AllArgsConstructor
 @Service
 public class JwtService {
     private final UserRepository userRepository;
-    AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
-    SecretKey secretKey = enc.key().build();
 
     public JwtService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-//    @Value("$security.jwt.secret-key")
-//    private String secretKey;
-//
+    @Value("${secret-key}")
+    private String secretKey;
+//    AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
+//    SecretKey secretKey = enc.key().build();
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -42,9 +46,13 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+//    public String generateToken(UserDetails userDetails) {
+//        return generateToken(new HashMap<>(), userDetails);
+//    }
+
     public String generateToken(String email) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, email);
+        Map<String, Object> extraClaims = new HashMap<>();
+        return createToken(extraClaims, email);
     }
 
     private String createToken(
@@ -53,13 +61,12 @@ public class JwtService {
     ) {
         String userRole = userRepository.findRoleByUsername(email);
         extraClaims.put("role", userRole);
-        return Jwts
-                .builder()
+        return Jwts.builder()
                 .subject(email)
-                .claim(userRole, extraClaims)
+                .claims(extraClaims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 60000 * 60)) // one hour
-                .encryptWith(secretKey,Jwts.ENC.A128CBC_HS256)
+                .signWith(key())
                 .compact();
     }
 
@@ -80,14 +87,13 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .verifyWith(secretKey)
+                .verifyWith((SecretKey) key())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-//    private SecretKey getSignInKey() {
-//        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-//        return Keys.hmacShaKeyFor(keyBytes);
-//    }
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
 }

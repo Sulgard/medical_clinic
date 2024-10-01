@@ -1,5 +1,6 @@
 package uwm.backend.medicalclinic.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,13 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uwm.backend.medicalclinic.repository.UserRepository;
 
+@AllArgsConstructor
 @Configuration
 public class ApplicationConfiguration {
     private final UserRepository userRepository;
-
-    public ApplicationConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Bean
     UserDetailsService userDetailsService() {

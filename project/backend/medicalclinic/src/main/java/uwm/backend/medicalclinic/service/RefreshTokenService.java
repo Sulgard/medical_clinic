@@ -1,5 +1,6 @@
 package uwm.backend.medicalclinic.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.model.RefreshToken;
 import uwm.backend.medicalclinic.repository.RefreshTokenRepository;
@@ -9,19 +10,13 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+@AllArgsConstructor
 @Service
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
 
-    public RefreshTokenService(
-            RefreshTokenRepository refreshTokenRepository,
-            UserRepository userRepository
-    ) {
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.userRepository = userRepository;
-    }
 
     public RefreshToken createRefreshToken(String email) {
         RefreshToken refreshToken = RefreshToken.builder()
