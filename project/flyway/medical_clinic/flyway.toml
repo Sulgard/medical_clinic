@@ -30,3 +30,4 @@ schemas = [ "medicalclinic" ]
 [environments.target2]
 url = "jdbc:postgresql://localhost:5432/medical"
 schemas = [ "public", "medical" ]
+displayName = "Medical Clinic Database"

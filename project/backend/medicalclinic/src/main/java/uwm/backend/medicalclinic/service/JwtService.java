@@ -2,14 +2,13 @@ package uwm.backend.medicalclinic.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.AeadAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import uwm.backend.medicalclinic.repository.UserRepository;
 
 import javax.crypto.SecretKey;
@@ -19,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-//@AllArgsConstructor
+
 @Service
 public class JwtService {
     private final UserRepository userRepository;
@@ -30,25 +29,23 @@ public class JwtService {
 
     @Value("${secret-key}")
     private String secretKey;
-//    AeadAlgorithm enc = Jwts.ENC.A128CBC_HS256;
-//    SecretKey secretKey = enc.key().build();
+
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+
     public Date extractDate(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-//    public String generateToken(UserDetails userDetails) {
-//        return generateToken(new HashMap<>(), userDetails);
-//    }
 
     public String generateToken(String email) {
         Map<String, Object> extraClaims = new HashMap<>();
@@ -70,6 +67,7 @@ public class JwtService {
                 .compact();
     }
 
+
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -80,9 +78,11 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
+
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
 
     private Claims extractAllClaims(String token) {
         return Jwts
@@ -92,6 +92,7 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
 
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));

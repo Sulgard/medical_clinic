@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uwm.backend.medicalclinic.enums.StatusType;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -16,7 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "appointments")
 public class Appointment extends BaseEntity {
-    @Column(name = "notes", nullable = true)
+    @Column(name = "notes")
     private String notes;
 
     @Column(name = "appointment_description", nullable = false)
@@ -27,10 +28,10 @@ public class Appointment extends BaseEntity {
     private StatusType status;
 
     @Column(name = "appointment_date", nullable = false)
-    private Date appointmentDate;
+    private LocalDate appointmentDate;
 
     @Column(name = "appointment_time", nullable = false)
-    private Date appointmentTime;
+    private LocalDate appointmentTime;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")

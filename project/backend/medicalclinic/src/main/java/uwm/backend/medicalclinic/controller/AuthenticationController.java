@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uwm.backend.medicalclinic.dto.AuthRequestDTO;
-import uwm.backend.medicalclinic.dto.JwtResponseDTO;
-import uwm.backend.medicalclinic.dto.RefreshTokenRequestDTO;
-import uwm.backend.medicalclinic.dto.RegisterPatientDto;
+import uwm.backend.medicalclinic.dto.*;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.RefreshToken;
 import uwm.backend.medicalclinic.service.AuthenticationService;
@@ -31,10 +28,8 @@ public class AuthenticationController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Patient> registerPatient(@RequestBody RegisterPatientDto registerPatientDto) {
-        Patient registeredPatient = authenticationService.signup(registerPatientDto);
-
-        return ResponseEntity.ok(registeredPatient);
+    public CreatePatientResponseDTO registerPatient(@RequestBody RegisterPatientDto registerPatientDto) {
+        return authenticationService.signup(registerPatientDto);
     }
 
     @PostMapping("/login")

@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.AuthRequestDTO;
+import uwm.backend.medicalclinic.dto.CreatePatientResponseDTO;
 import uwm.backend.medicalclinic.dto.RegisterPatientDto;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.Role;
@@ -21,9 +22,10 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
 
 
-    public Patient signup(RegisterPatientDto input) {
+    public CreatePatientResponseDTO signup(RegisterPatientDto input) {
         Role patientRole = roleRepository.findByName("PATIENT")
                 .orElseThrow(() -> new RuntimeException("Patient Role not found"));
+        CreatePatientResponseDTO result = new CreatePatientResponseDTO();
 
         Patient patient = new Patient();
         patient.setFirstName(input.firstName());
@@ -35,8 +37,12 @@ public class AuthenticationService {
         patient.setInsuranceNumber(input.insuranceNumber());
         patient.setGender(input.gender());
         patient.setBirthDate(input.birthDate());
+        result.setName(input.firstName());
+        result.setSecondeName(input.lastName());
+        result.setCorrect(true);
+        patientRepository.saveAndFlush(patient);
 
-        return patientRepository.save(patient);
+        return result;
     }
 
     public Patient authenticate(AuthRequestDTO input) {

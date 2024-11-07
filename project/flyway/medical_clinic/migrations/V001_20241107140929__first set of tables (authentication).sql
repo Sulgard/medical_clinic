@@ -1,35 +1,31 @@
--- First, create the roles table
-CREATE TABLE roles (
+CREATE TABLE medical.roles (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL, -- Stores the enum value as a string or use ENUM as needed
+    name VARCHAR(50) UNIQUE NOT NULL,
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );
 
--- Next, create the permissions table
-CREATE TABLE permissions (
+CREATE TABLE medical.permissions (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL, -- Stores the enum value as a string or use ENUM as needed
+    name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT,
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );
 
--- Create the role_permissions join table
-CREATE TABLE role_permissions (
+CREATE TABLE medical.role_permissions (
     role_id BIGINT,
     permission_id BIGINT,
     PRIMARY KEY(role_id, permission_id),
     CONSTRAINT fk_role_permissions_role
         FOREIGN KEY(role_id) 
-        REFERENCES roles(id),
+        REFERENCES medical.roles(id),
     CONSTRAINT fk_role_permissions_permission
         FOREIGN KEY(permission_id) 
-        REFERENCES permissions(id)
+        REFERENCES medical.permissions(id)
 );
 
--- Now, create the users table
-CREATE TABLE users (
+CREATE TABLE medical.users (
     id BIGSERIAL PRIMARY KEY NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
@@ -37,41 +33,42 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     phone_number VARCHAR(20) NOT NULL,
     birth_date DATE NOT NULL,
-    gender VARCHAR(50) NOT NULL, -- Stores the enum value as a string or use ENUM as needed
+    gender VARCHAR(50) NOT NULL, 
     role_id BIGINT NOT NULL,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
     CONSTRAINT fk_role
         FOREIGN KEY(role_id) 
-        REFERENCES roles(id)
+        REFERENCES medical.roles(id)
 );
 
--- Create the refresh_token table
-CREATE TABLE refresh_token (
+CREATE TABLE medical.refresh_token (
     id BIGSERIAL PRIMARY KEY,
     token VARCHAR(255) NOT NULL,
+    user_id BIGINT NOT NULL,
 	expires_at TIMESTAMP,
     created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_refresh_token_user
+        FOREIGN KEY(user_id) REFERENCES medical.users(id)
 );
 
--- Finally, create the patients table
-CREATE TABLE patients (
+CREATE TABLE medical.patients (
     id BIGSERIAL PRIMARY KEY,
     insurance_number VARCHAR(255) NOT NULL,
     -- Inherits from User
     CONSTRAINT fk_patient_user
         FOREIGN KEY(id) 
-        REFERENCES users(id)
+        REFERENCES medical.users(id)
 );
 
--- Create the doctors table
-CREATE TABLE doctors (
+CREATE TABLE medical.doctors (
     id BIGSERIAL PRIMARY KEY,
     medical_license VARCHAR(255) UNIQUE NOT NULL,
     specialization VARCHAR(255) NOT NULL,
     -- Inherits from User
     CONSTRAINT fk_doctor_user
         FOREIGN KEY(id) 
-        REFERENCES users(id)
+        REFERENCES medical.users(id)
 );
+
