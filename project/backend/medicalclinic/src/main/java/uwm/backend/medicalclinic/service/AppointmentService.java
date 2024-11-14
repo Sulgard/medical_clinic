@@ -1,11 +1,11 @@
 package uwm.backend.medicalclinic.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
-import uwm.backend.medicalclinic.enums.StatusType;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.model.Patient;
@@ -13,6 +13,9 @@ import uwm.backend.medicalclinic.repository.AppointmentRepository;
 import uwm.backend.medicalclinic.repository.DoctorRepository;
 import uwm.backend.medicalclinic.repository.PatientRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -32,12 +35,12 @@ public class AppointmentService {
         Optional<Patient> patient = patientRepository.findPatientById(request.getPatientId());
         Optional<Doctor> doctor = doctorRepository.findDoctorById(request.getDoctorId());
 
-        if(!patient.isPresent()) {
+        if(patient.isEmpty()) {
             result.setCorrect(false);
             return result;
         }
 
-        if(!doctor.isPresent()) {
+        if(doctor.isEmpty()) {
             result.setCorrect(false);
             return result;
         }
@@ -50,7 +53,7 @@ public class AppointmentService {
         appointmentOB.setPatient(patientOB);
         appointmentOB.setDoctor(doctorOB);
         appointmentOB.setStatus("PENDING");
-        if(request.getAppointmentReason().isEmpty() || request.getAppointmentReason() == null){
+        if(request.getAppointmentReason().isEmpty()){
             appointmentOB.setVisitDescription("NO REASON HAS BEEN SET YET.");
         }
         appointmentOB.setVisitDescription(request.getAppointmentReason());
@@ -58,6 +61,65 @@ public class AppointmentService {
 
         result.setAppointmentDate(appointmentOB.getAppointmentDate());
         result.setCorrect(true);
+
+        return result;
+    }
+
+    public AppointmentDTO getAppointment(Long id) {
+        AppointmentDTO result = new AppointmentDTO();
+
+        Appointment appointmentOB = appointmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
+
+        result.setAppointmentDate(appointmentOB.getAppointmentDate());
+        result.setStatus(appointmentOB.getStatus());
+        result.setNotes(appointmentOB.getNotes());
+        result.setVisitDescription(appointmentOB.getVisitDescription());
+            if (appointmentOB.getCancellationReason() != null && !appointmentOB.getCancellationReason().isEmpty()) {
+            result.setCanellationReason(appointmentOB.getCancellationReason());
+        }
+
+        return result;
+    }
+
+    public List<AppointmentDTO> listAppointments() {
+        List<Appointment> appoinmetns = appointmentRepository.findAll();
+
+        List<AppointmentDTO> result = new ArrayList<>();
+
+        for(Appointment appointment: appoinmetns) {
+            AppointmentDTO element = new AppointmentDTO();
+            element.setVisitDescription(appointment.getVisitDescription());
+            element.setAppointmentDate(appointment.getAppointmentDate());
+            element.setStatus(appointment.getStatus());
+            element.setNotes(appointment.getNotes());
+            if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
+                element.setVisitDescription(appointment.getVisitDescription());
+            }
+            result.add(element);
+        }
+        return result;
+    }
+
+    public List<AppointmentDTO> listAppointmentsForPatient(Long patientId) {
+        List<Appointment> appoinmetns = appointmentRepository.findByPatientId(patientId);
+        List<AppointmentDTO> result = new ArrayList<>();
+
+        if(appoinmetns.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        for(Appointment appointment: appoinmetns) {
+            AppointmentDTO element = new AppointmentDTO();
+            element.setVisitDescription(appointment.getVisitDescription());
+            element.setAppointmentDate(appointment.getAppointmentDate());
+            element.setStatus(appointment.getStatus());
+            element.setNotes(appointment.getNotes());
+            if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
+                element.setVisitDescription(appointment.getVisitDescription());
+            }
+            result.add(element);
+        }
 
         return result;
     }
