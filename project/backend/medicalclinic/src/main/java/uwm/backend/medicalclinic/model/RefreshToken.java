@@ -11,7 +11,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "refresh_token")
+@Table(name = "refresh_token", schema = "medical")
 public class RefreshToken extends BaseEntity {
     @Column(name = "token")
     private String refreshToken;

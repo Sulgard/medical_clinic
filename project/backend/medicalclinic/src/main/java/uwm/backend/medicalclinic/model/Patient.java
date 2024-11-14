@@ -1,8 +1,6 @@
 package uwm.backend.medicalclinic.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -10,10 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "patients")
+@Table(name = "patients", schema = "medical")
 public class Patient extends User{
 
     @Column(name = "insurance_number", nullable = false)
     private String insuranceNumber;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 }

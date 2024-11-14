@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "doctors")
+@Table(name = "doctors", schema = "medical")
 public class Doctor extends User{
 
     @Column(name = "medical_license", unique = true, nullable = false)

@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "perscriptions")
+@Table(name = "perscriptions", schema = "medical")
 public class Perscription extends BaseEntity {
     @Column(name = "medication_name")
     private String medicationName;
@@ -20,13 +20,9 @@ public class Perscription extends BaseEntity {
     private String instruction;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private String quantity;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
-
-    @OneToOne
-    @JoinColumn(name = "appointment_id")
+    @JoinColumn(name="appointment_id", nullable=false)
     private Appointment appointment;
 }

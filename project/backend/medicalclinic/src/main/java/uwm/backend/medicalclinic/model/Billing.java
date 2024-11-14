@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "billings")
+@Table(name = "billing", schema = "medical")
 public class Billing extends BaseEntity {
     @Column(name = "payment_method")
     private String paymentMethod;
@@ -22,10 +23,10 @@ public class Billing extends BaseEntity {
     private double amount;
 
     @Column(name = "payment_date")
-    private Date paymentDate;
+    private LocalDateTime paymentDate;
 
     @Column(name = "billing_date")
-    private Date billingDate;
+    private LocalDateTime billingDate;
 
     @OneToOne
     @JoinColumn(name = "appointment_id")

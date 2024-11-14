@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", schema = "medical")
 public class Role extends BaseEntity {
 
     @Column(unique = true, nullable = false)
@@ -21,6 +21,7 @@ public class Role extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_permissions",
+            schema = "medical",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )

@@ -14,24 +14,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "doctor_availability")
+@Table(name = "doctor_availability", schema = "medical")
 public class DoctorAvailability extends BaseEntity {
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private StatusType status;
-
-    @Column(name = "availability_date")
+    //TODO: fix typo in database
+    @Column(name = "avilable_date")
     private Date availabilityDate;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
-
-    @Column(name = "start_time")
-    private Date startTime;
-
-    @Column(name = "end_time")
-    private Date endTime;
-
 }

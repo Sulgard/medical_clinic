@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "address")
+@Table(name = "address", schema = "medical")
 public class Address extends BaseEntity{
     @Column(name = "city", nullable = false)
     private String city;
@@ -19,23 +19,15 @@ public class Address extends BaseEntity{
     @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "number", nullable = false)
-    private String number;
+    @Column(name = "local_number", nullable = false)
+    private String localNumber;
 
-    @Column(name = "postal_code", nullable = false)
-    private String postalCode;
+    @Column(name = "zip_code", nullable = false)
+    private String zipCode;
 
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "county", nullable = false)
-    private String county;
-
-    @Column(name = "state", nullable = false)
-    private String state;
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-
+    @Column(name = "province", nullable = false)
+    private String province;
 }

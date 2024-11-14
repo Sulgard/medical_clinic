@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "medical")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends BaseEntity implements UserDetails {
     @Column(name = "first_name", nullable = false)

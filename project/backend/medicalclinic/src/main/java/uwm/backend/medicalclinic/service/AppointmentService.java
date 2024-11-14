@@ -1,5 +1,6 @@
 package uwm.backend.medicalclinic.service;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
@@ -14,7 +15,7 @@ import uwm.backend.medicalclinic.repository.PatientRepository;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class AppointmentService {
     AppointmentRepository appointmentRepository;
@@ -46,18 +47,16 @@ public class AppointmentService {
 
         Appointment appointmentOB = new Appointment();
         appointmentOB.setAppointmentDate(request.getAppointmentDate());
-        appointmentOB.setAppointmentTime(request.getAppointmentTime());
         appointmentOB.setPatient(patientOB);
         appointmentOB.setDoctor(doctorOB);
-        appointmentOB.setStatus(StatusType.PENDING);
+        appointmentOB.setStatus("PENDING");
         if(request.getAppointmentReason().isEmpty() || request.getAppointmentReason() == null){
-            appointmentOB.setAppointmentDescription("NO REASON HAS BEEN SET YET.");
+            appointmentOB.setVisitDescription("NO REASON HAS BEEN SET YET.");
         }
-        appointmentOB.setAppointmentDescription(request.getAppointmentReason());
+        appointmentOB.setVisitDescription(request.getAppointmentReason());
         appointmentRepository.saveAndFlush(appointmentOB);
 
         result.setAppointmentDate(appointmentOB.getAppointmentDate());
-        result.setAppointmentTime(appointmentOB.getAppointmentTime());
         result.setCorrect(true);
 
         return result;

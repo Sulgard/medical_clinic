@@ -56,6 +56,7 @@ CREATE TABLE medical.billing (
     payment_method VARCHAR(255),
     appointment_id BIGINT NOT NULL,
     patient_id BIGINT NOT NULL,
+    --switch to double precision in the future
     amount BIGINT NOT NULL,
     payment_date TIMESTAMP,
     billing_date TIMESTAMP,

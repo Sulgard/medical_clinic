@@ -13,10 +13,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "permissions")
+@Table(name = "permissions", schema = "medical")
 public class Permission extends BaseEntity implements GrantedAuthority {
-    @Enumerated(EnumType.STRING)
-    private PermissionEnum name;
+    private String name;
     private String description;
 
     @ManyToMany(mappedBy = "permissions")
@@ -24,6 +23,6 @@ public class Permission extends BaseEntity implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return name.name();
+        return name;
     }
 }
