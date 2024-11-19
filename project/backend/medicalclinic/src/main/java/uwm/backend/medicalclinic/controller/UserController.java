@@ -10,7 +10,7 @@ import uwm.backend.medicalclinic.dto.UserInfoDTO;
 import uwm.backend.medicalclinic.service.UserService;
 
 @AllArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("api/users")
 @RestController
 public class UserController {
     UserService userService;

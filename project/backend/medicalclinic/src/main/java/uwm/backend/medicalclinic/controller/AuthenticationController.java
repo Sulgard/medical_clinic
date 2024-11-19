@@ -18,7 +18,7 @@ import uwm.backend.medicalclinic.service.JwtService;
 import uwm.backend.medicalclinic.service.RefreshTokenService;
 
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("api/auth")
 @RestController
 public class AuthenticationController {
 

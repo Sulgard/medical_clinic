@@ -94,6 +94,41 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>cz.habarta.typescript-generator</groupId>
+				<artifactId>typescript-generator-maven-plugin</artifactId>
+				<version>3.2.1263</version>
+				<executions>
+					<execution>
+						<id>generate-typescript</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-sources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<jsonLibrary>jackson2</jsonLibrary>
+					<outputKind>multipleFiles</outputKind>
+					<outputFileType>implementationFile</outputFileType>
+					<outputFile>../../frontend/src/app/api</outputFile>
+					<classPatterns>
+						<pattern>uwm.backend.medicalclinic.dto.**</pattern>
+						<pattern>uwm.backend.medicalclinic.controller.**</pattern>
+					</classPatterns>
+					<generateSpringApplicationClient>true</generateSpringApplicationClient>
+					<optionalAnnotations>
+            			<annotation>org.springframework.lang.Nullable</annotation>
+        			</optionalAnnotations>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>cz.habarta.typescript-generator</groupId>
+						<artifactId>typescript-generator-spring</artifactId>
+						<version>3.2.1263</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 

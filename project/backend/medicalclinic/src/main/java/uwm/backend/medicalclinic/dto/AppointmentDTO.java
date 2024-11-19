@@ -10,5 +10,5 @@ public class AppointmentDTO {
     private String visitDescription;
     private String status;
     private LocalDateTime appointmentDate;
-    private String canellationReason;
+    private String cancellationReason;
 }

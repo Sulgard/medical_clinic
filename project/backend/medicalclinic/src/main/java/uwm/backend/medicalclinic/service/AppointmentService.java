@@ -76,7 +76,7 @@ public class AppointmentService {
         result.setNotes(appointmentOB.getNotes());
         result.setVisitDescription(appointmentOB.getVisitDescription());
             if (appointmentOB.getCancellationReason() != null && !appointmentOB.getCancellationReason().isEmpty()) {
-            result.setCanellationReason(appointmentOB.getCancellationReason());
+            result.setCancellationReason(appointmentOB.getCancellationReason());
         }
 
         return result;
@@ -94,7 +94,7 @@ public class AppointmentService {
             element.setStatus(appointment.getStatus());
             element.setNotes(appointment.getNotes());
             if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
-                element.setVisitDescription(appointment.getVisitDescription());
+                element.setCancellationReason(appointment.getCancellationReason());
             }
             result.add(element);
         }
@@ -116,7 +116,7 @@ public class AppointmentService {
             element.setStatus(appointment.getStatus());
             element.setNotes(appointment.getNotes());
             if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
-                element.setVisitDescription(appointment.getVisitDescription());
+                element.setCancellationReason(appointment.getCancellationReason());
             }
             result.add(element);
         }

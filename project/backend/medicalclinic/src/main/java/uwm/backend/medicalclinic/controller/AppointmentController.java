@@ -13,7 +13,7 @@ import javax.net.ssl.SSLEngineResult;
 import java.util.List;
 
 @AllArgsConstructor
-@RequestMapping("/appointment")
+@RequestMapping("api/appointment")
 @RestController
 public class AppointmentController {
     AppointmentService appointmentService;

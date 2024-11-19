@@ -11,7 +11,7 @@ import uwm.backend.medicalclinic.dto.DoctorResponseDTO;
 import uwm.backend.medicalclinic.service.DoctorService;
 
 @AllArgsConstructor
-@RequestMapping("/doctor")
+@RequestMapping("api/doctor")
 @RestController
 public class DoctorController {
     DoctorService doctorService;
