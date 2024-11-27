@@ -27,6 +27,9 @@ export class AuthService {
   }
 
   
+  loadToken(): string | null {
+    return localStorage.getItem('accessToken') || null;
+  }
 
   login(authRequestDTO: AuthRequestDTO): Observable<JwtResponseDTO> {
     return this.http.post<JwtResponseDTO>('http://localhost:8080/api/auth/login', authRequestDTO).pipe(
@@ -65,6 +68,11 @@ export class AuthService {
     return decoded ? decoded.role: '';
   }
 
+  getUserId(): number{
+    const decoded = this.getDecodedToken();
+    return decoded ? decoded.userId: null;
+  }
+
   redirectToDashboard(): void {
     const role = this.getUserRole();
     if (role === 'DOCTOR') {
@@ -72,6 +80,10 @@ export class AuthService {
     } else if (role === 'PATIENT') {
       this.router.navigate(['/patient/dashboard']);
     }
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('accessToken');
   }
   
 }

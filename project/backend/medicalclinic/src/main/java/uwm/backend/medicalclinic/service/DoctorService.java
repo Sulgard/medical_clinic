@@ -1,9 +1,11 @@
 package uwm.backend.medicalclinic.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.CreateDoctorRequestDTO;
+import uwm.backend.medicalclinic.dto.DoctorInfoDTO;
 import uwm.backend.medicalclinic.dto.DoctorResponseDTO;
 import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.model.Role;
@@ -46,6 +48,21 @@ public class DoctorService {
         doctorRepository.saveAndFlush(doctor);
         result.setCorrect(true);
         result.setName(input.getFirstName());
+        return result;
+    }
+
+    public DoctorInfoDTO getDoctorInfo(Long id) {
+        Doctor doctor = doctorRepository.findDoctorById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor not found."));
+
+        DoctorInfoDTO result = new DoctorInfoDTO();
+        result.setFirstName(doctor.getFirstName());
+        result.setLastName(doctor.getLastName());
+        result.setEmail(doctor.getEmail());
+        result.setSpecialization(doctor.getSpecialization());
+        result.setMedicalLicense(doctor.getMedicalLicense());
+        result.setBirthDate(doctor.getBirthDate());
+        result.setPhoneNumber(doctor.getPhoneNumber());
         return result;
     }
 }

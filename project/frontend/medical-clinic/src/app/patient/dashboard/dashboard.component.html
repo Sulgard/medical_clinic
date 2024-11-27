@@ -1,19 +1,50 @@
-<div class="dashboard-container">
-    <h1>Welcome, {{ patientName }}</h1>
-    <div class="dashboard-section">
-      <h2>Upcoming Appointments</h2>
-      <mat-list>
-        <mat-list-item *ngFor="let appointment of upcomingAppointments">
-          {{ appointment.date }} - {{ appointment.doctor }}
-        </mat-list-item>
-      </mat-list>
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidebar Navigation -->
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <div class="sidenav-content">
+      <button mat-button (click)="bookAppointment()">Book Appointment</button>
+      <button mat-button (click)="viewPrescriptions()">View Prescriptions</button>
+      <button mat-button (click)="viewBillings()">View Billings</button>
+      <button mat-button (click)="viewAppointments()">View Appointments</button>
+      <button mat-button (click)="logout()">Logout</button>
     </div>
-  
-    <div class="dashboard-section">
-      <h2>Quick Actions</h2>
-      <button mat-raised-button color="primary" (click)="bookAppointment()">Book Appointment</button>
-      <button mat-raised-button color="accent" (click)="viewPrescriptions()">View Prescriptions</button>
-      <button mat-raised-button color="accent" (click)="viewAppointments()">View Appointments</button>
-      <button mat-raised-button color="accent" (click)="viewBillings()">View Billings</button>
+  </mat-sidenav>
+
+  <!-- Main Content Area -->
+  <mat-sidenav-content class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- User Info Section -->
+        <div class="col-md-4">
+          <mat-card class="user-info-card">
+            <mat-card-header>
+              <mat-card-title>User Information</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Name:</strong> {{ patientInfo?.firstName }} {{ patientInfo?.lastName }}</p>
+              <p><strong>Email:</strong> {{ patientInfo?.email }}</p>
+              <p><strong>Phone:</strong> {{ patientInfo?.phoneNumber }}</p>
+              <p><strong>Birthdate:</strong> {{ patientInfo?.birthDate | date }}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Upcoming Appointments Section -->
+        <div class="col-md-8">
+          <mat-card class="appointments-card">
+            <mat-card-header>
+              <mat-card-title>Upcoming Appointments</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <ul class="list-group">
+                <li *ngFor="let appointment of upcomingAppointments" class="list-group-item">
+                  <strong>{{ appointment.date | date }}</strong><br />
+                </li>
+              </ul>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </div>
-  </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

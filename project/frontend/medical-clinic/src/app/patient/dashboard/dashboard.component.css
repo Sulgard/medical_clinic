@@ -1,0 +1,32 @@
+.sidenav-container {
+    height: 100vh;
+  }
+  
+  .sidenav {
+    background-color: #f4f4f4;
+    padding-top: 20px;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .mat-card {
+    margin-bottom: 20px;
+  }
+  
+  .user-info-card, .appointments-card {
+    padding: 15px;
+  }
+  
+  .sidenav-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  button.mat-button {
+    text-align: left;
+    width: 100%;
+  }
+  

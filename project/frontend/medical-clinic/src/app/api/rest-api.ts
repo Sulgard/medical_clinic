@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-11-21 19:36:21.
+// Generated using typescript-generator version 3.2.1263 on 2024-11-27 11:43:33.
 
 export interface AppointmentDTO {
     notes: string;
@@ -136,6 +136,14 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP POST /api/appointment/appointments/{id}/cancel
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.cancelAppointment
+     */
+    cancelAppointment(id: number, queryParams: { patientId: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/${id}/cancel`, queryParams: queryParams });
+    }
+
+    /**
      * HTTP POST /api/appointment/create
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.createAppointment
      */
@@ -168,11 +176,27 @@ export class RestApplicationClient {
     }
 
     /**
-     * HTTP POST /api/doctor/create
+     * HTTP POST /api/doctors/create
      * Java method: uwm.backend.medicalclinic.controller.DoctorController.createDoctor
      */
     createDoctor(request: CreateDoctorRequestDTO): RestResponse<DoctorResponseDTO> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/doctor/create`, data: request });
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/doctors/create`, data: request });
+    }
+
+    /**
+     * HTTP GET /api/doctors/info/{id}
+     * Java method: uwm.backend.medicalclinic.controller.DoctorController.getDoctorInfo
+     */
+    getDoctorInfo(id: number): RestResponse<DoctorInfoDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/doctors/info/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/patients/info/{id}
+     * Java method: uwm.backend.medicalclinic.controller.PatientController.getPatientInfo
+     */
+    getPatientInfo(id: number): RestResponse<PatientInfoDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/patients/info/${id}` });
     }
 
     /**
