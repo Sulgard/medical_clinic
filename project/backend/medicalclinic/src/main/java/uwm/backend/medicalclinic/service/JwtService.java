@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import uwm.backend.medicalclinic.model.User;
 import uwm.backend.medicalclinic.repository.UserRepository;
 
 import javax.crypto.SecretKey;
@@ -56,8 +57,11 @@ public class JwtService {
             Map<String, Object> extraClaims,
             String email
     ) {
-        String userRole = userRepository.findRoleByUsername(email);
-        extraClaims.put("role", userRole);
+        User user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        extraClaims.put("role", user.getRole().getName());
+        extraClaims.put("userId", user.getId());
         return Jwts.builder()
                 .subject(email)
                 .claims(extraClaims)

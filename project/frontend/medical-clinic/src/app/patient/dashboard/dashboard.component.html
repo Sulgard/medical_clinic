@@ -1,0 +1,19 @@
+<div class="dashboard-container">
+    <h1>Welcome, {{ patientName }}</h1>
+    <div class="dashboard-section">
+      <h2>Upcoming Appointments</h2>
+      <mat-list>
+        <mat-list-item *ngFor="let appointment of upcomingAppointments">
+          {{ appointment.date }} - {{ appointment.doctor }}
+        </mat-list-item>
+      </mat-list>
+    </div>
+  
+    <div class="dashboard-section">
+      <h2>Quick Actions</h2>
+      <button mat-raised-button color="primary" (click)="bookAppointment()">Book Appointment</button>
+      <button mat-raised-button color="accent" (click)="viewPrescriptions()">View Prescriptions</button>
+      <button mat-raised-button color="accent" (click)="viewAppointments()">View Appointments</button>
+      <button mat-raised-button color="accent" (click)="viewBillings()">View Billings</button>
+    </div>
+  </div>

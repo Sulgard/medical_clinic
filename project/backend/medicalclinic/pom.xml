@@ -109,9 +109,9 @@
 				</executions>
 				<configuration>
 					<jsonLibrary>jackson2</jsonLibrary>
-					<outputKind>multipleFiles</outputKind>
+					<outputKind>module</outputKind>
 					<outputFileType>implementationFile</outputFileType>
-					<outputFile>../../frontend/src/app/api</outputFile>
+					<outputFile>../../frontend/medical-clinic/src/app/api/rest-api.ts</outputFile>
 					<classPatterns>
 						<pattern>uwm.backend.medicalclinic.dto.**</pattern>
 						<pattern>uwm.backend.medicalclinic.controller.**</pattern>
