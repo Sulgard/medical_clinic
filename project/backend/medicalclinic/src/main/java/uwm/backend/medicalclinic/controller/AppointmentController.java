@@ -1,15 +1,15 @@
 package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
+import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.service.AppointmentService;
 
-import javax.net.ssl.SSLEngineResult;
 import java.util.List;
 
 @AllArgsConstructor
@@ -39,5 +39,15 @@ public class AppointmentController {
     public ResponseEntity<?> listAppointmentsForPatient(@PathVariable Long id) {
         List<AppointmentDTO> appointments = appointmentService.listAppointmentsForPatient(id);
         return ResponseEntity.ok(appointments);
+    }
+
+    @PostMapping("appointments/{id}/cancel")
+    public ResponseEntity<?> cancelAppointment(
+            @PathVariable Long id,
+            @RequestParam Long patientId
+    ) {
+        Appointment response = appointmentService.cancelAppointment(id, patientId);
+
+        return ResponseEntity.ok(response);
     }
 }

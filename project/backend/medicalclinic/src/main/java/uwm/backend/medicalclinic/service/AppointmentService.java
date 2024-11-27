@@ -2,6 +2,7 @@ package uwm.backend.medicalclinic.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
@@ -36,13 +37,11 @@ public class AppointmentService {
         Optional<Doctor> doctor = doctorRepository.findDoctorById(request.getDoctorId());
 
         if(patient.isEmpty()) {
-            result.setCorrect(false);
-            return result;
+            throw new EntityNotFoundException("Patient not found");
         }
 
         if(doctor.isEmpty()) {
-            result.setCorrect(false);
-            return result;
+            throw new EntityNotFoundException("Doctor not found");
         }
 
         Patient patientOB = patient.get();
@@ -122,5 +121,17 @@ public class AppointmentService {
         }
 
         return result;
+    }
+
+    public Appointment cancelAppointment(Long id, Long patientId) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
+
+        if(!appointment.getPatient().getId().equals(patientId)) {
+            throw new IllegalStateException("This appointment does not belong to this Patient");
+        }
+
+        appointment.setStatus("CANCELLED");
+        return appointmentRepository.saveAndFlush(appointment);
     }
 }
