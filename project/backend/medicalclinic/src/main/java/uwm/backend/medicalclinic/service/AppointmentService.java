@@ -157,4 +157,11 @@ public class AppointmentService {
         appointment.setStatus("CANCELLED");
         return appointmentRepository.saveAndFlush(appointment);
     }
+
+    public void deleteAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Appointemnt not found"));
+
+        appointmentRepository.delete(appointment);
+    }
 }
