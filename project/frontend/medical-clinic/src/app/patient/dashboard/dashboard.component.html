@@ -1,5 +1,4 @@
 <mat-sidenav-container class="sidenav-container">
-  <!-- Sidebar Navigation -->
   <mat-sidenav #sidenav mode="side" opened class="sidenav">
     <div class="sidenav-content">
       <button mat-button (click)="bookAppointment()">Book Appointment</button>
@@ -10,11 +9,9 @@
     </div>
   </mat-sidenav>
 
-  <!-- Main Content Area -->
   <mat-sidenav-content class="content">
     <div class="container-fluid">
       <div class="row">
-        <!-- User Info Section -->
         <div class="col-md-4">
           <mat-card class="user-info-card">
             <mat-card-header>
@@ -29,21 +26,26 @@
           </mat-card>
         </div>
 
-        <!-- Upcoming Appointments Section -->
         <div class="col-md-8">
           <mat-card class="appointments-card">
             <mat-card-header>
               <mat-card-title>Upcoming Appointments</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <ul class="list-group">
-                <li *ngFor="let appointment of upcomingAppointments" class="list-group-item">
-                  <strong>{{ appointment.date | date }}</strong><br />
-                </li>
-              </ul>
+              <div *ngIf="appointments?.length === 0; else appointmentsList">
+                <p>No appointments yet.</p>
+              </div>
+              <ng-template #appointmentsList>
+                <ul class="list-group">
+                  <li *ngFor="let appointment of appointments" class="list-group-item">
+                    <strong>{{ appointment.appointmentDate | date }} - {{appointment.status}}</strong><br />
+                  </li>
+                </ul>
+              </ng-template>
             </mat-card-content>
           </mat-card>
         </div>
+
       </div>
     </div>
   </mat-sidenav-content>

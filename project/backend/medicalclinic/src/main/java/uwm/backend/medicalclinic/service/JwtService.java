@@ -71,7 +71,6 @@ public class JwtService {
                 .compact();
     }
 
-
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -87,7 +86,6 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
@@ -96,7 +94,6 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
 
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));

@@ -1,0 +1,35 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Book Appointment</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="appointmentForm" (ngSubmit)="bookAppointment()">
+        <mat-form-field appearance="fill">
+          <mat-label>Appointment Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="appointmentDate" required />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <!-- <mat-error *ngIf="appointmentForm.get('appointmentDate').hasError('required')">Appointment date is required</mat-error> -->
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Reason for Appointment</mat-label>
+          <input matInput formControlName="appointmentReason" required />
+          <!-- <mat-error *ngIf="appointmentForm.get('appointmentReason').hasError('required')">Appointment reason is required</mat-error> -->
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Doctor</mat-label>
+          <mat-select formControlName="doctorId" required>
+            <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
+              {{ doctor.firstName }} {{ doctor.lastName }}
+            </mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="appointmentForm.get('doctorId').hasError('required')">Doctor is required</mat-error> -->
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" [disabled]="appointmentForm.invalid" type="submit">Book Appointment</button>
+      </form>
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    </mat-card-content>
+  </mat-card>

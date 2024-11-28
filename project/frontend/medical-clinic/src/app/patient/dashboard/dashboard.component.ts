@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PatientInfoDTO } from '../../api/rest-api';
+import { AppointmentDTO, PatientInfoDTO } from '../../api/rest-api';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +20,7 @@ import { PatientInfoDTO } from '../../api/rest-api';
 })
 export class DashboardComponent implements OnInit {
   patientInfo: PatientInfoDTO | null = null;
+  appointments: AppointmentDTO[] | null = null;
   isLoading: boolean = true;
   errorMessage: string = '';
 
@@ -37,10 +38,11 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewPatientInfo();
+    this.viewUpcomingAppointments();
   }
 
   viewPatientInfo(): any {
-    const patientId: number = 9;
+    const patientId: number = this.authService.getUserId();
     this.patientService.getPatientInfo(patientId).subscribe({
       next: (data: PatientInfoDTO) => {
         this.patientInfo = data;
@@ -54,8 +56,20 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  viewUpcomingAppointments(): void {
+    const patientId: number = this.authService.getUserId();
+    this.patientService.listAppointmentsForPatient(patientId).subscribe({
+      next: (data: AppointmentDTO[]) => {
+        this.appointments = data;
+      },
+      error: (err) => {
+        console.error('Error fetching appointments:', err);
+      }
+    });
+  }
+
   bookAppointment(): void {
-    this.router.navigate(['/book-appointment']);
+    this.router.navigate(['/patient/book-appointment']);
   }
 
   viewPrescriptions(): void {
