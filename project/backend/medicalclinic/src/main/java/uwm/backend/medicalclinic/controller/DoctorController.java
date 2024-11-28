@@ -1,7 +1,6 @@
 package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.CreateDoctorRequestDTO;
