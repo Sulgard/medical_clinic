@@ -42,6 +42,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/doctors/{id}")
+    public ResponseEntity<?> listAppointmentsForDoctor(@PathVariable Long id) {
+        List<AppointmentDTO> appointments = appointmentService.listAppointmentsForDoctor(id);
+        return ResponseEntity.ok(appointments);
+    }
+
     @PostMapping("appointments/{id}/cancel")
     public ResponseEntity<?> cancelAppointment(
             @PathVariable Long id,

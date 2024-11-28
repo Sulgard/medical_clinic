@@ -25,4 +25,6 @@ public class DoctorController {
         DoctorInfoDTO response = doctorService.getDoctorInfo(id);
         return ResponseEntity.ok(response);
     }
+
+
 }

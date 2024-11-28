@@ -100,7 +100,30 @@ public class AppointmentService {
         return result;
     }
 
-    public List<AppointmentDTO> listAppointmentsForPatient(Long patientId) {
+    public List<AppointmentDTO> listAppointmentsForDoctor(Long doctorId) {
+        List<Appointment> appoinmetns = appointmentRepository.findByDoctorId(doctorId);
+        List<AppointmentDTO> result = new ArrayList<>();
+
+        if(appoinmetns.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        for(Appointment appointment: appoinmetns) {
+            AppointmentDTO element = new AppointmentDTO();
+            element.setVisitDescription(appointment.getVisitDescription());
+            element.setAppointmentDate(appointment.getAppointmentDate());
+            element.setStatus(appointment.getStatus());
+            element.setNotes(appointment.getNotes());
+            if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
+                element.setCancellationReason(appointment.getCancellationReason());
+            }
+            result.add(element);
+        }
+
+        return result;
+    }
+
+     public List<AppointmentDTO> listAppointmentsForPatient(Long patientId) {
         List<Appointment> appoinmetns = appointmentRepository.findByPatientId(patientId);
         List<AppointmentDTO> result = new ArrayList<>();
 
