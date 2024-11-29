@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uwm.backend.medicalclinic.enums.StatusType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -22,14 +20,20 @@ public class Appointment extends BaseEntity {
     @Column(name = "notes")
     private String notes;
 
-    @Column(name = "visit_description", nullable = false)
-    private String visitDescription;
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "status")
     private String status;
 
+    @ManyToOne(optional = false)
+    private AppointmentType appointmentType;
+
     @Column(name = "appointment_date", nullable = false)
-    private LocalDateTime appointmentDate;
+    private LocalDate appointmentDate;
+
+    @Column(name = "appointment_time", nullable = false)
+    private LocalTime appointmentTime;
 
     @Column(name = "cancellation_resason")
     private String cancellationReason;
@@ -43,5 +47,5 @@ public class Appointment extends BaseEntity {
     private Doctor doctor;
 
     @OneToMany(mappedBy = "appointment")
-    private List<Perscription> perscriptionList;
+    private List<Prescriptions> perscriptionList;
 }

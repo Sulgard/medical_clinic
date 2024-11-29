@@ -21,12 +21,21 @@ export class PatientService {
   }
   
   listAppointmentsForPatient(patientId: number): Observable<any> {
-    // const token = this.authService.loadToken();
-    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/patients/${patientId}`);
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/patients/${patientId}`, {headers});
   }
 
   createAppointment(createAppointmentRequest: CreateAppointmentRequestDTO): Observable<CreateAppointmentResponseDTO> {
     return this.http.post<CreateAppointmentResponseDTO>(`http://localhost:8080/api/appointment/create`, createAppointmentRequest);
   }
+
+  bookAppointment(something: any): any {
+  }
+
+  getAvailableDoctors(sometthing: any): any {
+
+  }
+
+
 }

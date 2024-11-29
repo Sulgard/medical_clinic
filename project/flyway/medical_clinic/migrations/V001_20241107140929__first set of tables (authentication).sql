@@ -5,26 +5,6 @@ CREATE TABLE medical.roles (
     updated_at TIMESTAMP
 );
 
-CREATE TABLE medical.permissions (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-
-CREATE TABLE medical.role_permissions (
-    role_id BIGINT,
-    permission_id BIGINT,
-    PRIMARY KEY(role_id, permission_id),
-    CONSTRAINT fk_role_permissions_role
-        FOREIGN KEY(role_id) 
-        REFERENCES medical.roles(id),
-    CONSTRAINT fk_role_permissions_permission
-        FOREIGN KEY(permission_id) 
-        REFERENCES medical.permissions(id)
-);
-
 CREATE TABLE medical.users (
     id BIGSERIAL PRIMARY KEY NOT NULL,
     first_name VARCHAR(255) NOT NULL,

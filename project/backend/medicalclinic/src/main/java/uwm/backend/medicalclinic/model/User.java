@@ -3,12 +3,13 @@ package uwm.backend.medicalclinic.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uwm.backend.medicalclinic.enums.GenderEnum;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,14 +47,13 @@ public class User extends BaseEntity implements UserDetails {
 
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getPermissions().stream()
-                .collect(Collectors.toSet());
+    public String getUsername() {
+        return email;
     }
 
     @Override
-    public String getUsername() {
-        return email;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 
     public String getPassword() {

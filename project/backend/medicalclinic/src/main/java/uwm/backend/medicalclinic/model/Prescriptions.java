@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "perscriptions", schema = "medical")
-public class Perscription extends BaseEntity {
+@Table(name = "prescriptions", schema = "medical")
+public class Prescriptions extends BaseEntity {
     @Column(name = "medication_name")
     private String medicationName;
 

@@ -17,46 +17,52 @@ import { CommonModule } from '@angular/common';
   templateUrl: './patient-book-appointment.component.html',
   styleUrl: './patient-book-appointment.component.css'
 })
-export class PatientBookAppointmentComponent{
-    appointmentForm: FormGroup;
-    doctors = [
-      {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        specialization: 'Cardiologist',
-        phoneNumber: '123-456-7890',
-        email: 'john.doe@example.com',
-      },
-      {
-        id: 2,
-        firstName: 'Jane',
-        lastName: 'Smith',
-        specialization: 'Dermatologist',
-        phoneNumber: '987-654-3210',
-        email: 'jane.smith@example.com',
-      }
-    ];
+export class PatientBookAppointmentComponent implements OnInit {
+  appointmentForm: FormGroup;
+  appointmentTypes: string[] = ['Consultation', 'Follow-up', 'Diagnostics'];
+  availableDoctors: any[] = [];
+  selectedDate: Date | null = null;
+  availableTimes: string[] = [];
+  selectedDoctor: any | null = null;
 
-    isLoading: boolean = false;
-    errorMessage: string = '';
-  
-    constructor(
-      private fb: FormBuilder,
-      private patientService: PatientService,
-      private authService: AuthService,
-      private router: Router
-    ) {
-      this.appointmentForm = this.fb.group({
+  constructor(private fb: FormBuilder, private patientService: PatientService) {
+    this.appointmentForm = this.fb.group({
+      appointmentType: [''],
+      date: [null]
+    });
+  }
 
-      })
+  ngOnInit(): void {}
+
+  onDateChange(): void {
+    const date: any = this.appointmentForm.get('date')?.value;
+    this.selectedDate = date;
+
+    if (date) {
+      this.patientService.getAvailableDoctors(date).subscribe((data: any) => {
+        this.availableDoctors = data;
+      });
     }
-
-  ngOnInit(){
   }
 
-  bookAppointment(): void {
-
+  onDoctorSelect(doctor: any): void {
+    this.selectedDoctor = doctor;
+    if (this.selectedDate && doctor) {
+      this.availableTimes = doctor.availableHours; // Assume backend sends this.
+    }
   }
 
+  bookAppointment(time: string): void {
+    const appointmentDetails = {
+      doctorId: this.selectedDoctor.id,
+      patientId: 1, // Replace with authenticated patient's ID
+      date: this.selectedDate,
+      time: time,
+      appointmentType: this.appointmentForm.get('appointmentType')?.value
+    };
+
+    this.patientService.bookAppointment(appointmentDetails).subscribe(() => {
+      alert('Appointment successfully booked!');
+    });
+  }
 }

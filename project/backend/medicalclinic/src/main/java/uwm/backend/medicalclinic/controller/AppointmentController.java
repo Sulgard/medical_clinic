@@ -1,15 +1,18 @@
 package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
 import uwm.backend.medicalclinic.model.Appointment;
+import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.service.AppointmentService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,7 +24,7 @@ public class AppointmentController {
 
     @PostMapping("/create")
     public CreateAppointmentResponseDTO createAppointment(@RequestBody CreateAppointmentRequestDTO request) {
-        return appointmentService.createAppointment(request);
+        return appointmentService.bookAppointment(request);
     }
 
     @GetMapping("/appointments")
@@ -56,6 +59,16 @@ public class AppointmentController {
         Appointment response = appointmentService.cancelAppointment(id, patientId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("appointments/available-doctors")
+    @PreAuthorize("hasAuthority('PATIENT')")
+    ResponseEntity<List<Doctor>> getAvailableDoctors(
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) LocalTime time
+    ) {
+        List<Doctor> availableDoctors = appointmentService.listAvailableDoctors(date, time);
+        return ResponseEntity.ok(availableDoctors);
     }
 
     @DeleteMapping("appointments/{id}/delete")

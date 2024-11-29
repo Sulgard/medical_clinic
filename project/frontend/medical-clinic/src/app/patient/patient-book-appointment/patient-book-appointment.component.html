@@ -1,35 +1,33 @@
-<mat-card>
-    <mat-card-header>
-      <mat-card-title>Book Appointment</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="appointmentForm" (ngSubmit)="bookAppointment()">
-        <mat-form-field appearance="fill">
-          <mat-label>Appointment Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="appointmentDate" required />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <!-- <mat-error *ngIf="appointmentForm.get('appointmentDate').hasError('required')">Appointment date is required</mat-error> -->
-        </mat-form-field>
-  
-        <mat-form-field appearance="fill">
-          <mat-label>Reason for Appointment</mat-label>
-          <input matInput formControlName="appointmentReason" required />
-          <!-- <mat-error *ngIf="appointmentForm.get('appointmentReason').hasError('required')">Appointment reason is required</mat-error> -->
-        </mat-form-field>
-  
-        <mat-form-field appearance="fill">
-          <mat-label>Doctor</mat-label>
-          <mat-select formControlName="doctorId" required>
-            <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
-              {{ doctor.firstName }} {{ doctor.lastName }}
-            </mat-option>
-          </mat-select>
-          <!-- <mat-error *ngIf="appointmentForm.get('doctorId').hasError('required')">Doctor is required</mat-error> -->
-        </mat-form-field>
-  
-        <button mat-raised-button color="primary" [disabled]="appointmentForm.invalid" type="submit">Book Appointment</button>
-      </form>
-      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    </mat-card-content>
-  </mat-card>
+<div class="appointment-container">
+  <form [formGroup]="appointmentForm">
+    <!-- Appointment Type -->
+    <label for="appointmentType">Select Appointment Type:</label>
+    <select formControlName="appointmentType" id="appointmentType">
+      <option *ngFor="let type of appointmentTypes" [value]="type">{{ type }}</option>
+    </select>
+
+    <!-- Date Picker -->
+    <mat-form-field>
+      <mat-label>Choose Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" (dateChange)="onDateChange()" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </form>
+
+  <!-- Available Doctors -->
+  <h3>Available Doctors:</h3>
+  <div *ngIf="availableDoctors.length > 0">
+    <div *ngFor="let doctor of availableDoctors" (click)="onDoctorSelect(doctor)" class="doctor-card">
+      <p><strong>{{ doctor.name }}</strong> - {{ doctor.specialization }}</p>
+    </div>
+  </div>
+
+  <!-- Available Time Slots -->
+  <h3>Available Time Slots:</h3>
+  <div *ngIf="availableTimes.length > 0">
+    <div *ngFor="let time of availableTimes" (click)="bookAppointment(time)" class="time-slot">
+      <button>{{ time }}</button>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.*;
-import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.RefreshToken;
 import uwm.backend.medicalclinic.service.AuthenticationService;
 import uwm.backend.medicalclinic.service.JwtService;
