@@ -31,15 +31,31 @@ constructor(
   private router: Router
 ) {
   this.registerForm = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    email: ['', Validators.required],
-    password: ['', Validators.required],
-    birthDate: ['', Validators.required],
-    gender: ['', Validators.required],
-    insuranceNumber: ['', Validators.required],
-    phoneNumber: ['', Validators.required]
-  })
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+      gender: ['', Validators.required],
+      birthDate: ['', Validators.required],
+      insuranceNumber: ['', Validators.required],
+      street: ['', Validators.required],
+      city: ['', Validators.required],
+      zipCode: ['', Validators.required],
+      country: ['', Validators.required],
+      county: ['', Validators.required],
+      localNumber: ['', Validators.required],
+    }, {
+      validators: this.passwordMatchValidator
+    });
+  }
+
+passwordMatchValidator(form: FormGroup) {
+  const password = form.get('password')?.value;
+  const confirmPassword = form.get('confirmPassword')?.value;
+
+  return password === confirmPassword ? null : { passwordMismatch: true };
 }
 
 onSubmit() {
@@ -52,12 +68,19 @@ onSubmit() {
       birthDate: this.registerForm.value.birthDate,
       gender: this.registerForm.value.gender,
       phoneNumber: this.registerForm.value.phoneNumber,
-      insuranceNumber: this.registerForm.value.insuranceNumber
+      insuranceNumber: this.registerForm.value.insuranceNumber,
+      country: this.registerForm.value.country,
+      county: this.registerForm.value.county,
+      city: this.registerForm.value.city,
+      zipCode: this.registerForm.value.zipCode,
+      street: this.registerForm.value.street,
+      localNumber: this.registerForm.value.localNumber
     }
     this.authService.register(registerRequest).subscribe({
       next: () => {
         this.successMessage = 'Successfull signing up attempt. You can log in';
         this.registerForm.reset();
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error(err);

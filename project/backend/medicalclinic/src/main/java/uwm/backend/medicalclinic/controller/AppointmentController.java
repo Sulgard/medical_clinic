@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
+import uwm.backend.medicalclinic.dto.DoctorForListResponseDTO;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.service.AppointmentService;
@@ -63,11 +64,11 @@ public class AppointmentController {
 
     @GetMapping("appointments/available-doctors")
     @PreAuthorize("hasAuthority('PATIENT')")
-    ResponseEntity<List<Doctor>> getAvailableDoctors(
+    ResponseEntity<List<DoctorForListResponseDTO>> getAvailableDoctors(
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) LocalTime time
     ) {
-        List<Doctor> availableDoctors = appointmentService.listAvailableDoctors(date, time);
+        List<DoctorForListResponseDTO> availableDoctors = appointmentService.listAvailableDoctors(date, time);
         return ResponseEntity.ok(availableDoctors);
     }
 

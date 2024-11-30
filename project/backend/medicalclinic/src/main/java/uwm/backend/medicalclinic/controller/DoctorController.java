@@ -2,6 +2,7 @@ package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.CreateDoctorRequestDTO;
 import uwm.backend.medicalclinic.dto.DoctorInfoDTO;
@@ -15,6 +16,7 @@ public class DoctorController {
     DoctorService doctorService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorResponseDTO createDoctor(@RequestBody CreateDoctorRequestDTO request) {
         return doctorService.createDoctor(request);
     }

@@ -25,7 +25,7 @@ public class AuthenticationController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public CreatePatientResponseDTO registerPatient(@RequestBody RegisterPatientDto registerPatientDto) {
+    public CreatePatientResponseDTO registerPatient(@Valid @RequestBody RegisterPatientDto registerPatientDto) {
         return authenticationService.signup(registerPatientDto);
     }
 

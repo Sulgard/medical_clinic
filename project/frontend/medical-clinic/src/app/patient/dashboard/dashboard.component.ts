@@ -81,7 +81,7 @@ export class DashboardComponent implements OnInit {
   }
 
   viewAppointments(): void {
-    this.router.navigate(['/appointments']);
+    this.router.navigate(['/patient/patient-appointments']);
   }
 
 

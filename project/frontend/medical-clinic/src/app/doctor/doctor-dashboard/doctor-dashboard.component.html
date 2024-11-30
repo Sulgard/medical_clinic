@@ -1,0 +1,34 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" opened class="sidenav">
+      <div class="sidenav-content">
+        <button mat-button (click)="navigateProfile()">My profile</button>
+        <button mat-button (click)="bookAppointment()">Book Appointment</button>
+        <button mat-button (click)="navigateAppointments()">View Appointments</button>
+        <button mat-button (click)="navigatePatients()">View Patients</button>
+        <button mat-button (click)="logout()">Logout</button>
+      </div>
+    </mat-sidenav>
+  
+    <mat-sidenav-content class="content">
+          <div class="col-md-8">
+            <mat-card class="appointments-card">
+              <mat-card-header>
+                <mat-card-title>Today's Appointments</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngIf="appointments?.length === 0; else appointmentsList">
+                  <p>No appointments yet.</p>
+                </div>
+                <ng-template #appointmentsList>
+                  <ul class="list-group">
+                    <li *ngFor="let appointment of appointments" class="list-group-item">
+                      <strong>{{ appointment.appointmentDate | date }} - {{appointment.status}}</strong><br />
+                    </li>
+                  </ul>
+                </ng-template>
+              </mat-card-content>
+            </mat-card>
+          </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  

@@ -79,6 +79,8 @@ export class AuthService {
       this.router.navigate(['/doctor/dashboard']);
     } else if (role === 'PATIENT') {
       this.router.navigate(['/patient/dashboard']);
+    } else if (role === 'ADMIN') {
+      this.router.navigate(['/admin/dashboard']);
     }
   }
 

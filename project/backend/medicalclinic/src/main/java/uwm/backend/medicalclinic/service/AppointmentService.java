@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
+import uwm.backend.medicalclinic.dto.DoctorForListResponseDTO;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.AppointmentType;
 import uwm.backend.medicalclinic.model.Doctor;
@@ -179,13 +180,19 @@ public class AppointmentService {
         appointmentRepository.delete(appointment);
     }
 
-    public List<Doctor> listAvailableDoctors(LocalDate date, LocalTime time) {
+    public List<DoctorForListResponseDTO> listAvailableDoctors(LocalDate date, LocalTime time) {
         List<Appointment> bookedAppointments = appointmentRepository.findByAppointmentDateAndAndAppointmentTime(date, time);
         List<Doctor> bookedDoctors = bookedAppointments.stream().
                 map(Appointment::getDoctor)
                 .collect(Collectors.toList());
         return doctorRepository.findAll().stream()
                 .filter(doctor -> !bookedDoctors.contains(doctor))
+                .map(doctor -> new DoctorForListResponseDTO(
+                    doctor.getFirstName(),
+                    doctor.getLastName(),
+                    doctor.getSpecialization(),
+                    doctor.getPhoneNumber()
+                ))
                 .collect(Collectors.toList());
     }
 }

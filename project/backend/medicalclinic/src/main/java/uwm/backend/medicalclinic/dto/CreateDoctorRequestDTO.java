@@ -14,7 +14,6 @@ public class CreateDoctorRequestDTO {
     String phoneNumber;
     GenderEnum gender;
     LocalDate birthDate;
-    String insuranceNumber;
     String medicalLicense;
     String specialization;
 }

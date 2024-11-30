@@ -39,7 +39,6 @@ export interface CreateDoctorRequestDTO {
     phoneNumber: string;
     gender: GenderEnum;
     birthDate: Date;
-    insuranceNumber: string;
     medicalLicense: string;
     specialization: string;
 }
