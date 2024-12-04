@@ -1,13 +1,12 @@
 package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uwm.backend.medicalclinic.dto.AppointmentDTO;
-import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
-import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
-import uwm.backend.medicalclinic.dto.DoctorForListResponseDTO;
+import uwm.backend.medicalclinic.dto.*;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.AppointmentType;
 import uwm.backend.medicalclinic.service.AppointmentService;
@@ -85,9 +84,16 @@ public class AppointmentController {
     }
 
     @GetMapping("appointments/type")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR', 'ADMIN')")
     public ResponseEntity<?> fetchAppointments() {
         List<AppointmentType> response = appointmentTypeService.getAllAppointmentTypes();
         return  ResponseEntity.ok(response);
+    }
+
+    @PostMapping("appointments/patient/{id}")
+    @PreAuthorize("hasAuthority('PATIENT')")
+    public ResponseEntity<Page<AppointmentDTO>> listFilteredAppointmentsForPatient(@PathVariable("id") Long id, @RequestBody AppointmentFilterDTO filter) {
+        Page<AppointmentDTO> response = appointmentService.listFilteredAppointmentsForPatient(id, filter);
+        return ResponseEntity.ok(response);
     }
 }

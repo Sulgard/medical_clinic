@@ -1,8 +1,9 @@
-import { CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, PatientInfoDTO } from './../api/rest-api';
+import { Appointment, AppointmentDTO, AppointmentFilterDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, PatientInfoDTO } from './../api/rest-api';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { Page } from '../shared/Page';
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +48,11 @@ export class PatientService {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
     return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/type`, {headers});
+  }
+
+  getFilteredAppointmentsForPatient(patientId: number, filter: AppointmentFilterDTO): Observable<Page<Appointment>> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    return this.http.post<Page<Appointment>>(`http://localhost:8080/api/appointment/appointments/patient/${patientId}`, filter, {headers});
   }
 }

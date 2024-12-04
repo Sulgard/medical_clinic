@@ -1,12 +1,15 @@
 package uwm.backend.medicalclinic.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import uwm.backend.medicalclinic.dto.AppointmentDTO;
-import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
-import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
-import uwm.backend.medicalclinic.dto.DoctorForListResponseDTO;
+import uwm.backend.medicalclinic.dto.*;
 import uwm.backend.medicalclinic.enums.StatusType;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.AppointmentType;
@@ -85,6 +88,39 @@ public class AppointmentService {
 
         return result;
     }
+
+public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, AppointmentFilterDTO filter) {
+    Pageable pageable = PageRequest.of(
+            filter.getPage(),
+            filter.getSize(),
+            Sort.by(Sort.Direction.fromString(filter.getSortDirection()), filter.getSortField()));
+
+    Specification<Appointment> specification = (root, query, criteriaBuilder) -> {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (filter.getAppointmentStatus() != null && !filter.getAppointmentStatus().isEmpty()) {
+            predicates.add(criteriaBuilder.equal(root.get("status"), filter.getAppointmentStatus()));
+        }
+
+        if (filter.getStartDate() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("appointmentDate"), filter.getStartDate()));
+        }
+
+        if (filter.getEndDate() != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("appointmentDate"), filter.getEndDate()));
+        }
+
+        predicates.add(criteriaBuilder.equal(root.get("patient").get("id"), patientId));
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    };
+
+    Page<Appointment> appointments = appointmentRepository.findAll(specification, pageable);
+
+    return appointments;
+}
+
+
 
     public Long manageAppointment(Long appointmentId, AppointmentDTO request) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);

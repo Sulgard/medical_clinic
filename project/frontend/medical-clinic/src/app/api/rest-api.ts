@@ -1,13 +1,25 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-04 14:39:10.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-04 20:01:05.
 
 export interface AppointmentDTO {
+    appointmentId: number;
     notes: string;
     visitDescription: string;
     status: string;
     appointmentDate: Date;
     cancellationReason: string;
+    doctorName: string;
+}
+
+export interface AppointmentFilterDTO {
+    appointmentStatus: string;
+    startDate: Date;
+    endDate: Date;
+    sortField: string;
+    sortDirection: string;
+    page: number;
+    size: number;
 }
 
 export interface AuthRequestDTO {
@@ -20,9 +32,9 @@ export interface AuthRequestDTOBuilder {
 
 export interface CreateAddressRequestDTO {
     country: string;
-    zipCode: string;
     city: string;
     street: string;
+    zipCode: string;
     localNumber: string;
     province: string;
 }
@@ -165,6 +177,11 @@ export interface Prescription extends BaseEntity {
     appointment: Appointment;
 }
 
+export interface Page<T> extends Slice<T> {
+    totalElements: number;
+    totalPages: number;
+}
+
 export interface Appointment extends BaseEntity {
     notes: string;
     description: string;
@@ -182,6 +199,20 @@ export interface BaseEntity {
     id: number;
 }
 
+export interface Sort extends Streamable<Order>, Serializable {
+    sorted: boolean;
+    unsorted: boolean;
+}
+
+export interface Pageable {
+    offset: number;
+    sort: Sort;
+    unpaged: boolean;
+    paged: boolean;
+    pageSize: number;
+    pageNumber: number;
+}
+
 export interface AppointmentType extends BaseEntity {
     name: string;
     price: number;
@@ -195,6 +226,20 @@ export interface Patient extends User {
 export interface Doctor extends User {
     medicalLicense: string;
     specialization: string;
+}
+
+export interface Serializable {
+}
+
+export interface Slice<T> extends Streamable<T> {
+    size: number;
+    content: T[];
+    number: number;
+    sort: Sort;
+    numberOfElements: number;
+    first: boolean;
+    last: boolean;
+    pageable: Pageable;
 }
 
 export interface Role extends BaseEntity {
@@ -224,17 +269,43 @@ export interface User extends BaseEntity, UserDetails {
     role: Role;
 }
 
-export interface Serializable {
+export interface Streamable<T> extends Iterable<T>, Supplier<Stream<T>> {
+    empty: boolean;
+}
+
+export interface Order extends Serializable {
+    direction: Direction;
+    property: string;
+    ignoreCase: boolean;
+    nullHandling: NullHandling;
+    descending: boolean;
+    ascending: boolean;
 }
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
+    accountNonExpired: boolean;
+    credentialsNonExpired: boolean;
     password: string;
     username: string;
     authorities: GrantedAuthority[];
     accountNonLocked: boolean;
-    accountNonExpired: boolean;
-    credentialsNonExpired: boolean;
+}
+
+export interface Iterable<T> {
+}
+
+export interface Supplier<T> {
+}
+
+export interface Stream<T> extends BaseStream<T, Stream<T>> {
+}
+
+export interface BaseStream<T, S> extends AutoCloseable {
+    parallel: boolean;
+}
+
+export interface AutoCloseable {
 }
 
 export interface HttpClient {
@@ -261,6 +332,14 @@ export class RestApplicationClient {
      */
     getAvailableDoctors(queryParams?: { date?: string; time?: string; }): RestResponse<DoctorForListResponseDTO[]> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/available-doctors`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP POST /api/appointment/appointments/patient/{id}
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.listFilteredAppointmentsForPatient
+     */
+    listFilteredAppointmentsForPatient(id: number, filter: AppointmentFilterDTO): RestResponse<Page<AppointmentDTO>> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/patient/${id}`, data: filter });
     }
 
     /**
@@ -451,6 +530,10 @@ export class RestApplicationClient {
 export type RestResponse<R> = Promise<R>;
 
 export type GenderEnum = "MALE" | "FEMALE" | "NONE";
+
+export type Direction = "ASC" | "DESC";
+
+export type NullHandling = "NATIVE" | "NULLS_FIRST" | "NULLS_LAST";
 
 function uriEncoding(template: TemplateStringsArray, ...substitutions: any[]): string {
     let result = "";
