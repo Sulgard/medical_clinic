@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "prescriptions", schema = "medical")
-public class Prescriptions extends BaseEntity {
+public class Prescription extends BaseEntity {
     @Column(name = "medication_name")
     private String medicationName;
 
