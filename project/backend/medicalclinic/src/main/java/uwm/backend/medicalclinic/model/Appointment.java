@@ -47,5 +47,5 @@ public class Appointment extends BaseEntity {
     private Doctor doctor;
 
     @OneToMany(mappedBy = "appointment")
-    private List<Prescriptions> perscriptionList;
+    private List<Prescription> perscriptionList;
 }

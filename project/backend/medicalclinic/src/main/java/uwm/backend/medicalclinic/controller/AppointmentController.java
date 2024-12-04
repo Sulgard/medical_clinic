@@ -9,8 +9,9 @@ import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
 import uwm.backend.medicalclinic.dto.DoctorForListResponseDTO;
 import uwm.backend.medicalclinic.model.Appointment;
-import uwm.backend.medicalclinic.model.Doctor;
+import uwm.backend.medicalclinic.model.AppointmentType;
 import uwm.backend.medicalclinic.service.AppointmentService;
+import uwm.backend.medicalclinic.service.AppointmentTypeService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,9 +22,11 @@ import java.util.List;
 @RequestMapping("api/appointment")
 @RestController
 public class AppointmentController {
+    private final AppointmentTypeService appointmentTypeService;
     AppointmentService appointmentService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public CreateAppointmentResponseDTO createAppointment(@RequestBody CreateAppointmentRequestDTO request) {
         return appointmentService.bookAppointment(request);
     }
@@ -35,12 +38,14 @@ public class AppointmentController {
     }
 
     @GetMapping("appointments/{id}")
+        @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getAppointment(@PathVariable Long id) {
         AppointmentDTO appointment = appointmentService.getAppointment(id);
         return ResponseEntity.ok(appointment);
     }
 
     @GetMapping("appointments/patients/{id}")
+        @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> listAppointmentsForPatient(@PathVariable Long id) {
         List<AppointmentDTO> appointments = appointmentService.listAppointmentsForPatient(id);
         return ResponseEntity.ok(appointments);
@@ -53,6 +58,7 @@ public class AppointmentController {
     }
 
     @PostMapping("appointments/{id}/cancel")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> cancelAppointment(
             @PathVariable Long id,
             @RequestParam Long patientId
@@ -65,8 +71,8 @@ public class AppointmentController {
     @GetMapping("appointments/available-doctors")
     @PreAuthorize("hasAuthority('PATIENT')")
     ResponseEntity<List<DoctorForListResponseDTO>> getAvailableDoctors(
-            @RequestParam(required = false) LocalDate date,
-            @RequestParam(required = false) LocalTime time
+            @RequestParam(required = false) String date,
+            @RequestParam(required = false) String time
     ) {
         List<DoctorForListResponseDTO> availableDoctors = appointmentService.listAvailableDoctors(date, time);
         return ResponseEntity.ok(availableDoctors);
@@ -75,5 +81,12 @@ public class AppointmentController {
     @DeleteMapping("appointments/{id}/delete")
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
+    }
+
+    @GetMapping("appointments/type")
+        @PreAuthorize("hasAuthority('PATIENT')")
+    public ResponseEntity<?> fetchAppointments() {
+        List<AppointmentType> response = appointmentTypeService.getAllAppointmentTypes();
+        return  ResponseEntity.ok(response);
     }
 }

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-11-27 11:43:33.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-03 00:09:25.
 
 export interface AppointmentDTO {
     notes: string;
@@ -18,16 +18,27 @@ export interface AuthRequestDTO {
 export interface AuthRequestDTOBuilder {
 }
 
+export interface CreateAddressRequestDTO {
+    country: string;
+    zipCode: string;
+    city: string;
+    street: string;
+    province: string;
+    localNumber: string;
+}
+
 export interface CreateAppointmentRequestDTO {
-    appointmentDate: Date;
+    appointmentDate: string;
+    appointmentTime: string;
     appointmentReason: string;
+    appointmentTypeId: number;
     patientId: number;
     doctorId: number;
 }
 
 export interface CreateAppointmentResponseDTO {
-    appointmentDate: Date;
-    appointmentTime: Date;
+    appointmentDate: string;
+    appointmentTime: string;
     correct: boolean;
 }
 
@@ -47,6 +58,13 @@ export interface CreatePatientResponseDTO {
     name: string;
     secondeName: string;
     correct: boolean;
+}
+
+export interface DoctorForListResponseDTO {
+    firstName: string;
+    lastName: string;
+    specialization: string;
+    phoneNumber: string;
 }
 
 export interface DoctorInfoDTO extends UserInfoDTO {
@@ -87,9 +105,12 @@ export interface RegisterPatientDto {
     gender: GenderEnum;
     birthDate: Date;
     insuranceNumber: string;
-}
-
-export interface RegisterPatientDtoBuilder {
+    street: string;
+    city: string;
+    zipCode: string;
+    country: string;
+    province: string;
+    localNumber: string;
 }
 
 export interface UserInfoDTO {
@@ -119,11 +140,27 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP GET /api/appointment/appointments/available-doctors
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.getAvailableDoctors
+     */
+    getAvailableDoctors(queryParams?: { date?: string; time?: string; }): RestResponse<DoctorForListResponseDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/available-doctors`, queryParams: queryParams });
+    }
+
+    /**
      * HTTP GET /api/appointment/appointments/patients/{id}
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.listAppointmentsForPatient
      */
     listAppointmentsForPatient(id: number): RestResponse<any> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/patients/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/appointment/appointments/type
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.fetchAppointments
+     */
+    fetchAppointments(): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/type` });
     }
 
     /**
@@ -143,11 +180,27 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP DELETE /api/appointment/appointments/{id}/delete
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.deleteAppointment
+     */
+    deleteAppointment(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/appointment/appointments/${id}/delete` });
+    }
+
+    /**
      * HTTP POST /api/appointment/create
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.createAppointment
      */
     createAppointment(request: CreateAppointmentRequestDTO): RestResponse<CreateAppointmentResponseDTO> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/create`, data: request });
+    }
+
+    /**
+     * HTTP GET /api/appointment/doctors/{id}
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.listAppointmentsForDoctor
+     */
+    listAppointmentsForDoctor(id: number): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/doctors/${id}` });
     }
 
     /**

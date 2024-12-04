@@ -17,4 +17,7 @@ import lombok.Setter;
 public class AppointmentType extends BaseEntity{
     @Column(name = "name", unique = true, nullable = false)
     private String name;
+
+    @Column(name = "price")
+    private double price;
 }

@@ -16,7 +16,6 @@ public class DoctorController {
     DoctorService doctorService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorResponseDTO createDoctor(@RequestBody CreateDoctorRequestDTO request) {
         return doctorService.createDoctor(request);
     }

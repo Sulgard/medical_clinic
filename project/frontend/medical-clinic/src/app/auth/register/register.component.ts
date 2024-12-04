@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../shared/material.module';
 import { AuthService } from '../auth.service';
@@ -30,7 +30,8 @@ constructor(
   private authService: AuthService,
   private router: Router
 ) {
-  this.registerForm = this.fb.group({
+  this.registerForm = this.fb.group(
+    {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
@@ -44,21 +45,28 @@ constructor(
       city: ['', Validators.required],
       zipCode: ['', Validators.required],
       country: ['', Validators.required],
-      county: ['', Validators.required],
+      province: ['', Validators.required],
       localNumber: ['', Validators.required],
-    }, {
-      validators: this.passwordMatchValidator
-    });
+    },
+    { validators: this.passwordMatchValidator }
+  );
   }
 
-passwordMatchValidator(form: FormGroup) {
-  const password = form.get('password')?.value;
-  const confirmPassword = form.get('confirmPassword')?.value;
+passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const formGroup = control as FormGroup;
+  const password = formGroup.get('password')?.value;
+  const confirmPassword = formGroup.get('confirmPassword')?.value;
 
   return password === confirmPassword ? null : { passwordMismatch: true };
-}
+};
 
 onSubmit() {
+  Object.keys(this.registerForm.controls).forEach(key => {
+    const control = this.registerForm.get(key);
+    if (control && control.invalid) {
+      console.log(`Field: ${key}, Invalid: ${control.invalid}, Errors:`, control.errors);
+    }
+  });
   if(this.registerForm.valid) {
     const registerRequest: RegisterPatientDto = {
       firstName: this.registerForm.value.firstName,
@@ -70,7 +78,7 @@ onSubmit() {
       phoneNumber: this.registerForm.value.phoneNumber,
       insuranceNumber: this.registerForm.value.insuranceNumber,
       country: this.registerForm.value.country,
-      county: this.registerForm.value.county,
+      province: this.registerForm.value.province,
       city: this.registerForm.value.city,
       zipCode: this.registerForm.value.zipCode,
       street: this.registerForm.value.street,

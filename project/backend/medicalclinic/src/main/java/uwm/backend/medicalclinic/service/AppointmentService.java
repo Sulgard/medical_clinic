@@ -7,6 +7,7 @@ import uwm.backend.medicalclinic.dto.AppointmentDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentRequestDTO;
 import uwm.backend.medicalclinic.dto.CreateAppointmentResponseDTO;
 import uwm.backend.medicalclinic.dto.DoctorForListResponseDTO;
+import uwm.backend.medicalclinic.enums.StatusType;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.AppointmentType;
 import uwm.backend.medicalclinic.model.Doctor;
@@ -18,6 +19,8 @@ import uwm.backend.medicalclinic.repository.PatientRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,10 +61,14 @@ public class AppointmentService {
         Patient patientOB = patient.get();
         Doctor doctorOB = doctor.get();
         AppointmentType appointmentTypeOB = appointmentType.get();
+        OffsetDateTime dateTime = OffsetDateTime.parse(request.getAppointmentDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        LocalDate date = dateTime.toLocalDate();
+        LocalTime time = LocalTime.parse(request.getAppointmentTime(), DateTimeFormatter.ISO_LOCAL_TIME);
 
         Appointment appointmentOB = new Appointment();
-        appointmentOB.setAppointmentDate(request.getAppointmentDate());
-        appointmentOB.setAppointmentTime(request.getAppointmentTime());
+        appointmentOB.setAppointmentDate(date);
+        appointmentOB.setAppointmentTime(time);
         appointmentOB.setAppointmentType(appointmentTypeOB);
         appointmentOB.setPatient(patientOB);
         appointmentOB.setDoctor(doctorOB);
@@ -72,11 +79,27 @@ public class AppointmentService {
         appointmentOB.setDescription(request.getAppointmentReason());
         appointmentRepository.saveAndFlush(appointmentOB);
 
-        result.setAppointmentDate(appointmentOB.getAppointmentDate());
-        result.setAppointmentTime(appointmentOB.getAppointmentTime());
+        result.setAppointmentDate(request.getAppointmentDate());
+        result.setAppointmentTime(request.getAppointmentTime());
         result.setCorrect(true);
 
         return result;
+    }
+
+    public Long manageAppointment(Long appointmentId, AppointmentDTO request) {
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+
+        if(!appointment.isPresent()) {
+            throw new EntityNotFoundException("Appointment not found");
+        }
+
+        Appointment appointmentOB = appointment.get();
+
+        appointmentOB.setStatus(StatusType.CANCELLED.name());
+        appointmentOB.setNotes(request.getNotes());
+        appointmentRepository.save(appointmentOB);
+
+        return appointmentOB.getId();
     }
 
     public AppointmentDTO getAppointment(Long id) {
@@ -180,7 +203,9 @@ public class AppointmentService {
         appointmentRepository.delete(appointment);
     }
 
-    public List<DoctorForListResponseDTO> listAvailableDoctors(LocalDate date, LocalTime time) {
+    public List<DoctorForListResponseDTO> listAvailableDoctors(String dateStr, String timeStr) {
+        LocalDate date = LocalDate.parse(dateStr);
+        LocalTime time = LocalTime.parse(timeStr);
         List<Appointment> bookedAppointments = appointmentRepository.findByAppointmentDateAndAndAppointmentTime(date, time);
         List<Doctor> bookedDoctors = bookedAppointments.stream().
                 map(Appointment::getDoctor)
@@ -188,6 +213,7 @@ public class AppointmentService {
         return doctorRepository.findAll().stream()
                 .filter(doctor -> !bookedDoctors.contains(doctor))
                 .map(doctor -> new DoctorForListResponseDTO(
+                        doctor.getId(),
                     doctor.getFirstName(),
                     doctor.getLastName(),
                     doctor.getSpecialization(),

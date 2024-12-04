@@ -30,7 +30,7 @@ export class LoginComponent {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
-  }
+   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
@@ -45,6 +45,10 @@ export class LoginComponent {
     } else {
       console.error('Form is invalid!');
     }
+  }
+
+  navigateToRegister() {
+    return this.router.navigate(['/register']);
   }
 
 }

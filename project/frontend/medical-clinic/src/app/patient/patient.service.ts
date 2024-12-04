@@ -1,5 +1,5 @@
-import { CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, PatientInfoDTO } from './../api/rest-api';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, PatientInfoDTO } from './../api/rest-api';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
@@ -26,16 +26,26 @@ export class PatientService {
     return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/patients/${patientId}`, {headers});
   }
 
-  createAppointment(createAppointmentRequest: CreateAppointmentRequestDTO): Observable<CreateAppointmentResponseDTO> {
-    return this.http.post<CreateAppointmentResponseDTO>(`http://localhost:8080/api/appointment/create`, createAppointmentRequest);
+  bookAppointment(createAppointmentRequest: CreateAppointmentRequestDTO): Observable<CreateAppointmentResponseDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    return this.http.post<CreateAppointmentResponseDTO>(`http://localhost:8080/api/appointment/create`, createAppointmentRequest, {headers});
   }
 
-  bookAppointment(something: any): any {
+  getAvailableDoctors(date?: string, time?: string): Observable<DoctorForListResponseDTO[]> { 
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    let params = new HttpParams();
+    if (date) params = params.set('date', date);
+    if (time) params = params.set('time', time);
+
+    return this.http.get<DoctorForListResponseDTO[]>(
+      'http://localhost:8080/api/appointment/appointments/available-doctors', { headers, params });
   }
 
-  getAvailableDoctors(sometthing: any): any {
-
+  fetchAppointmentTypes(): Observable<any[]> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/type`, {headers});
   }
-
-
 }
