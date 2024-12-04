@@ -3,7 +3,7 @@ package uwm.backend.medicalclinic.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.CreateHealthDetailsRequestDTO;
-import uwm.backend.medicalclinic.dto.HealDetailsResponseDTO;
+import uwm.backend.medicalclinic.dto.HealthDetailsResponseDTO;
 import uwm.backend.medicalclinic.model.HealthDetails;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.repository.HealthDetailsRepository;
@@ -22,10 +22,10 @@ public class HealthDetailsService {
         this.healthDetailsRepository = healthDetailsRepository;
     }
 
-    public HealthDetails createHealthDetials(Long patientId, CreateHealthDetailsRequestDTO request) {
+    public HealthDetails createHealthDetials(CreateHealthDetailsRequestDTO request) {
         HealthDetails healthDetails = new HealthDetails();
 
-        Optional<Patient> patient = patientRepository.findPatientById(patientId);
+        Optional<Patient> patient = patientRepository.findPatientById(request.getPatientId());
 
         if (!patient.isPresent()) {
             throw new EntityNotFoundException("Patient not found");
@@ -106,8 +106,8 @@ public class HealthDetailsService {
         return healthDetailsRepository.save(healthDetailsOB);
     }
 
-    public HealDetailsResponseDTO getHealthDetails(Long id) {
-        HealDetailsResponseDTO result = new HealDetailsResponseDTO();
+    public HealthDetailsResponseDTO getHealthDetails(Long id) {
+        HealthDetailsResponseDTO result = new HealthDetailsResponseDTO();
 
         Optional<HealthDetails> healthDetails = healthDetailsRepository.findById(id);
 
@@ -127,9 +127,9 @@ public class HealthDetailsService {
         result.setEmergencyContactPhone(healthDetailsOB.getEmergencyContactPhone());
 
         return result;
-    }  
+    }
 
-    public void deleteHealthDetails(Long healthDetailsID) {
-        healthDetailsRepository.deleteById(healthDetailsID);
+    public void deleteHealthDetails(Long healthDetailsId) {
+        healthDetailsRepository.deleteById(healthDetailsId);
     }
 }

@@ -10,6 +10,7 @@ import uwm.backend.medicalclinic.dto.DoctorResponseDTO;
 import uwm.backend.medicalclinic.service.DoctorService;
 
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("api/doctors")
 @RestController
 public class DoctorController {

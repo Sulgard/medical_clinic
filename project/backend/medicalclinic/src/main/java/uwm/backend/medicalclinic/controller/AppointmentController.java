@@ -13,8 +13,6 @@ import uwm.backend.medicalclinic.model.AppointmentType;
 import uwm.backend.medicalclinic.service.AppointmentService;
 import uwm.backend.medicalclinic.service.AppointmentTypeService;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,39 +24,41 @@ public class AppointmentController {
     AppointmentService appointmentService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'ADMIN', 'DOCTOR')")
     public CreateAppointmentResponseDTO createAppointment(@RequestBody CreateAppointmentRequestDTO request) {
         return appointmentService.bookAppointment(request);
     }
 
     @GetMapping("/appointments")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> listAppointments() {
         List<AppointmentDTO> appointments = appointmentService.listAppointments();
         return ResponseEntity.ok(appointments);
     }
 
     @GetMapping("appointments/{id}")
-        @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getAppointment(@PathVariable Long id) {
         AppointmentDTO appointment = appointmentService.getAppointment(id);
         return ResponseEntity.ok(appointment);
     }
 
     @GetMapping("appointments/patients/{id}")
-        @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'ADMIN')")
     public ResponseEntity<?> listAppointmentsForPatient(@PathVariable Long id) {
         List<AppointmentDTO> appointments = appointmentService.listAppointmentsForPatient(id);
         return ResponseEntity.ok(appointments);
     }
 
     @GetMapping("/doctors/{id}")
+    @PreAuthorize("hasAnyAuthority('DOCTOR', 'ADMIN')")
     public ResponseEntity<?> listAppointmentsForDoctor(@PathVariable Long id) {
         List<AppointmentDTO> appointments = appointmentService.listAppointmentsForDoctor(id);
         return ResponseEntity.ok(appointments);
     }
 
     @PostMapping("appointments/{id}/cancel")
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     public ResponseEntity<?> cancelAppointment(
             @PathVariable Long id,
             @RequestParam Long patientId
@@ -79,12 +79,13 @@ public class AppointmentController {
     }
 
     @DeleteMapping("appointments/{id}/delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
     }
 
     @GetMapping("appointments/type")
-        @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> fetchAppointments() {
         List<AppointmentType> response = appointmentTypeService.getAllAppointmentTypes();
         return  ResponseEntity.ok(response);

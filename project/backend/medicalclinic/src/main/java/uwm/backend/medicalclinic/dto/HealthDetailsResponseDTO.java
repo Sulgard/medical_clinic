@@ -3,7 +3,7 @@ package uwm.backend.medicalclinic.dto;
 import lombok.Data;
 
 @Data
-public class HealDetailsResponseDTO {
+public class HealthDetailsResponseDTO {
     private Long id;
     private char bloodType;
     private String allergies;
