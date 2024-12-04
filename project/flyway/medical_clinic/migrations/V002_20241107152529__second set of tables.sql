@@ -20,6 +20,7 @@ REFERENCES medical.address(id);
 CREATE TABLE medical.appointment_type (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
+    price double precision,
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );
