@@ -50,17 +50,29 @@ CREATE TABLE medical.appointment (
         REFERENCES medical.appointment_type
 );
 
+CREATE TABLE medical.medicines (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL, 
+    category VARCHAR(100) NOT NULL,
+    dosage_form VARCHAR(100) NOT NULL,
+    manufacturer VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
 --table to store perscriptions for each appointment
 CREATE TABLE medical.prescriptions (
     id BIGSERIAL PRIMARY KEY,
-    medication_name VARCHAR(255) NOT NULL,
+    medicine_id BIGINT NOT NULL,
     quantity VARCHAR(255),
     instruction VARCHAR(255) NOT NULL,
     appointment_id BIGINT NOT NULL,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
     CONSTRAINT fk_appointment
-        FOREIGN KEY(appointment_id) REFERENCES medical.appointment(id)
+        FOREIGN KEY(appointment_id) REFERENCES medical.appointment(id),
+    CONSTRAINT fk_medicine
+        FOREIGN KEY(medicine_id) REFERENCES medical.medicines(id)
 );
 
 --table to store billing for each appointment
@@ -69,8 +81,8 @@ CREATE TABLE medical.billing (
     payment_method VARCHAR(255),
     appointment_id BIGINT NOT NULL,
     patient_id BIGINT NOT NULL,
-    --switch to double precision in the future
     amount double precision NOT NULL,
+    paid boolean NOT NULL,
     payment_date TIMESTAMP,
     billing_date TIMESTAMP,
     created_at TIMESTAMP,

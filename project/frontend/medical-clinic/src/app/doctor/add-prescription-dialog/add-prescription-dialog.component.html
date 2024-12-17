@@ -1,0 +1,23 @@
+<div class="container">
+    <h2>Add prescription</h2>
+    <form [formGroup]="prescriptionForm" (ngSubmit)="onSubmit()">
+      
+        <div class="form-group">
+        <label for="notes">Medication:</label>
+        <textarea class="form-control" id="medication" formControlName="medication"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="notes">Quantity:</label>
+        <textarea class="form-control" id="quantity" formControlName="quantity"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="notes">Instruction:</label>
+        <textarea class="form-control" id="instruction" formControlName="instruction"></textarea>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="!prescriptionForm.valid">Submit</button>
+    </form>
+  </div>
+  

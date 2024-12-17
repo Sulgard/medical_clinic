@@ -39,3 +39,17 @@ CREATE TABLE medical.health_details (
     REFERENCES medical.patients(id)
     ON DELETE CASCADE
 );
+
+INSERT INTO medical.medicines(id, name, category, dosage_form, manufacturer) VALUES
+ (1, 'Paracetamol', 'Analgesic/Antipyretic', 'Tablet', 'Acme Pharmaceuticals'),
+ (2, 'Amoxicillin', 'Antibiotic', 'Capsule', 'Medico Labs'),
+ (3, 'Metformin', 'Antidiabetic', 'Tablet', 'Diabeto Inc.'),
+ (4, 'Ibuprofen', 'Non-Steroidal Anti-Inflammatory Drug', 'Suspension', 'PharmaCare'),
+ (5, 'Salbutamol', 'Bronchodilator', 'Inhaler', 'BreatheWell'),
+ (6, 'Cetirizine', 'Antihistamine', 'Tablet', 'AllergyFree Meds'),
+ (7, 'Omeprazole', 'Proton Pump Inhibitor', 'Capsule', 'GastroHealth Pharma'),
+ (8, 'Diclofenac', 'NSAID', 'Gel', 'PainAway Labs'),
+ (9, 'Amlodipine', 'Antihypertensive', 'Tablet', 'CardioCare'),
+ (10, 'Multivitamin', 'Supplement', 'Syrup', 'NutriPlus Labs');
+
+SELECT setval('medical.medicines_id_seq', (SELECT MAX(id) FROM medical.medicines));

@@ -35,7 +35,8 @@ export class PatientBookAppointmentComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private patientService: PatientService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private router: Router) {
     this.patientId = this.authService.getUserId();
     }
 
@@ -91,5 +92,9 @@ export class PatientBookAppointmentComponent implements OnInit {
         alert('Failed to book appointment. Please try again.');
       }
     });
+  }
+
+  navDashboard(): void {
+    this.router.navigate(['/patient/dashboard']);
   }
 }

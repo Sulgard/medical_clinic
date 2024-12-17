@@ -4,12 +4,14 @@ import { DoctorDashboardComponent } from './doctor-dashboard/doctor-dashboard.co
 import { DoctorProfileComponent } from './doctor-profile/doctor-profile.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { AppointmentListComponent } from './appointment-list/appointment-list.component';
+import { ManageAppointmentComponent } from './manage-appointment/manage-appointment.component';
 
 const routes: Routes = [
   {path: 'dashboard', component: DoctorDashboardComponent},
   {path: 'profile', component: DoctorProfileComponent},
   {path: 'patient-list', component: PatientListComponent},
-  {path: 'appointment-list', component: AppointmentListComponent}
+  {path: 'appointment-list', component: AppointmentListComponent},
+  {path: 'manage-appointment/:id', component: ManageAppointmentComponent}
 ];
 
 @NgModule({

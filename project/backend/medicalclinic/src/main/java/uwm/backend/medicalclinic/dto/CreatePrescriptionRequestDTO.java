@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CreatePrescriptionRequestDTO {
     private Long appointmentId;
-    private String medicationName;
+    private Long medicineId;
     private String instruction;
     private String quantitiy;
 }

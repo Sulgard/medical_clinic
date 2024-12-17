@@ -5,7 +5,10 @@ import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppointmentDTO, PatientInfoDTO } from '../../api/rest-api';
+import { AppointmentDTO, AppointmentForListDTO, BillingDTO, BillingForListDTO, PatientInfoDTO } from '../../api/rest-api';
+import { AppointmentDetailsDialogComponent } from '../appointment-details-dialog/appointment-details-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { BillingDetailsDialogComponent } from '../billing-details-dialog/billing-details-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,25 +23,22 @@ import { AppointmentDTO, PatientInfoDTO } from '../../api/rest-api';
 })
 export class DashboardComponent implements OnInit {
   patientInfo: PatientInfoDTO | null = null;
-  appointments: AppointmentDTO[] | null = null;
+  appointments: AppointmentForListDTO[] | null = null;
+  billings: BillingForListDTO[] | null = null;
   isLoading: boolean = true;
   errorMessage: string = '';
-
-  patientName = 'John Doe';
-  upcomingAppointments = [
-    { date: new Date(), doctor: 'Dr. Smith' },
-    { date: new Date('2024-12-01'), doctor: 'Dr. Adams' }
-  ];
 
   constructor(
     private patientService: PatientService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.viewPatientInfo();
     this.viewUpcomingAppointments();
+    this.viewPendingCharges();
   }
 
   viewPatientInfo(): any {
@@ -58,8 +58,8 @@ export class DashboardComponent implements OnInit {
 
   viewUpcomingAppointments(): void {
     const patientId: number = this.authService.getUserId();
-    this.patientService.listAppointmentsForPatient(patientId).subscribe({
-      next: (data: AppointmentDTO[]) => {
+    this.patientService.getUpcoming(patientId).subscribe({
+      next: (data: AppointmentForListDTO[]) => {
         this.appointments = data;
       },
       error: (err) => {
@@ -68,20 +68,56 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  viewPendingCharges(): void {
+    const patientId: number = this.authService.getUserId();
+    this.patientService.getPendingCharges(patientId).subscribe({
+      next: (data: BillingForListDTO[]) => {
+        this.billings = data;
+      },
+      error: (err) => {
+        console.error('Error fetching appointments:', err);
+      }
+    });
+  }
+
+  showAppointmentDetails(id: number) {
+    console.log("ID: ", id);
+      this.patientService.getAppointmentDetails(id).subscribe((details: AppointmentDTO) => {
+        this.dialog.open(AppointmentDetailsDialogComponent, {
+          data: details,
+          width: '400px',
+        });
+      });
+  }
+
+  showBillingDetails(id: number) {
+    console.log("ID: ", id);
+    this.patientService.getBillingDetails(id).subscribe((details: BillingDTO) => {
+      this.dialog.open(BillingDetailsDialogComponent, {
+        data: details,
+        width: '400px',
+      });
+    });
+  }
+
   bookAppointment(): void {
     this.router.navigate(['/patient/book-appointment']);
   }
 
-  viewPrescriptions(): void {
-    this.router.navigate(['/prescriptions']);
+  viewDoctors(): void {
+    this.router.navigate(['/patient/doctors-list']);
   }
 
   viewBillings(): void {
-    this.router.navigate(['/billings']);
+    this.router.navigate(['/patient/billing-list']);
   }
 
   viewAppointments(): void {
     this.router.navigate(['/patient/patient-appointments']);
+  }
+
+  viewProfile(): void {
+    this.router.navigate(['/patient/patient-profile']);
   }
 
 

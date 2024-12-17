@@ -10,25 +10,37 @@
     </mat-sidenav>
   
     <mat-sidenav-content class="content">
-          <div class="col-md-8">
-            <mat-card class="appointments-card">
-              <mat-card-header>
-                <mat-card-title>Today's Appointments</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div *ngIf="appointments?.length === 0; else appointmentsList">
-                  <p>No appointments yet.</p>
-                </div>
-                <ng-template #appointmentsList>
-                  <ul class="list-group">
-                    <li *ngFor="let appointment of appointments" class="list-group-item">
-                      <strong>{{ appointment.appointmentDate | date }} - {{appointment.status}}</strong><br />
-                    </li>
-                  </ul>
-                </ng-template>
-              </mat-card-content>
-            </mat-card>
-          </div>
+      <div class="col-md-8">
+        <mat-card class="appointments-card">
+          <mat-card-header>
+            <mat-card-title>Upcoming Appointments</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="appointments?.length === 0; else appointmentsList">
+              <p>No appointments yet.</p>
+            </div>
+            <ng-template #appointmentsList>
+              <ul class="list-group">
+                <li *ngFor="let appointment of appointments" class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ appointment.appointmentDate | date }} - {{appointment.status}}</strong><br />
+                  </div>
+                  <div>
+                    <!-- Manage Button -->
+                    <button 
+                      mat-raised-button 
+                      color="primary" 
+                      (click)="manageAppointment(appointment.appointmentId)" 
+                      class="btn btn-light">
+                      Manage
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </ng-template>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
   

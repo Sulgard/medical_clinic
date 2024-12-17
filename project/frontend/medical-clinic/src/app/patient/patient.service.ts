@@ -1,9 +1,8 @@
-import { Appointment, AppointmentDTO, AppointmentFilterDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, PatientInfoDTO } from './../api/rest-api';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, HealthDetailsResponseDTO, PatientInfoDTO } from './../api/rest-api';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
-import { Page } from '../shared/Page';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +18,18 @@ export class PatientService {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<PatientInfoDTO>(`http://localhost:8080/api/patients/info/${patientId}`, { headers });
+  }
+
+  getPatientAddress(patientId: number): Observable<AddressResponseDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<AddressResponseDTO>(`http://localhost:8080/api/address/patient/${patientId}`, { headers });
+  }
+
+  getPatientHealthDetails(patientId: number): Observable<HealthDetailsResponseDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<HealthDetailsResponseDTO>(`http://localhost:8080/api/health-details/details/${patientId}`, { headers });
   }
   
   listAppointmentsForPatient(patientId: number): Observable<any> {
@@ -50,9 +61,100 @@ export class PatientService {
     return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/type`, {headers});
   }
 
-  getFilteredAppointmentsForPatient(patientId: number, filter: AppointmentFilterDTO): Observable<Page<Appointment>> {
+  getFilteredAppointmentsForPatient(patientId: number, filter: any): Observable<HttpResponse<AppointmentDTO[]>> {
     const token = this.authService.loadToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-    return this.http.post<Page<Appointment>>(`http://localhost:8080/api/appointment/appointments/patient/${patientId}`, filter, {headers});
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.post<AppointmentDTO[]>(
+      `http://localhost:8080/api/appointment/appointments/patient/${patientId}`,
+      filter,
+      { headers, observe: 'response' }
+    );
+  }
+
+  getAppointments2(patientId: number, filter: any): Observable<any> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.post<any>(
+      `http://localhost:8080/api/appointment/appointments/patient2/${patientId}`,
+      filter,
+      { headers }
+    );
+  }
+
+  getAppointmentDetails(appointmentId: number): Observable<AppointmentDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/${appointmentId}`, { headers });
+  }
+
+  cancelAppointment(appointmentId: number, cancelReason: any): Observable<Appointment> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(`http://localhost:8080/api/appointment/appointments/${appointmentId}/cancel`, cancelReason, { headers })
+  }
+
+  getUpcoming(patientId: number): Observable<any> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/upcoming/${patientId}`, { headers })
+  }
+
+  getPendingCharges(patientId: number): Observable<BillingForListDTO[]> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/billing/upcoming/${patientId}`, { headers })
+  }
+
+  getBillingDetails(billingId: number): Observable<BillingDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/billing/details/${billingId}`, { headers })
+  }
+
+  getBillingsList(patientId: number, filter: any): Observable<BillingListDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(`http://localhost:8080/api/billing/list/patient/${patientId}`, filter, { headers })
+  }
+
+  payForAppointment(billingId: number): Observable<Billing> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(`http://localhost:8080/api/billing/pay/${billingId}`, {}, { headers })
+  }
+
+  getFilteredAppointmentsForPatient2(patientId: number, filter: any): Observable<any> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
+    let params = new HttpParams();
+    if (filter.appointmentStatus) {
+      params = params.set('appointmentStatus', filter.appointmentStatus);
+    }
+    if (filter.startDate) {
+      params = params.set('startDate', filter.startDate);
+    }
+    if (filter.endDate) {
+      params = params.set('endDate', filter.endDate);
+    }
+    if (filter.page) {
+      params = params.set('page', filter.page); 
+    }
+    if (filter.size) {
+      params = params.set('size', filter.size);
+    }
+    if (filter.sortField) {
+      params = params.set('sortField', filter.sortField);
+    }
+    if (filter.sortDirection) {
+      params = params.set('sortDirection', filter.sortDirection);
+    }
+  
+    return this.http.get<any>(`http://localhost:8080/api/appointment/appointments/patienttwo/${patientId}`, {
+      headers: headers,
+      params: params
+    });
   }
 }

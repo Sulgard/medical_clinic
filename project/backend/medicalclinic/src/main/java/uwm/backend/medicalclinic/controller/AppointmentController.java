@@ -1,8 +1,8 @@
 package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.data.domain.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 public class AppointmentController {
     private final AppointmentTypeService appointmentTypeService;
+    private static final Logger log = LoggerFactory.getLogger(AppointmentController.class);
     AppointmentService appointmentService;
 
     @PostMapping("/create")
@@ -36,8 +37,8 @@ public class AppointmentController {
     }
 
     @GetMapping("appointments/{id}")
-    @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> getAppointment(@PathVariable Long id) {
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR', 'ADMIN')")
+    public ResponseEntity<AppointmentDTO> getAppointment(@PathVariable Long id) {
         AppointmentDTO appointment = appointmentService.getAppointment(id);
         return ResponseEntity.ok(appointment);
     }
@@ -60,10 +61,17 @@ public class AppointmentController {
     @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     public ResponseEntity<?> cancelAppointment(
             @PathVariable Long id,
-            @RequestParam Long patientId
+            @RequestBody CancelAppointmentDTO cancel
     ) {
-        Appointment response = appointmentService.cancelAppointment(id, patientId);
+        Appointment response = appointmentService.cancelAppointment(id,cancel);
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("appointments/upcoming/{id}")
+    @PreAuthorize("hasAuthority('PATIENT')")
+    ResponseEntity<List<AppointmentForListDTO>> upcomingPatientAppointments(@PathVariable("id") Long patientId) {
+        List<AppointmentForListDTO> response = appointmentService.upcomingPatientAppointments(patientId);
         return ResponseEntity.ok(response);
     }
 
@@ -90,10 +98,16 @@ public class AppointmentController {
         return  ResponseEntity.ok(response);
     }
 
-    @PostMapping("appointments/patient/{id}")
+    @PostMapping("appointments/patient2/{id}")
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<Page<AppointmentDTO>> listFilteredAppointmentsForPatient(@PathVariable("id") Long id, @RequestBody AppointmentFilterDTO filter) {
-        Page<AppointmentDTO> response = appointmentService.listFilteredAppointmentsForPatient(id, filter);
+    public ResponseEntity<AppointmentListDTO> listFilteredAppointmentsForPatient2(@PathVariable("id") Long id, @RequestBody AppointmentFilterDTO filter) {
+        return ResponseEntity.ok(appointmentService.listFilteredAppointmentsForPatientTwo(id, filter));
+    }
+
+    @PostMapping("appointments/{id}/manage")
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    public ResponseEntity<Appointment> manageAppointment(@PathVariable("id") Long id, @RequestBody AppointmentDTO data) {
+        Appointment response = appointmentService.manageAppointment(id, data);
         return ResponseEntity.ok(response);
     }
 }

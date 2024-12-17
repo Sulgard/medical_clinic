@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Contact Info</h1>
+<div mat-dialog-content>
+    <p><strong>Name:</strong> {{ doctorInfo.fullName }}</p>
+    <p><strong>Phone Number:</strong> {{ doctorInfo.phoneNumber }}</p>
+    <p><strong>Email:</strong> {{ doctorInfo.email }}</p>
+    <p><strong>Specialization:</strong> {{ doctorInfo.specialization }}</p>
+    <p><strong>MedicalLicense:</strong> {{ doctorInfo.medicalLicense }}</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Close</button>
+</div>

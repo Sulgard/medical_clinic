@@ -13,9 +13,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "prescriptions", schema = "medical")
 public class Prescription extends BaseEntity {
-    @Column(name = "medication_name")
-    private String medicationName;
-
     @Column(name = "instruction")
     private String instruction;
 
@@ -25,4 +22,8 @@ public class Prescription extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="appointment_id", nullable=false)
     private Appointment appointment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="medicine_id", nullable = false)
+    private Medicine medicine;
 }

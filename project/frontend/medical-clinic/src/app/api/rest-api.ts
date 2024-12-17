@@ -1,6 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-04 20:01:05.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-16 19:06:07.
+
+export interface AddressResponseDTO {
+    country: string;
+    province: string;
+    city: string;
+    zipCode: string;
+    street: string;
+    localNumber: string;
+}
 
 export interface AppointmentDTO {
     appointmentId: number;
@@ -22,6 +31,23 @@ export interface AppointmentFilterDTO {
     size: number;
 }
 
+export interface AppointmentForListDTO {
+    id: number;
+    date: Date;
+    time: Date;
+    doctorFullName: string;
+    status: string;
+}
+
+export interface AppointmentListDTO {
+    content: AppointmentForListDTO[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    last: boolean;
+}
+
 export interface AuthRequestDTO {
     email: string;
     password: string;
@@ -30,13 +56,54 @@ export interface AuthRequestDTO {
 export interface AuthRequestDTOBuilder {
 }
 
+export interface BillingDTO {
+    id: number;
+    billingDate: Date;
+    paymentDate: Date;
+    amount: number;
+    appointmentId: number;
+    paid: boolean;
+}
+
+export interface BillingFilterDTO {
+    paid: boolean;
+    startDate: Date;
+    endDate: Date;
+    sortField: string;
+    sortDirection: string;
+    page: number;
+    size: number;
+}
+
+export interface BillingForListDTO {
+    id: number;
+    amount: number;
+    paymentDate: Date;
+    billingDate: Date;
+    appointmentId: number;
+}
+
+export interface BillingListDTO {
+    content: BillingDTO[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    last: boolean;
+}
+
+export interface CancelAppointmentDTO {
+    patientId: number;
+    cancelReason: string;
+}
+
 export interface CreateAddressRequestDTO {
     country: string;
-    city: string;
-    street: string;
-    zipCode: string;
     localNumber: string;
     province: string;
+    street: string;
+    city: string;
+    zipCode: string;
 }
 
 export interface CreateAppointmentRequestDTO {
@@ -85,9 +152,27 @@ export interface CreatePatientResponseDTO {
 
 export interface CreatePrescriptionRequestDTO {
     appointmentId: number;
-    medicationName: string;
+    medicineId: number;
     instruction: string;
     quantitiy: string;
+}
+
+export interface DoctorFilterDTO {
+    specialization: string;
+    name: string;
+    sortField: string;
+    sortDirection: string;
+    page: number;
+    size: number;
+}
+
+export interface DoctorForListDTO {
+    id: number;
+    fullName: string;
+    specialization: string;
+    medicalLicense: string;
+    phoneNumber: string;
+    email: string;
 }
 
 export interface DoctorForListResponseDTO {
@@ -101,6 +186,15 @@ export interface DoctorForListResponseDTO {
 export interface DoctorInfoDTO extends UserInfoDTO {
     specialization: string;
     medicalLicense: string;
+}
+
+export interface DoctorListDTO {
+    content: DoctorForListDTO[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    last: boolean;
 }
 
 export interface DoctorResponseDTO {
@@ -133,7 +227,7 @@ export interface PatientInfoDTO extends UserInfoDTO {
 
 export interface PrescriptionForListDTO {
     id: number;
-    medicationName: string;
+    medicationId: number;
     instruction: string;
     quantity: string;
 }
@@ -168,18 +262,7 @@ export interface UserInfoDTO {
     email: string;
     phoneNumber: string;
     birthDate: Date;
-}
-
-export interface Prescription extends BaseEntity {
-    medicationName: string;
-    instruction: string;
-    quantity: string;
-    appointment: Appointment;
-}
-
-export interface Page<T> extends Slice<T> {
-    totalElements: number;
-    totalPages: number;
+    fullName: string;
 }
 
 export interface Appointment extends BaseEntity {
@@ -195,22 +278,21 @@ export interface Appointment extends BaseEntity {
     perscriptionList: Prescription[];
 }
 
-export interface BaseEntity {
-    id: number;
+export interface Billing extends BaseEntity {
+    paymentMethod: string;
+    amount: number;
+    paymentDate: Date;
+    billingDate: Date;
+    paid: boolean;
+    appointment: Appointment;
+    patient: Patient;
 }
 
-export interface Sort extends Streamable<Order>, Serializable {
-    sorted: boolean;
-    unsorted: boolean;
-}
-
-export interface Pageable {
-    offset: number;
-    sort: Sort;
-    unpaged: boolean;
-    paged: boolean;
-    pageSize: number;
-    pageNumber: number;
+export interface Prescription extends BaseEntity {
+    instruction: string;
+    quantity: string;
+    appointment: Appointment;
+    medicine: Medicine;
 }
 
 export interface AppointmentType extends BaseEntity {
@@ -228,18 +310,15 @@ export interface Doctor extends User {
     specialization: string;
 }
 
-export interface Serializable {
+export interface BaseEntity {
+    id: number;
 }
 
-export interface Slice<T> extends Streamable<T> {
-    size: number;
-    content: T[];
-    number: number;
-    sort: Sort;
-    numberOfElements: number;
-    first: boolean;
-    last: boolean;
-    pageable: Pageable;
+export interface Medicine extends BaseEntity {
+    name: string;
+    category: string;
+    dosageForm: string;
+    manufacturer: string;
 }
 
 export interface Role extends BaseEntity {
@@ -267,45 +346,20 @@ export interface User extends BaseEntity, UserDetails {
     birthDate: Date;
     gender: GenderEnum;
     role: Role;
+    fullName: string;
 }
 
-export interface Streamable<T> extends Iterable<T>, Supplier<Stream<T>> {
-    empty: boolean;
-}
-
-export interface Order extends Serializable {
-    direction: Direction;
-    property: string;
-    ignoreCase: boolean;
-    nullHandling: NullHandling;
-    descending: boolean;
-    ascending: boolean;
+export interface Serializable {
 }
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
-    accountNonExpired: boolean;
-    credentialsNonExpired: boolean;
-    password: string;
-    username: string;
     authorities: GrantedAuthority[];
     accountNonLocked: boolean;
-}
-
-export interface Iterable<T> {
-}
-
-export interface Supplier<T> {
-}
-
-export interface Stream<T> extends BaseStream<T, Stream<T>> {
-}
-
-export interface BaseStream<T, S> extends AutoCloseable {
-    parallel: boolean;
-}
-
-export interface AutoCloseable {
+    password: string;
+    username: string;
+    credentialsNonExpired: boolean;
+    accountNonExpired: boolean;
 }
 
 export interface HttpClient {
@@ -316,6 +370,14 @@ export interface HttpClient {
 export class RestApplicationClient {
 
     constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/address/patient/{id}
+     * Java method: uwm.backend.medicalclinic.controller.AddressController.getPatientAddress
+     */
+    getPatientAddress(id: number): RestResponse<AddressResponseDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/patient/${id}` });
     }
 
     /**
@@ -335,11 +397,11 @@ export class RestApplicationClient {
     }
 
     /**
-     * HTTP POST /api/appointment/appointments/patient/{id}
-     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.listFilteredAppointmentsForPatient
+     * HTTP POST /api/appointment/appointments/patient2/{id}
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.listFilteredAppointmentsForPatient2
      */
-    listFilteredAppointmentsForPatient(id: number, filter: AppointmentFilterDTO): RestResponse<Page<AppointmentDTO>> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/patient/${id}`, data: filter });
+    listFilteredAppointmentsForPatient2(id: number, filter: AppointmentFilterDTO): RestResponse<AppointmentListDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/patient2/${id}`, data: filter });
     }
 
     /**
@@ -359,10 +421,18 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP GET /api/appointment/appointments/upcoming/{id}
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.upcomingPatientAppointments
+     */
+    upcomingPatientAppointments(id: number): RestResponse<AppointmentForListDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/upcoming/${id}` });
+    }
+
+    /**
      * HTTP GET /api/appointment/appointments/{id}
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.getAppointment
      */
-    getAppointment(id: number): RestResponse<any> {
+    getAppointment(id: number): RestResponse<AppointmentDTO> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/${id}` });
     }
 
@@ -370,8 +440,8 @@ export class RestApplicationClient {
      * HTTP POST /api/appointment/appointments/{id}/cancel
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.cancelAppointment
      */
-    cancelAppointment(id: number, queryParams: { patientId: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/${id}/cancel`, queryParams: queryParams });
+    cancelAppointment(id: number, cancel: CancelAppointmentDTO): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/${id}/cancel`, data: cancel });
     }
 
     /**
@@ -380,6 +450,14 @@ export class RestApplicationClient {
      */
     deleteAppointment(id: number): RestResponse<void> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/appointment/appointments/${id}/delete` });
+    }
+
+    /**
+     * HTTP POST /api/appointment/appointments/{id}/manage
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.manageAppointment
+     */
+    manageAppointment(id: number, data: AppointmentDTO): RestResponse<Appointment> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/${id}/manage`, data: data });
     }
 
     /**
@@ -423,6 +501,38 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP POST /api/billing/details/{id}
+     * Java method: uwm.backend.medicalclinic.controller.BillingController.getBillingDetails
+     */
+    getBillingDetails(id: number): RestResponse<BillingDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/billing/details/${id}` });
+    }
+
+    /**
+     * HTTP POST /api/billing/list/patient/{id}
+     * Java method: uwm.backend.medicalclinic.controller.BillingController.listFiltereBillings
+     */
+    listFiltereBillings(id: number, filter: BillingFilterDTO): RestResponse<BillingListDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/billing/list/patient/${id}`, data: filter });
+    }
+
+    /**
+     * HTTP POST /api/billing/pay/{id}
+     * Java method: uwm.backend.medicalclinic.controller.BillingController.payForAppointment
+     */
+    payForAppointment(id: number): RestResponse<Billing> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/billing/pay/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/billing/upcoming/{id}
+     * Java method: uwm.backend.medicalclinic.controller.BillingController.pendingCharges
+     */
+    pendingCharges(id: number): RestResponse<BillingForListDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/billing/upcoming/${id}` });
+    }
+
+    /**
      * HTTP POST /api/doctors/create
      * Java method: uwm.backend.medicalclinic.controller.DoctorController.createDoctor
      */
@@ -436,6 +546,14 @@ export class RestApplicationClient {
      */
     getDoctorInfo(id: number): RestResponse<DoctorInfoDTO> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/doctors/info/${id}` });
+    }
+
+    /**
+     * HTTP POST /api/doctors/list
+     * Java method: uwm.backend.medicalclinic.controller.DoctorController.listFilteredDoctors
+     */
+    listFilteredDoctors(filter: DoctorFilterDTO): RestResponse<DoctorListDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/doctors/list`, data: filter });
     }
 
     /**
@@ -530,10 +648,6 @@ export class RestApplicationClient {
 export type RestResponse<R> = Promise<R>;
 
 export type GenderEnum = "MALE" | "FEMALE" | "NONE";
-
-export type Direction = "ASC" | "DESC";
-
-export type NullHandling = "NATIVE" | "NULLS_FIRST" | "NULLS_LAST";
 
 function uriEncoding(template: TemplateStringsArray, ...substitutions: any[]): string {
     let result = "";

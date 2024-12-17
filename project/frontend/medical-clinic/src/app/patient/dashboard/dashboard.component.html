@@ -2,9 +2,10 @@
   <mat-sidenav #sidenav mode="side" opened class="sidenav">
     <div class="sidenav-content">
       <button mat-button (click)="bookAppointment()">Book Appointment</button>
-      <button mat-button (click)="viewPrescriptions()">View Prescriptions</button>
+      <button mat-button (click)="viewDoctors()">View Doctors</button>
       <button mat-button (click)="viewBillings()">View Billings</button>
       <button mat-button (click)="viewAppointments()">View Appointments</button>
+      <button mat-button (click)="viewProfile()">View Profile</button>
       <button mat-button (click)="logout()">Logout</button>
     </div>
   </mat-sidenav>
@@ -12,16 +13,23 @@
   <mat-sidenav-content class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-4">
-          <mat-card class="user-info-card">
+        <div class="col-md-8">
+          <mat-card class="appointments-card">
             <mat-card-header>
-              <mat-card-title>User Information</mat-card-title>
+              <mat-card-title>Pending Charges</mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <p><strong>Name:</strong> {{ patientInfo?.firstName }} {{ patientInfo?.lastName }}</p>
-              <p><strong>Email:</strong> {{ patientInfo?.email }}</p>
-              <p><strong>Phone:</strong> {{ patientInfo?.phoneNumber }}</p>
-              <p><strong>Birthdate:</strong> {{ patientInfo?.birthDate | date }}</p>
+              <div *ngIf="billings?.length === 0; else billingsList">
+                <p>No billings yet.</p>
+              </div>
+              <ng-template #billingsList>
+                <ul class="list-group">
+                  <li *ngFor="let billing of billings" class="list-group-item">
+                    <strong>{{ billing.billingDate | date }} - {{ billing.amount }}</strong>
+                    <button mat-button (click)="showBillingDetails(billing.id)">Show details</button><br />
+                  </li>
+                </ul>
+              </ng-template>
             </mat-card-content>
           </mat-card>
         </div>
@@ -38,7 +46,8 @@
               <ng-template #appointmentsList>
                 <ul class="list-group">
                   <li *ngFor="let appointment of appointments" class="list-group-item">
-                    <strong>{{ appointment.appointmentDate | date }} - {{appointment.status}}</strong><br />
+                    <strong>{{ appointment.date | date }} - {{ appointment.time }} - {{ appointment.doctorFullName }} - {{appointment.status}}</strong>
+                    <button mat-button (click)="showAppointmentDetails(appointment.id)">Show details</button><br />
                   </li>
                 </ul>
               </ng-template>

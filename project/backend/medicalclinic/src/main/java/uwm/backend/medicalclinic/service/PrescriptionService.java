@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.CreatePrescriptionRequestDTO;
 import uwm.backend.medicalclinic.dto.PrescriptionForListDTO;
 import uwm.backend.medicalclinic.model.Appointment;
+import uwm.backend.medicalclinic.model.Medicine;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.Prescription;
 import uwm.backend.medicalclinic.repository.AppointmentRepository;
+import uwm.backend.medicalclinic.repository.MedicineRepository;
 import uwm.backend.medicalclinic.repository.PatientRepository;
 import uwm.backend.medicalclinic.repository.PrescriptionRepository;
 
@@ -21,25 +23,36 @@ public class PrescriptionService {
     private final AppointmentRepository appointmentRepository;
     private final PrescriptionRepository prescriptionRepository;
     private final PatientRepository patientRepository;
+    private final MedicineRepository medicineRepository;
 
-    public PrescriptionService(AppointmentRepository appointmentRepository, PrescriptionRepository prescriptionRepository, PatientRepository patientRepository) {
+    public PrescriptionService(AppointmentRepository appointmentRepository,
+                               PrescriptionRepository prescriptionRepository,
+                               PatientRepository patientRepository,
+                               MedicineRepository medicineRepository) {
         this.appointmentRepository = appointmentRepository;
         this.prescriptionRepository = prescriptionRepository;
         this.patientRepository = patientRepository;
+        this.medicineRepository = medicineRepository;
     }
 
     public Prescription createPrescritpion(CreatePrescriptionRequestDTO request) {
         Optional<Appointment> appointment = appointmentRepository.findById(request.getAppointmentId());
-
+        Optional<Medicine> medicine = medicineRepository.findById(request.getMedicineId());
         if(!appointment.isPresent())
         {
             throw new EntityNotFoundException("Appointment not found");
         }
 
+        if(!medicine.isPresent())
+        {
+            throw new EntityNotFoundException("Medicine not found");
+        }
+
         Appointment appointmentOB = appointment.get();
+        Medicine medicineOB = medicine.get();
         Prescription prescription = new Prescription();
         prescription.setAppointment(appointmentOB);
-        prescription.setMedicationName(request.getMedicationName());
+        prescription.setMedicine(medicineOB);
         prescription.setInstruction(request.getInstruction());
         prescription.setQuantity(request.getQuantitiy());
 
@@ -90,22 +103,29 @@ public class PrescriptionService {
     //TODO : MODIFY EXAMPLE
     public Prescription modifyPrescription(Long prescriptionId, CreatePrescriptionRequestDTO changes) {
         Optional<Prescription> prescription = prescriptionRepository.findById(prescriptionId);
+        Optional<Medicine> medicine = medicineRepository.findById(changes.getMedicineId());
 
         if(!prescription.isPresent()) {
             throw new EntityNotFoundException("Prescription not found");
         }
 
-        Prescription prescriptionOB = prescription.get();
-
-        if (changes.getMedicationName() != null) {
-            prescriptionOB.setMedicationName(changes.getMedicationName());
+        if(!medicine.isPresent())
+        {
+            throw new EntityNotFoundException("Medicine not found");
         }
 
-        if (changes.getMedicationName() != null) {
+        Prescription prescriptionOB = prescription.get();
+        Medicine medicineOB = medicine.get();
+
+        if (changes.getMedicineId() != null) {
+            prescriptionOB.setMedicine(medicineOB);
+        }
+
+        if (changes.getInstruction() != null) {
             prescriptionOB.setInstruction(changes.getInstruction());
         }
 
-        if (changes.getMedicationName() != null) {
+        if (changes.getQuantitiy() != null) {
             prescriptionOB.setQuantity(changes.getQuantitiy());
         }
 

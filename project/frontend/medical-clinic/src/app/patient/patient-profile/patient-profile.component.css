@@ -1,0 +1,17 @@
+.user-profile-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  mat-toolbar {
+    background-color: #c4c4c4;
+    color: white;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  

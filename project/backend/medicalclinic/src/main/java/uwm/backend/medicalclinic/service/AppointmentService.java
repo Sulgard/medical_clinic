@@ -3,22 +3,13 @@ package uwm.backend.medicalclinic.service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.*;
 import uwm.backend.medicalclinic.enums.StatusType;
-import uwm.backend.medicalclinic.model.Appointment;
-import uwm.backend.medicalclinic.model.AppointmentType;
-import uwm.backend.medicalclinic.model.Doctor;
-import uwm.backend.medicalclinic.model.Patient;
-import uwm.backend.medicalclinic.repository.AppointmentRepository;
-import uwm.backend.medicalclinic.repository.AppointmentTypeRepository;
-import uwm.backend.medicalclinic.repository.DoctorRepository;
-import uwm.backend.medicalclinic.repository.PatientRepository;
+import uwm.backend.medicalclinic.model.*;
+import uwm.backend.medicalclinic.repository.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,6 +25,8 @@ import java.util.stream.Collectors;
 @Service
 public class AppointmentService {
     private final AppointmentTypeRepository appointmentTypeRepository;
+    private final BillingService billingService;
+    private final BillingRepository billingRepository;
     AppointmentRepository appointmentRepository;
     PatientRepository patientRepository;
     DoctorRepository doctorRepository;
@@ -89,14 +82,17 @@ public class AppointmentService {
         return result;
     }
 
-public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, AppointmentFilterDTO filter) {
+public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, AppointmentFilterDTO filter) {
     Pageable pageable = PageRequest.of(
             filter.getPage(),
             filter.getSize(),
-            Sort.by(Sort.Direction.fromString(filter.getSortDirection()), filter.getSortField()));
+            Sort.by(Sort.Direction.fromString(filter.getSortDirection()), filter.getSortField())
+    );
 
     Specification<Appointment> specification = (root, query, criteriaBuilder) -> {
         List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(criteriaBuilder.equal(root.get("patient").get("id"), patientId));
 
         if (filter.getAppointmentStatus() != null && !filter.getAppointmentStatus().isEmpty()) {
             predicates.add(criteriaBuilder.equal(root.get("status"), filter.getAppointmentStatus()));
@@ -105,24 +101,34 @@ public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, Appo
         if (filter.getStartDate() != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("appointmentDate"), filter.getStartDate()));
         }
-
         if (filter.getEndDate() != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("appointmentDate"), filter.getEndDate()));
         }
 
-        predicates.add(criteriaBuilder.equal(root.get("patient").get("id"), patientId));
-
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     };
 
-    Page<Appointment> appointments = appointmentRepository.findAll(specification, pageable);
+    Page<Appointment> appointmentPage = appointmentRepository.findAll(specification, pageable);
+    List<Appointment> contents = appointmentPage.getContent();
+    List<AppointmentForListDTO> contentDTO = new ArrayList<>();
+    for (Appointment content : contents ) {
+        AppointmentForListDTO element = new AppointmentForListDTO(content);
+        contentDTO.add(element);
+    }
 
-    return appointments;
+    AppointmentListDTO result = new AppointmentListDTO();
+    result.setContent(contentDTO);
+    result.setPageNumber(appointmentPage.getNumber());
+    result.setPageSize(appointmentPage.getSize());
+    result.setTotalPages(appointmentPage.getTotalPages());
+    result.setTotalElements(appointmentPage.getTotalElements());
+    return result;
 }
 
 
 
-    public Long manageAppointment(Long appointmentId, AppointmentDTO request) {
+
+    public Appointment manageAppointment(Long appointmentId, AppointmentDTO request) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
 
         if(!appointment.isPresent()) {
@@ -131,11 +137,14 @@ public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, Appo
 
         Appointment appointmentOB = appointment.get();
 
-        appointmentOB.setStatus(StatusType.CANCELLED.name());
+        appointmentOB.setStatus(StatusType.COMPLETED.name());
         appointmentOB.setNotes(request.getNotes());
-        appointmentRepository.save(appointmentOB);
 
-        return appointmentOB.getId();
+        Billing billing = billingService.createBillingforAppointment(appointmentOB.getId());
+        billingRepository.save(billing);
+
+
+        return appointmentRepository.save(appointmentOB);
     }
 
     public AppointmentDTO getAppointment(Long id) {
@@ -144,9 +153,11 @@ public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, Appo
         Appointment appointmentOB = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
 
+        result.setAppointmentId(appointmentOB.getId());
         result.setAppointmentDate(appointmentOB.getAppointmentDate());
         result.setStatus(appointmentOB.getStatus());
         result.setNotes(appointmentOB.getNotes());
+        result.setDoctorName(appointmentOB.getDoctor().getFullName());
         result.setVisitDescription(appointmentOB.getDescription());
             if (appointmentOB.getCancellationReason() != null && !appointmentOB.getCancellationReason().isEmpty()) {
             result.setCancellationReason(appointmentOB.getCancellationReason());
@@ -184,6 +195,7 @@ public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, Appo
 
         for(Appointment appointment: appoinmetns) {
             AppointmentDTO element = new AppointmentDTO();
+            element.setAppointmentId(appointment.getId());
             element.setVisitDescription(appointment.getDescription());
             element.setAppointmentDate(appointment.getAppointmentDate());
             element.setStatus(appointment.getStatus());
@@ -220,16 +232,25 @@ public Page<Appointment> listFilteredAppointmentsForPatient(Long patientId, Appo
         return result;
     }
 
-    public Appointment cancelAppointment(Long id, Long patientId) {
+    public Appointment cancelAppointment(Long id, CancelAppointmentDTO cancel) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
 
-        if(!appointment.getPatient().getId().equals(patientId)) {
+        if(!appointment.getPatient().getId().equals(cancel.getPatientId())) {
             throw new IllegalStateException("This appointment does not belong to this Patient");
         }
 
+        appointment.setCancellationReason(cancel.getCancelReason());
+
         appointment.setStatus("CANCELLED");
         return appointmentRepository.saveAndFlush(appointment);
+    }
+
+    public List<AppointmentForListDTO> upcomingPatientAppointments(Long patientId) {
+        List<Appointment> filteredAppointments = appointmentRepository.findByPatientIdAndStatusOrderByAppointmentDateAsc(patientId, StatusType.PENDING.name());
+        List<AppointmentForListDTO> result = filteredAppointments.stream().map(appointment -> new AppointmentForListDTO(appointment))
+        .collect(Collectors.toList());
+        return result;
     }
 
     public void deleteAppointment(Long id) {

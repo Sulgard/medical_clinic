@@ -1,64 +1,111 @@
-<div class="container mt-4">
-  <h3>Patient Appointments</h3>
-
+<div class="container mt-5">
   <!-- Filtry -->
-  <form [formGroup]="filterForm" class="row g-3" (ngSubmit)="applyFilters()">
-    <div class="col-md-4">
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Appointment Status</mat-label>
-        <mat-select formControlName="appointmentStatus">
-          <mat-option value="">All</mat-option>
-          <mat-option value="COMPLETED">Completed</mat-option>
-          <mat-option value="CANCELLED">Cancelled</mat-option>
-          <mat-option value="PENDING">Pending</mat-option>
-        </mat-select>
-      </mat-form-field>
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <button mat-stroked-button color="accent" (click)="navDashboard()">
+        Back to Dashboard
+      </button>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Filtry</h5>
+          <form (ngSubmit)="applyFilter()">
+            <div class="form-row">
+              <!-- Status wizyty -->
+              <div class="col-md-4">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Appointment status</mat-label>
+                  <mat-select [(ngModel)]="filter.appointmentStatus" name="status" (selectionChange)="applyFilter()">
+                    <mat-option value="">All</mat-option>
+                    <mat-option value="COMPLETED">Completed</mat-option>
+                    <mat-option value="PENDING">Pending</mat-option>
+                    <mat-option value="CANCELLED">Cancelled</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- Data początkowa -->
+              <div class="col-md-4">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Start date</mat-label>
+                  <input matInput [matDatepicker]="startDate" [(ngModel)]="filter.startDate" name="startDate" (dateChange)="applyFilter()">
+                  <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                  <mat-datepicker #startDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <!-- Data końcowa -->
+              <div class="col-md-4">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>End date</mat-label>
+                  <input matInput [matDatepicker]="endDate" [(ngModel)]="filter.endDate" name="endDate" (dateChange)="applyFilter()">
+                  <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                  <mat-datepicker #endDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <button mat-raised-button color="primary" type="submit">Apply filters</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="col-md-4">
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Start Date</mat-label>
-        <input matInput [matDatepicker]="startPicker" formControlName="startDate">
-        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="col-md-4">
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>End Date</mat-label>
-        <input matInput [matDatepicker]="endPicker" formControlName="endDate">
-        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-        <mat-datepicker #endPicker></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="col-12 text-center">
-      <button mat-raised-button color="primary" type="submit">Apply Filters</button>
-    </div>
-  </form>
+  </div>
 
-  <!-- Lista wizyt -->
-  <table mat-table [dataSource]="appointments" class="mat-elevation-z8 mt-4">
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Date </th>
-      <td mat-cell *matCellDef="let appointment"> {{ appointment.appointmentDate }} </td>
-    </ng-container>
-    <ng-container matColumnDef="doctorName">
-      <th mat-header-cell *matHeaderCellDef> Doctor </th>
-      <td mat-cell *matCellDef="let appointment"> {{ appointment.doctorName }} </td>
-    </ng-container>
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let appointment"> {{ appointment.status }} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="['date', 'doctorName', 'status']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['date', 'doctorName', 'status']"></tr>
-  </table>
+  <!-- Tabela wizyt -->
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Your appointments</h4>
+          <div *ngIf="isLoading" class="text-center">
+            <mat-spinner></mat-spinner> <!-- Spinner do ładowania -->
+          </div>
+          <div *ngIf="!isLoading && appointments.length === 0">
+            <p>No appointments that meet required criteria.</p>
+          </div>
+          <div *ngIf="appointments.length > 0">
+            <table mat-table [dataSource]="appointments" class="table">
+              <!-- Kolumna data wizyty -->
+              <ng-container matColumnDef="appointmentDate">
+                  <th mat-header-cell *matHeaderCellDef> Appointment date </th>
+                  <td mat-cell *matCellDef="let appointment">
+                      {{ appointment.date | date: 'yyyy-MM-dd HH:mm' }}
+                  </td>
+              </ng-container>
+          
+              <!-- Kolumna status -->
+              <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let appointment"> {{ appointment.status }} </td>
+              </ng-container>
+          
+              <!-- Kolumna doktor -->
+              <ng-container matColumnDef="doctor">
+                  <th mat-header-cell *matHeaderCellDef> Doctor </th>
+                  <td mat-cell *matCellDef="let appointment">
+                      {{ appointment.doctorFullName }}
+                      <button mat-button (click)="showAppointmentDetails(appointment.id)">Show details</button>
+                  </td>
+              </ng-container>
+          
+              <!-- Wiersze tabeli -->
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Paginacja -->
-  <mat-paginator
-    [length]="totalItems"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event.pageIndex)">
-  </mat-paginator>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <mat-paginator 
+        [length]="totalElements" 
+        [pageSize]="filter.size" 
+        [pageIndex]="filter.page"
+        [pageSizeOptions]="[5, 10, 20]" 
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+  </div>
+  
 </div>

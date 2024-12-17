@@ -5,10 +5,7 @@ import uwm.backend.medicalclinic.model.Appointment;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
-@Setter
+@Data
 public class AppointmentDTO {
     private Long appointmentId;
     private String notes;

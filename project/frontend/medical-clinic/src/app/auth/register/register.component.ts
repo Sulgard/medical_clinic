@@ -98,4 +98,8 @@ onSubmit() {
   }
 }
 
+navLogin(): void {
+  this.router.navigate(['login']);
+}
+
 }

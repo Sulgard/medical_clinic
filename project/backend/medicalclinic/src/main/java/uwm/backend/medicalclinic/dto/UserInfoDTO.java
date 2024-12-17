@@ -12,4 +12,5 @@ public class UserInfoDTO {
     String email;
     String phoneNumber;
     LocalDate birthDate;
+    String fullName;
 }

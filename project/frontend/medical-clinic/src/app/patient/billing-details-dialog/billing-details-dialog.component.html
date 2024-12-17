@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Billing Details</h1>
+<div mat-dialog-content>
+    <p><strong>Billing date:</strong> {{ billingDetails.billingDate }}</p>
+    <p><strong>Amount:</strong> {{ billingDetails.amount }}</p>
+    <p><strong>Payment date:</strong> {{ billingDetails.paymentDate }}</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Close</button>
+    <button 
+    mat-raised-button 
+    color="warn" 
+    [hidden]="billingDetails.paid" 
+    [disabled]="billingDetails.paid" 
+    (click)="payForAppointment(billingDetails.id)">
+    Pay
+  </button>
+</div>

@@ -5,6 +5,7 @@ import { AuthService } from '../../auth/auth.service';
 import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DoctorService } from '../doctor.service';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -25,15 +26,24 @@ export class DoctorDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private doctorService: DoctorService
   ){}
 
   ngOnInit():void {
-
+    this.viewUpcomingAppointments();
   }
 
   viewUpcomingAppointments(): void {
-
+    const doctorId: number = this.authService.getUserId();
+    this.doctorService.listAppointmentsForDocotr(doctorId).subscribe({
+      next: (data: AppointmentDTO[]) => {
+        this.appointments = data;
+      },
+      error: (err: any) => {
+        console.error('Error fetching appointments:', err);
+      }
+    });
   }
 
   bookAppointment():void {
@@ -54,5 +64,10 @@ export class DoctorDashboardComponent implements OnInit {
 
   logout():void {
     this.authService.logout();
+  }
+
+  manageAppointment(appointmentId: number): void {
+    console.log('Manage button clicked for appointment ID:', appointmentId);
+    this.router.navigate([`/doctor/manage-appointment/${appointmentId}`]);
   }
 }

@@ -1,0 +1,23 @@
+<div class="user-profile-container">
+    <mat-toolbar color="primary">
+      <button mat-button (click)="setActiveTab('info')">User Info</button>
+      <button mat-button (click)="setActiveTab('address')">Address</button>
+      <button mat-button (click)="setActiveTab('health-details')">HealthDetails</button>
+      <button mat-button (click)="navDashboard()">Go Back</button>
+    </mat-toolbar>
+  
+    <div class="main-content">
+      <ng-container *ngIf="activeTab === 'info'">
+        <app-patient-details></app-patient-details>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'address'">
+        <app-patient-address></app-patient-address>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'health-details'">
+        <app-health-details></app-health-details>
+      </ng-container>
+    </div>
+  </div>
+  

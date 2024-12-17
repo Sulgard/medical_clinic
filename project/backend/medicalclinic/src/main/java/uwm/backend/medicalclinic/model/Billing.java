@@ -28,6 +28,9 @@ public class Billing extends BaseEntity {
     @Column(name = "billing_date")
     private LocalDateTime billingDate;
 
+    @Column(name = "paid")
+    private boolean paid;
+
     @OneToOne
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
