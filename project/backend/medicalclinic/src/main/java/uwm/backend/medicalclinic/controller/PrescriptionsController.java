@@ -34,7 +34,7 @@ public class PrescriptionsController {
     }
 
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     void deleteHealthDetails(@PathVariable("id") Long id) {
         prescriptionService.deletePrescription(id);
     }

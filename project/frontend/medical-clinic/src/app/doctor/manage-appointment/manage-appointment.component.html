@@ -1,27 +1,83 @@
 <div class="container">
-    <h2>Manage Appointment</h2>
-    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="appointmentDate">Appointment Date:</label>
-        <input type="text" class="form-control" id="appointmentDate" [value]="appointment.appointmentDate | date" disabled />
-      </div>
-  
-      <div class="form-group">
-        <label for="visitDescription">Visit Description:</label>
-        <input type="text" class="form-control" id="visitDescription" [value]="appointment.visitDescription" disabled />
-      </div>
-  
-      <div class="form-group">
-        <label for="status">Status:</label>
-        <input type="text" class="form-control" id="status" [value]="appointment.status" disabled />
-      </div>
-  
-      <div class="form-group">
-        <label for="notes">Notes:</label>
-        <textarea class="form-control" id="notes" formControlName="notes"></textarea>
-      </div>
-  
-      <button type="submit" class="btn btn-primary" [disabled]="!appointmentForm.valid">Submit</button>
-    </form>
+  <h2>Manage Appointment</h2>
+  <div class="row">
+    <!-- Sekcja główna z formularzem -->
+    <div class="col-md-8">
+      <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="appointmentDate">Appointment Date:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="appointmentDate"
+            [value]="appointment.appointmentDate | date"
+            disabled
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="visitDescription">Visit Description:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="visitDescription"
+            [value]="appointment.visitDescription"
+            disabled
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="status"
+            [value]="appointment.status"
+            disabled
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notes:</label>
+          <textarea class="form-control" id="notes" formControlName="notes"></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!appointmentForm.valid"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="openPrescriptionDialog()">
+          Add Prescription
+        </button>
+      </form>
+    </div>
+
+    <div class="col-md-4">
+      <h3>Prescriptions</h3>
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let prescription of prescriptions; let i = index"
+        >
+          <div class="d-flex justify-content-between align-items-center">
+            <span>
+              <strong>{{ prescription.medicationName }}</strong> - {{ prescription.instruction }} - {{ prescription.quantitiy}}
+            </span>
+            <button
+              class="btn btn-danger btn-sm"
+              (click)="removePrescription(prescription.id)"
+            >
+              X
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-  
+</div>

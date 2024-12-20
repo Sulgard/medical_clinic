@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Appointment, AppointmentDTO, DoctorForListDTO, DoctorInfoDTO, DoctorListDTO } from '../api/rest-api';
+import { Appointment, AppointmentDTO, DoctorForListDTO, DoctorInfoDTO, DoctorListDTO, MedicineDTO, Prescription } from '../api/rest-api';
 
 
 @Injectable({
@@ -40,9 +40,41 @@ export class DoctorService {
     return this.http.post<any>(`http://localhost:8080/api/doctors/list`, filter,  { headers });
   }
 
+  listPatients(filter: any): Observable<DoctorListDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(`http://localhost:8080/api/patients/list`, filter,  { headers });
+  }
+
+
+
   getDoctorDetails(id: number): Observable<DoctorInfoDTO> {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`http://localhost:8080/api/doctors/info/${id}`, {headers});
+  }
+
+  addPrescription(payload: any): Observable<Prescription> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(`http://localhost:8080/api/prescriptions/create`, payload, {headers})
+  }
+
+  deletePrescription(prescriptionId: number): Observable<any> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete<any>(`http://localhost:8080/api/prescriptions/delete/${prescriptionId}`, {headers})
+  }
+
+  listPrescriptions(appointmentId: number): Observable<any[]> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/prescriptions/appointment/list/${appointmentId}`, {headers})
+  }
+
+  listMedications(): Observable<MedicineDTO[]> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://localhost:8080/api/medicine/list`, {headers});
   }
 }

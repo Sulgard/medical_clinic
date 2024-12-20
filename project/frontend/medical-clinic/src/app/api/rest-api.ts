@@ -265,6 +265,11 @@ export interface UserInfoDTO {
     fullName: string;
 }
 
+export interface MedicineDTO {
+    id: number;
+    name: string;
+}
+
 export interface Appointment extends BaseEntity {
     notes: string;
     description: string;

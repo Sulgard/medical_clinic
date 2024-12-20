@@ -51,15 +51,15 @@ export class DoctorDashboardComponent implements OnInit {
   }
 
   navigateAppointments():void {
-    this.router.navigate(['appointment-list']);
+    this.router.navigate(['/doctor/appointment-list']);
   }
 
   navigatePatients():void {
-    this.router.navigate(['patient-list']);
+    this.router.navigate(['/doctor/patient-list']);
   }
 
   navigateProfile():void {
-    this.router.navigate(['doctor-profile']);
+    this.router.navigate(['/doctor/profile']);
   }
 
   logout():void {
