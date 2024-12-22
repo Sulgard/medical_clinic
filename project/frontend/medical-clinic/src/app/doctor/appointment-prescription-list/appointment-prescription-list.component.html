@@ -1,0 +1,25 @@
+<h3>Prescriptions</h3>
+    <button
+    type="button"
+    class="btn btn-success"
+    (click)="openPrescriptionDialog()">
+    Add Prescription
+    </button>
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let prescription of prescriptions; let i = index"
+        >
+          <div class="d-flex justify-content-between align-items-center">
+            <span>
+              <strong>{{ prescription.medicationName }}</strong> - {{ prescription.instruction }} - {{ prescription.quantitiy}}
+            </span>
+            <button
+              class="btn btn-danger btn-sm"
+              (click)="removePrescription(prescription.id)"
+            >
+              X
+            </button>
+          </div>
+        </li>
+      </ul>

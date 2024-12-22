@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DoctorService } from '../doctor.service';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-patient-list',
+  selector: 'app-medicine-list',
   standalone: true,
   imports: [
     MaterialModule,
@@ -15,11 +14,11 @@ import { MaterialModule } from '../../shared/material.module';
     ReactiveFormsModule,
     CommonModule
   ],
-  templateUrl: './patient-list.component.html',
-  styleUrl: './patient-list.component.css'
+  templateUrl: './medicine-list.component.html',
+  styleUrl: './medicine-list.component.css'
 })
-export class PatientListComponent {
-  patients: any[] = [];
+export class MedicineListComponent implements OnInit{
+  medicines: any[] = [];
   totalPages: number = 0;
   totalElements: number = 0;
   currentPage: number = 0;
@@ -29,33 +28,32 @@ export class PatientListComponent {
 
   filter = {
     name: '',
-    email: '',
-    sortField: 'email',
+    category: '',
+    manufacturer: '',
+    sortField: 'manufacturer',
     sortDirection: 'ASC',
     page: 0,
     size: 10
   };
-
-  displayedColumns: string[] = ['fullName', 'email'];
+  
+  displayedColumns: string[] = ['name', 'manufacturer', 'category'];
 
   constructor(
     private doctorService: DoctorService,
-    private dialog: MatDialog,
-    private router: Router) {}
+    private router: Router
+  ){}
 
   ngOnInit(): void {
-    this.loadPatientList();
-    console.log("Patients: ", this.patients);
-
+      this.loadMedicineList();
   }
 
-  loadPatientList(): void {
+  loadMedicineList(): void {
     this.isLoading = true;
-    this.doctorService.listPatients(this.filter)
+    this.doctorService.listFilteredMedications(this.filter)
       .subscribe({
         next: (response: any) => {
           console.log("Response:", response);
-          this.patients = response.content || [];
+          this.medicines = response.content || [];
           this.totalPages = response.totalPages;
           console.log("total Pages:", this.totalPages);
           this.totalElements = response.totalElements
@@ -71,24 +69,15 @@ export class PatientListComponent {
       });
   }
 
-  // showDoctorDetails(id: number) {
-  //     this.doctorService.getDoctorDetails(id).subscribe((details: DoctorInfoDTO) => {
-  //       this.dialog.open(DoctorInfoComponent, {
-  //         data: details,
-  //         width: '400px',
-  //       });
-  //     });
-  // }
-  
   applyFilter(): void {
     this.filter.page = 0;
-    this.loadPatientList();
+    this.loadMedicineList();
   }
 
   onPageChange(event: any): void {
     this.filter.page = event.pageIndex;
     this.filter.size = event.pageSize;
-    this.loadPatientList();
+    this.loadMedicineList();
   }
 
   navDashboard(): void {

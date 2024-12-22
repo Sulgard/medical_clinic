@@ -1,50 +1,46 @@
 <div class="container">
   <h2>Add Prescription</h2>
   <form [formGroup]="prescriptionForm" (ngSubmit)="onSubmit()">
-
-
     <div class="form-group">
-      <label for="medicine">Medicine:</label>
-      <select class="form-control" id="medicine" formControlName="medicineId">
-        <option *ngFor="let medicine of medications" [value]="medicine.id">
+      <label for="medicine">Select Medicine:</label>
+        <select 
+        class="form-control" 
+        formControlName="medicineId" 
+        (ngModelChange)="selectedMedicine = $event" 
+        [ngModel]="selectedMedicine?.id"> 
+        <option *ngFor="let medicine of filteredMedications" 
+                [value]="medicine.id">
           {{ medicine.name }}
         </option>
       </select>
+      
+      <div *ngIf="selectedMedicine">
+        Selected Medicine: {{ selectedMedicine.name }} 
+      </div> 
     </div>
-
+  
     <div class="form-group">
       <label for="quantity">Quantity:</label>
-      <textarea
-        class="form-control"
-        id="quantitiy"
-        formControlName="quantitiy"
-      ></textarea>
+      <input 
+        type="number" 
+        class="form-control" 
+        formControlName="quantity"
+        placeholder="Enter quantity"
+      />
     </div>
-
+  
     <div class="form-group">
-      <label for="instruction">Instruction:</label>
-      <textarea
-        class="form-control"
-        id="instruction"
+      <label for="instruction">Instructions:</label>
+      <textarea 
+        class="form-control" 
         formControlName="instruction"
+        rows="3" 
+        placeholder="Enter instructions"
       ></textarea>
     </div>
-
-    <div class="form-group d-flex justify-content-between">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="onCancel()"
-      >
-        Cancel
-      </button>
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="!prescriptionForm.valid"
-      >
-        Submit
-      </button>
-    </div>
-  </form>
+  
+    <button type="submit" class="btn btn-primary" [disabled]="prescriptionForm.invalid">
+      Submit Prescription
+    </button>
+  </form>  
 </div>

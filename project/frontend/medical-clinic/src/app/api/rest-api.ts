@@ -19,6 +19,7 @@ export interface AppointmentDTO {
     appointmentDate: Date;
     cancellationReason: string;
     doctorName: string;
+    patientName: string;
 }
 
 export interface AppointmentFilterDTO {

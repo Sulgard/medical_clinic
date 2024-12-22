@@ -21,6 +21,9 @@ export class AddPrescriptionDialogComponent {
 
   prescriptionForm: FormGroup;
   medications: MedicineDTO[] = [];
+  filteredMedications: MedicineDTO[] = [];
+  searchQuery: string = '';
+  selectedMedicine: MedicineDTO | null = null;
   
   constructor(
     private formBuilder: FormBuilder,
@@ -30,11 +33,12 @@ export class AddPrescriptionDialogComponent {
   ){
     this.prescriptionForm = this.formBuilder.group({
       medicineId: ['', Validators.required],
-      quantitiy: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      quantity: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       instruction: ['', Validators.required],
     });
     
     this.medications = this.data.medications;
+    this.filteredMedications = this.medications;
   }
 
   onSubmit(): void {
@@ -43,8 +47,27 @@ export class AddPrescriptionDialogComponent {
     }
   }
 
+  onSearchChange(): void {
+    if (this.searchQuery.trim()) {
+      this.filteredMedications = this.medications.filter(medicine => 
+        medicine.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredMedications = this.medications; 
+    }
+  }
+
+  selectMedicine(medicine: MedicineDTO): void {
+    this.selectedMedicine = medicine;
+    this.prescriptionForm.controls['medicineId'].setValue(medicine.id);
+    this.searchQuery = medicine.name;
+
+    this.filteredMedications = [];
+  }
+
   onCancel(): void {
     this.dialogRef.close(null);
   }
+  
 
 }

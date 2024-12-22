@@ -10,18 +10,10 @@
             <form (ngSubmit)="applyFilter()">
               <div class="form-row">
                 <div class="col-md-4">
-                  <!-- <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Doctors specialization</mat-label>
-                    <mat-select [(ngModel)]="filter.specialization" name="specialization" (selectionChange)="applyFilter()">
-                      <mat-option value="">All</mat-option>
-                      <mat-option value="Dentist">Dentist</mat-option>
-                      <mat-option value="Surgeon">Surgeon</mat-option>
-                    </mat-select>
-                  </mat-form-field> -->
                 </div>
                 <div class="col-md-4">
                     <mat-form-field appearance="fill" class="w-100">
-                      <mat-label>Doctor's Name</mat-label>
+                      <mat-label>Patient's Name</mat-label>
                       <input matInput [(ngModel)]="filter.name" name="name" (ngModelChange)="applyFilter()" placeholder="Search by name">
                     </mat-form-field>
                   </div>
@@ -49,13 +41,13 @@
             
                 <ng-container matColumnDef="fullName">
                     <th mat-header-cell *matHeaderCellDef> Patient Name </th>
-                    <td mat-cell *matCellDef="let patient"> dr. - {{ patient.fullName }} </td>
+                    <td mat-cell *matCellDef="let patient"> {{ patient.fullName }} </td>
                 </ng-container>
             
-                <ng-container matColumnDef="specialization">
-                    <th mat-header-cell *matHeaderCellDef> Specialization </th>
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef> Email </th>
                     <td mat-cell *matCellDef="let patient">
-                        {{ patient.specialization }}
+                        {{ patient.email }}
                         <!-- <button mat-button (click)="showDoctorDetails(doctor.id)">Contact info</button> -->
                     </td>
                 </ng-container>

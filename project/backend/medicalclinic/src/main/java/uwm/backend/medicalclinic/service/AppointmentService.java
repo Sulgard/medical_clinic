@@ -158,6 +158,7 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
         result.setStatus(appointmentOB.getStatus());
         result.setNotes(appointmentOB.getNotes());
         result.setDoctorName(appointmentOB.getDoctor().getFullName());
+        result.setPatientName(appointmentOB.getPatient().getFullName());
         result.setVisitDescription(appointmentOB.getDescription());
             if (appointmentOB.getCancellationReason() != null && !appointmentOB.getCancellationReason().isEmpty()) {
             result.setCancellationReason(appointmentOB.getCancellationReason());

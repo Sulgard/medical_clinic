@@ -62,6 +62,10 @@ export class DoctorDashboardComponent implements OnInit {
     this.router.navigate(['/doctor/profile']);
   }
 
+  navigateMedicines():void {
+    this.router.navigate(['/doctor/medicine-list']);
+  }
+
   logout():void {
     this.authService.logout();
   }

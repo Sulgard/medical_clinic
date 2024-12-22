@@ -40,7 +40,7 @@ export class DoctorService {
     return this.http.post<any>(`http://localhost:8080/api/doctors/list`, filter,  { headers });
   }
 
-  listPatients(filter: any): Observable<DoctorListDTO> {
+  listPatients(filter: any): Observable<any> {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post<any>(`http://localhost:8080/api/patients/list`, filter,  { headers });
@@ -76,5 +76,11 @@ export class DoctorService {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`http://localhost:8080/api/medicine/list`, {headers});
+  }
+
+  listFilteredMedications(filter: any): Observable<any> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(`http://localhost:8080/api/medicine/listFiltered`, filter, {headers});
   }
 }

@@ -5,13 +5,15 @@ import { DoctorProfileComponent } from './doctor-profile/doctor-profile.componen
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { AppointmentListComponent } from './appointment-list/appointment-list.component';
 import { ManageAppointmentComponent } from './manage-appointment/manage-appointment.component';
+import { MedicineListComponent } from './medicine-list/medicine-list.component';
 
 const routes: Routes = [
   {path: 'dashboard', component: DoctorDashboardComponent},
   {path: 'profile', component: DoctorProfileComponent},
   {path: 'patient-list', component: PatientListComponent},
   {path: 'appointment-list', component: AppointmentListComponent},
-  {path: 'manage-appointment/:id', component: ManageAppointmentComponent}
+  {path: 'manage-appointment/:id', component: ManageAppointmentComponent},
+  {path: 'medicine-list', component: MedicineListComponent}
 ];
 
 @NgModule({

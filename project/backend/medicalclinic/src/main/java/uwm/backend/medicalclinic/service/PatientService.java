@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.*;
-import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.repository.PatientRepository;
 

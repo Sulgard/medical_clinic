@@ -14,4 +14,5 @@ public class AppointmentDTO {
     private LocalDate appointmentDate;
     private String cancellationReason;
     private String doctorName;
+    private String patientName;
 }

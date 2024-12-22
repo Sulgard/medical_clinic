@@ -7,5 +7,5 @@ public class CreatePrescriptionRequestDTO {
     private Long appointmentId;
     private Long medicineId;
     private String instruction;
-    private String quantitiy;
+    private String quantity;
 }

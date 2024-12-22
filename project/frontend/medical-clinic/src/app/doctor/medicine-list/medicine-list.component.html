@@ -1,0 +1,113 @@
+<div class="container mt-5">
+    <!-- Filtry -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <button mat-stroked-button color="accent" (click)="navDashboard()">
+          Back to Dashboard
+        </button>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Filtry</h5>
+            <form (ngSubmit)="applyFilter()">
+              <div class="form-row">
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Manufacturer</mat-label>
+                    <mat-select [(ngModel)]="filter.category" name="Manufacturer" (selectionChange)="applyFilter()">
+                      <mat-option value="">All</mat-option>
+                      <mat-option value="COMPLETED">Completed</mat-option>
+                      <mat-option value="PENDING">Pending</mat-option>
+                      <mat-option value="CANCELLED">Cancelled</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                    <mat-form-field appearance="fill" class="w-100">
+                      <mat-label>Category</mat-label>
+                      <mat-select [(ngModel)]="filter.category" name="Category" (selectionChange)="applyFilter()">
+                        <mat-option value="">All</mat-option>
+                        <mat-option value="COMPLETED">Completed</mat-option>
+                        <mat-option value="PENDING">Pending</mat-option>
+                        <mat-option value="CANCELLED">Cancelled</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-form-field appearance="fill" class="w-100">
+                      <mat-label>Medicine's Name</mat-label>
+                      <input matInput [(ngModel)]="filter.name" name="name" (ngModelChange)="applyFilter()" placeholder="Search by name">
+                    </mat-form-field>
+                  </div>
+              </div>
+              <button mat-raised-button color="primary" type="submit">Apply filters</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Tabela wizyt -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Medicine List</h4>
+            <div *ngIf="isLoading" class="text-center">
+              <mat-spinner></mat-spinner> <!-- Spinner do ładowania -->
+            </div>
+            <div *ngIf="!isLoading && medicines.length === 0">
+              <p>No appointments that meet required criteria.</p>
+            </div>
+            <div *ngIf="medicines.length > 0">
+              <table mat-table [dataSource]="medicines" class="table">
+                <!-- Kolumna data wizyty -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Medicine name </th>
+                    <td mat-cell *matCellDef="let medicine">
+                        {{ medicine.name }}
+                    </td>
+                </ng-container>
+            
+                <!-- Kolumna status -->
+                <ng-container matColumnDef="manufacturer">
+                    <th mat-header-cell *matHeaderCellDef> Manufacturer </th>
+                    <td mat-cell *matCellDef="let medicine"> {{ medicine.manufacturer }} </td>
+                </ng-container>
+            
+                <!-- Kolumna doktor -->
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef> Category</th>
+                    <td mat-cell *matCellDef="let medicine">
+                        {{ medicine.category }}
+                        <!-- <button mat-button (click)="showAppointmentDetails(appointment.id)">Show details</button> -->
+                    </td>
+                </ng-container>
+            
+                <!-- Wiersze tabeli -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Paginacja -->
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <mat-paginator 
+          [length]="totalElements" 
+          [pageSize]="filter.size" 
+          [pageIndex]="filter.page"
+          [pageSizeOptions]="[5, 10, 20]" 
+          (page)="onPageChange($event)">
+        </mat-paginator>
+      </div>
+    </div>
+    
+  </div>
+  
