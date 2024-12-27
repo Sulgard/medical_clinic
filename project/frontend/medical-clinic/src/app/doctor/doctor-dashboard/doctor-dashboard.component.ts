@@ -6,6 +6,8 @@ import { MaterialModule } from '../../shared/material.module';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DoctorService } from '../doctor.service';
+import { CalendarModule, DateAdapter, CalendarEvent } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -13,7 +15,8 @@ import { DoctorService } from '../doctor.service';
   imports: [
     MaterialModule,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CalendarModule
   ],
   templateUrl: './doctor-dashboard.component.html',
   styleUrl: './doctor-dashboard.component.css'
@@ -23,11 +26,14 @@ export class DoctorDashboardComponent implements OnInit {
   appointments: AppointmentDTO[] | null = null;
   isLoading: boolean = true;
   errorMessage: string = '';
+  viewDate: Date = new Date();
+  calendarEvents: CalendarEvent[] = [];
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private doctorService: DoctorService
+
   ){}
 
   ngOnInit():void {

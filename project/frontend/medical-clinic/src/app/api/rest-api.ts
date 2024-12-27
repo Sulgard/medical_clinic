@@ -17,6 +17,7 @@ export interface AppointmentDTO {
     visitDescription: string;
     status: string;
     appointmentDate: Date;
+    appointmentTime: Date;
     cancellationReason: string;
     doctorName: string;
     patientName: string;

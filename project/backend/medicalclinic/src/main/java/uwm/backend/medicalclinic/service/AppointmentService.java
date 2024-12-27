@@ -176,6 +176,7 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
             AppointmentDTO element = new AppointmentDTO();
             element.setVisitDescription(appointment.getDescription());
             element.setAppointmentDate(appointment.getAppointmentDate());
+            element.setAppointmentTime(appointment.getAppointmentTime());
             element.setStatus(appointment.getStatus());
             element.setNotes(appointment.getNotes());
             if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
