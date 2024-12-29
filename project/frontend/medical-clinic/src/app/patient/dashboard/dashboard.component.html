@@ -30,31 +30,10 @@
                   </li>
                 </ul>
               </ng-template>
+              <full-calendar [options]="calendarOptions"></full-calendar>
             </mat-card-content>
           </mat-card>
         </div>
-
-        <div class="col-md-8">
-          <mat-card class="appointments-card">
-            <mat-card-header>
-              <mat-card-title>Upcoming Appointments</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <div *ngIf="appointments?.length === 0; else appointmentsList">
-                <p>No appointments yet.</p>
-              </div>
-              <ng-template #appointmentsList>
-                <ul class="list-group">
-                  <li *ngFor="let appointment of appointments" class="list-group-item">
-                    <strong>{{ appointment.date | date }} - {{ appointment.time }} - {{ appointment.doctorFullName }} - {{appointment.status}}</strong>
-                    <button mat-button (click)="showAppointmentDetails(appointment.id)">Show details</button><br />
-                  </li>
-                </ul>
-              </ng-template>
-            </mat-card-content>
-          </mat-card>
-        </div>
-
       </div>
     </div>
   </mat-sidenav-content>

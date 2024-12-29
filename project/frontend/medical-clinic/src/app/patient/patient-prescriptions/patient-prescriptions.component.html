@@ -1,1 +1,13 @@
-<p>patient-prescriptions works!</p>
+<h1 mat-dialog-title> Prescription List </h1>
+<div mat-dialog-content>
+  <div *ngFor="let prescription of prescriptionDetails">
+    <p><strong>Medication name:</strong> {{ prescription.medicationName }}</p>
+    <p><strong>Instruction: </strong> {{ prescription.instruction }}</p>
+    <p><strong>Quantity:</strong> {{ prescription.quantity }}</p>
+    <hr>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Close</button>
+</div>

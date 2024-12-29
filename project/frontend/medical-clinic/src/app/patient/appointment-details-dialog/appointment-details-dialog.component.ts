@@ -13,10 +13,10 @@ import { AppointmentDTO } from '../../api/rest-api';
   selector: 'app-appointment-details-dialog',
   standalone: true,
   imports: [
-        MaterialModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './appointment-details-dialog.component.html',
   styleUrl: './appointment-details-dialog.component.css'

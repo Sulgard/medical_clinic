@@ -83,7 +83,7 @@
                     <th mat-header-cell *matHeaderCellDef> Payment Status </th>
                     <td mat-cell *matCellDef="let billing">
                         {{ billing.paid ? 'Paid' : 'Awaiting Payment' }}
-                        <button mat-button (click)="showBillingDetails(billing.id)">Pay</button>
+                        <button mat-button (click)="showBillingDetails(billing.id)">{{ billing.paid === true ? 'Info' : 'Pay' }}</button>
                     </td>
                 </ng-container>
             

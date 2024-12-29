@@ -28,7 +28,7 @@ export class DoctorService {
     return this.http.get<AppointmentDTO>(`http://localhost:8080/api/appointment/appointments/${appointmentId}`, {headers});
   }
 
-  manageAppointment(appointmentId: number, data: AppointmentDTO): Observable<Appointment>{
+  manageAppointment(appointmentId: number, data: string): Observable<any>{
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post<Appointment>(`http://localhost:8080/api/appointment/appointments/${appointmentId}/manage`, data, {headers})

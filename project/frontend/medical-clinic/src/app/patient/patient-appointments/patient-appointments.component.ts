@@ -2,7 +2,7 @@ import { AuthService } from './../../auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../shared/material.module';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppointmentDTO, AppointmentFilterDTO } from '../../api/rest-api';
+import { AppointmentDTO, AppointmentFilterDTO, PrescriptionForListDTO } from '../../api/rest-api';
 import { PatientService } from '../patient.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { HttpResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AppointmentDetailsDialogComponent } from '../appointment-details-dialog/appointment-details-dialog.component';
 import { Router } from '@angular/router';
+import { PatientPrescriptionsComponent } from '../patient-prescriptions/patient-prescriptions.component';
 @Component({
   selector: 'app-patient-appointments',
   standalone: true,
@@ -39,7 +40,7 @@ export class PatientAppointmentsComponent implements OnInit{
     size: 10
   };
 
-  displayedColumns: string[] = ['appointmentDate', 'status', 'doctor'];
+  displayedColumns: string[] = ['appointmentDate', 'appointmentTime', 'status', 'doctor'];
 
   constructor(
     private patientService: PatientService,
@@ -56,6 +57,16 @@ export class PatientAppointmentsComponent implements OnInit{
     console.log("ID: ", id);
       this.patientService.getAppointmentDetails(id).subscribe((details: AppointmentDTO) => {
         this.dialog.open(AppointmentDetailsDialogComponent, {
+          data: details,
+          width: '400px',
+        });
+      });
+  }
+
+  showPrescriptionListOfAppointment(id: number) {
+    console.log("ID: ", id);
+      this.patientService.getPrescriptionListOfAppointment(id).subscribe((details: PrescriptionForListDTO[]) => {
+        this.dialog.open(PatientPrescriptionsComponent, {
           data: details,
           width: '400px',
         });

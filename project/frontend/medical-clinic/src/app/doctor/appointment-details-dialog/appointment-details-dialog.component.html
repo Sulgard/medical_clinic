@@ -4,27 +4,17 @@
     <p><strong>Time: </strong> {{ appointmentDetails.appointmentTime }}</p>
     <p><strong>Status:</strong> {{ appointmentDetails.status }}</p>
     <p><strong>Description:</strong> {{ appointmentDetails.visitDescription }}</p>
-    <p><strong>Doctor:</strong> {{ appointmentDetails.doctorName }}</p>
+    <p><strong>Patient:</strong> {{ appointmentDetails.patientName }}</p>
     <p><strong>Notes:</strong> {{ appointmentDetails.notes }}</p>
     <p *ngIf="appointmentDetails.status === 'CANCELLED'"><strong>Cancel Reason:</strong> {{ appointmentDetails.cancellationReason}}</p>
-
-
-    <mat-divider class="my-3"></mat-divider>
-    <div *ngIf="appointmentDetails.status === 'PENDING'">
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Cancellation Reason</mat-label>
-        <textarea matInput [(ngModel)]="cancellationReason"></textarea>
-      </mat-form-field>
-    </div>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="close()">Close</button>
     <button 
     mat-raised-button 
-    color="warn" 
-    [hidden]="appointmentDetails.status !== 'PENDING'" 
-    [disabled]="!cancellationReason" 
-    (click)="cancelAppointment()">
-    Cancel Appointment
+    *ngIf="appointmentDetails.status === 'PENDING'"
+    color="green" 
+    (click)="manageAppointment(appointmentDetails.appointmentId)">
+    Manage appointment
   </button>
 </div>

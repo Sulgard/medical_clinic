@@ -15,10 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -57,9 +54,11 @@ public class AppointmentService {
         Patient patientOB = patient.get();
         Doctor doctorOB = doctor.get();
         AppointmentType appointmentTypeOB = appointmentType.get();
-        OffsetDateTime dateTime = OffsetDateTime.parse(request.getAppointmentDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        //OffsetDateTime dateTime = OffsetDateTime.parse(request.getAppointmentDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        formatter = formatter.withLocale(Locale.US);
 
-        LocalDate date = dateTime.toLocalDate();
+        LocalDate date = LocalDate.parse(request.getAppointmentDate(), formatter);
         LocalTime time = LocalTime.parse(request.getAppointmentTime(), DateTimeFormatter.ISO_LOCAL_TIME);
 
         Appointment appointmentOB = new Appointment();
@@ -128,7 +127,7 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
 
 
 
-    public Appointment manageAppointment(Long appointmentId, AppointmentDTO request) {
+    public Appointment manageAppointment(Long appointmentId, String notes) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
 
         if(!appointment.isPresent()) {
@@ -138,7 +137,7 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
         Appointment appointmentOB = appointment.get();
 
         appointmentOB.setStatus(StatusType.COMPLETED.name());
-        appointmentOB.setNotes(request.getNotes());
+        appointmentOB.setNotes(notes);
 
         Billing billing = billingService.createBillingforAppointment(appointmentOB.getId());
         billingRepository.save(billing);
@@ -148,18 +147,19 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
     }
 
     public AppointmentDTO getAppointment(Long id) {
-        AppointmentDTO result = new AppointmentDTO();
+
 
         Appointment appointmentOB = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
-
-        result.setAppointmentId(appointmentOB.getId());
-        result.setAppointmentDate(appointmentOB.getAppointmentDate());
-        result.setStatus(appointmentOB.getStatus());
-        result.setNotes(appointmentOB.getNotes());
-        result.setDoctorName(appointmentOB.getDoctor().getFullName());
-        result.setPatientName(appointmentOB.getPatient().getFullName());
-        result.setVisitDescription(appointmentOB.getDescription());
+        AppointmentDTO result = new AppointmentDTO(appointmentOB);
+//        result.setAppointmentId(appointmentOB.getId());
+//        result.setAppointmentDate(appointmentOB.getAppointmentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//        result.setAppointmentTime(appointmentOB.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+//        result.setStatus(appointmentOB.getStatus());
+//        result.setNotes(appointmentOB.getNotes());
+//        result.setDoctorName(appointmentOB.getDoctor().getFullName());
+//        result.setPatientName(appointmentOB.getPatient().getFullName());
+//        result.setVisitDescription(appointmentOB.getDescription());
             if (appointmentOB.getCancellationReason() != null && !appointmentOB.getCancellationReason().isEmpty()) {
             result.setCancellationReason(appointmentOB.getCancellationReason());
         }
@@ -173,12 +173,14 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
         List<AppointmentDTO> result = new ArrayList<>();
 
         for(Appointment appointment: appoinmetns) {
-            AppointmentDTO element = new AppointmentDTO();
-            element.setVisitDescription(appointment.getDescription());
-            element.setAppointmentDate(appointment.getAppointmentDate());
-            element.setAppointmentTime(appointment.getAppointmentTime());
-            element.setStatus(appointment.getStatus());
-            element.setNotes(appointment.getNotes());
+            AppointmentDTO element = new AppointmentDTO(appointment);
+//            element.setVisitDescription(appointment.getDescription());
+//            element.setAppointmentDate(appointment.getAppointmentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//            element.setAppointmentTime(appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+//            element.setStatus(appointment.getStatus());
+//            element.setNotes(appointment.getNotes());
+//            element.setDoctorName(appointment.getDoctor().getFullName());
+//            element.setPatientName(appointment.getPatient().getFullName());
             if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
                 element.setCancellationReason(appointment.getCancellationReason());
             }
@@ -196,12 +198,15 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
         }
 
         for(Appointment appointment: appoinmetns) {
-            AppointmentDTO element = new AppointmentDTO();
+            AppointmentDTO element = new AppointmentDTO(appointment);
             element.setAppointmentId(appointment.getId());
             element.setVisitDescription(appointment.getDescription());
-            element.setAppointmentDate(appointment.getAppointmentDate());
-            element.setStatus(appointment.getStatus());
-            element.setNotes(appointment.getNotes());
+//            element.setAppointmentDate(appointment.getAppointmentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//            element.setAppointmentTime(appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+//            element.setStatus(appointment.getStatus());
+//            element.setNotes(appointment.getNotes());
+//            element.setDoctorName(appointment.getDoctor().getFullName());
+//            element.setPatientName(appointment.getPatient().getFullName());
             if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
                 element.setCancellationReason(appointment.getCancellationReason());
             }
@@ -220,11 +225,13 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
         }
 
         for(Appointment appointment: appoinmetns) {
-            AppointmentDTO element = new AppointmentDTO();
-            element.setVisitDescription(appointment.getDescription());
-            element.setAppointmentDate(appointment.getAppointmentDate());
-            element.setStatus(appointment.getStatus());
-            element.setNotes(appointment.getNotes());
+            AppointmentDTO element = new AppointmentDTO(appointment);
+//            element.setAppointmentDate(appointment.getAppointmentDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//            element.setAppointmentTime(appointment.getAppointmentTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+//            element.setStatus(appointment.getStatus());
+//            element.setNotes(appointment.getNotes());
+//            element.setDoctorName(appointment.getDoctor().getFullName());
+//            element.setPatientName(appointment.getPatient().getFullName());
             if (appointment.getCancellationReason() != null && !appointment.getCancellationReason().isEmpty()) {
                 element.setCancellationReason(appointment.getCancellationReason());
             }
@@ -248,9 +255,9 @@ public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, 
         return appointmentRepository.saveAndFlush(appointment);
     }
 
-    public List<AppointmentForListDTO> upcomingPatientAppointments(Long patientId) {
+    public List<AppointmentDTO> upcomingPatientAppointments(Long patientId) {
         List<Appointment> filteredAppointments = appointmentRepository.findByPatientIdAndStatusOrderByAppointmentDateAsc(patientId, StatusType.PENDING.name());
-        List<AppointmentForListDTO> result = filteredAppointments.stream().map(appointment -> new AppointmentForListDTO(appointment))
+        List<AppointmentDTO> result = filteredAppointments.stream().map(AppointmentDTO::new)
         .collect(Collectors.toList());
         return result;
     }

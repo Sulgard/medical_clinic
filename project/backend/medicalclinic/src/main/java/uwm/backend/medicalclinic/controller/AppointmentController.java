@@ -70,8 +70,8 @@ public class AppointmentController {
 
     @GetMapping("appointments/upcoming/{id}")
     @PreAuthorize("hasAuthority('PATIENT')")
-    ResponseEntity<List<AppointmentForListDTO>> upcomingPatientAppointments(@PathVariable("id") Long patientId) {
-        List<AppointmentForListDTO> response = appointmentService.upcomingPatientAppointments(patientId);
+    ResponseEntity<List<AppointmentDTO>> upcomingPatientAppointments(@PathVariable("id") Long patientId) {
+        List<AppointmentDTO> response = appointmentService.upcomingPatientAppointments(patientId);
         return ResponseEntity.ok(response);
     }
 
@@ -106,8 +106,8 @@ public class AppointmentController {
 
     @PostMapping("appointments/{id}/manage")
     @PreAuthorize("hasAuthority('DOCTOR')")
-    public ResponseEntity<Appointment> manageAppointment(@PathVariable("id") Long id, @RequestBody AppointmentDTO data) {
-        Appointment response = appointmentService.manageAppointment(id, data);
+    public ResponseEntity<Appointment> manageAppointment(@PathVariable("id") Long id, @RequestBody String notes) {
+        Appointment response = appointmentService.manageAppointment(id, notes);
         return ResponseEntity.ok(response);
     }
 }

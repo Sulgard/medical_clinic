@@ -4,6 +4,7 @@
     <!-- Sekcja główna z formularzem -->
     <div class="col-md-8">
       <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+        <!-- Appointment Date (non-editable) -->
         <div class="form-group">
           <label for="appointmentDate">Appointment Date:</label>
           <input
@@ -14,7 +15,8 @@
             disabled
           />
         </div>
-
+    
+        <!-- Visit Description (non-editable) -->
         <div class="form-group">
           <label for="visitDescription">Visit Description:</label>
           <input
@@ -25,7 +27,8 @@
             disabled
           />
         </div>
-
+    
+        <!-- Status (non-editable) -->
         <div class="form-group">
           <label for="status">Status:</label>
           <input
@@ -36,12 +39,14 @@
             disabled
           />
         </div>
-
+    
+        <!-- Notes (editable) -->
         <div class="form-group">
           <label for="notes">Notes:</label>
           <textarea class="form-control" id="notes" formControlName="notes"></textarea>
         </div>
-
+    
+        <!-- Submit Button -->
         <button
           type="submit"
           class="btn btn-primary"

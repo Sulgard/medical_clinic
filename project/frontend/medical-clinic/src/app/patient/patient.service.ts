@@ -1,4 +1,4 @@
-import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, HealthDetailsResponseDTO, PatientInfoDTO } from './../api/rest-api';
+import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, HealthDetailsResponseDTO, PatientInfoDTO, PrescriptionForListDTO } from './../api/rest-api';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -69,6 +69,16 @@ export class PatientService {
       `http://localhost:8080/api/appointment/appointments/patient/${patientId}`,
       filter,
       { headers, observe: 'response' }
+    );
+  }
+
+  getPrescriptionListOfAppointment(appointmentId: number): Observable<PrescriptionForListDTO[]> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.get<any>(
+      `http://localhost:8080/api/prescriptions/appointment/list/${appointmentId}`,
+      { headers}
     );
   }
 

@@ -22,6 +22,9 @@ import { CreateAppointmentRequestDTO } from '../../api/rest-api';
 export class PatientBookAppointmentComponent implements OnInit {
   appointmentTypes: any[] = [];
   availableDoctors: any[] = [];
+  minTime = "08:00";
+  maxTime = "18:00";
+  availableTimes: string[] = [];
   appointment: CreateAppointmentRequestDTO = {
     appointmentDate: '',
     appointmentTime: '',
@@ -38,8 +41,16 @@ export class PatientBookAppointmentComponent implements OnInit {
     private authService: AuthService,
     private router: Router) {
     this.patientId = this.authService.getUserId();
+    this.generateAvailableTimes();
     }
 
+    generateAvailableTimes() {
+      let startHour = 8;
+      let endHour = 18;
+      for (let hour = startHour; hour <= endHour; hour++) {
+        this.availableTimes.push(`${hour < 10 ? '0' : ''}${hour}:00`);
+      }
+    }
   ngOnInit(): void {
     this.fetchAppointmentTypes();
   }
@@ -52,17 +63,19 @@ export class PatientBookAppointmentComponent implements OnInit {
 
   fetchAvailableDoctors(): void {
     const { appointmentDate, appointmentTime } = this.appointment;
+
+    if (!appointmentDate || !appointmentTime) {
+      return;
+    }
   
-    // Convert appointmentDate (Date) to string in yyyy-MM-dd format
-    const dateStr = new Date(appointmentDate).toLocaleDateString('en-CA');
-  
-    // Convert appointmentTime to string in HH:mm format (assuming it's in HH:mm format already)
-    const timeStr = appointmentTime.split(":").join(":");  // Ensure the time is in HH:mm format
+    const dateObj = new Date(appointmentDate);
+    const dateStr = `${dateObj.getFullYear()}-${(dateObj.getMonth() + 1).toString().padStart(2, '0')}-${dateObj.getDate().toString().padStart(2, '0')}`;
+    this.appointment.appointmentDate = dateStr;
+    const timeStr = appointmentTime.split(":").join(":");
   
     console.log("Date in correct format:", dateStr);
     console.log("Time in correct format:", timeStr);
   
-    // Pass the formatted date and time as strings to the service
     this.patientService.getAvailableDoctors(dateStr, timeStr)
       .subscribe({
         next: (doctors) => {
@@ -76,11 +89,15 @@ export class PatientBookAppointmentComponent implements OnInit {
   }
   
   onAppointmentDateChange(): void {
-    this.fetchAvailableDoctors();
+    if (this.appointment.appointmentDate && this.appointment.appointmentTime) {
+      this.fetchAvailableDoctors();
+    }
   }
 
   onAppointmentTimeChange(): void {
-    this.fetchAvailableDoctors();
+    if (this.appointment.appointmentDate && this.appointment.appointmentTime) {
+      this.fetchAvailableDoctors();
+    }
   }
 
   bookAppointment(): void {

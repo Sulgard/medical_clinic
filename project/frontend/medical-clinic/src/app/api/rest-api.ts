@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-16 19:06:07.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-28 20:46:42.
 
 export interface AddressResponseDTO {
     country: string;
@@ -16,11 +16,12 @@ export interface AppointmentDTO {
     notes: string;
     visitDescription: string;
     status: string;
-    appointmentDate: Date;
-    appointmentTime: Date;
+    appointmentDate: string;
+    appointmentTime: string;
     cancellationReason: string;
     doctorName: string;
     patientName: string;
+    appointmentType: string;
 }
 
 export interface AppointmentFilterDTO {
@@ -101,11 +102,11 @@ export interface CancelAppointmentDTO {
 
 export interface CreateAddressRequestDTO {
     country: string;
-    localNumber: string;
-    province: string;
-    street: string;
     city: string;
     zipCode: string;
+    street: string;
+    province: string;
+    localNumber: string;
 }
 
 export interface CreateAppointmentRequestDTO {
@@ -146,6 +147,13 @@ export interface CreateHealthDetailsRequestDTO {
     patientId: number;
 }
 
+export interface CreateMedicineRequestDTO {
+    name: string;
+    category: string;
+    manufacturer: string;
+    dosageForm: string;
+}
+
 export interface CreatePatientResponseDTO {
     name: string;
     secondeName: string;
@@ -156,7 +164,7 @@ export interface CreatePrescriptionRequestDTO {
     appointmentId: number;
     medicineId: number;
     instruction: string;
-    quantitiy: string;
+    quantity: string;
 }
 
 export interface DoctorFilterDTO {
@@ -223,13 +231,81 @@ export interface JwtResponseDTO {
 export interface JwtResponseDTOBuilder {
 }
 
+export interface MedicineDTO {
+    id: number;
+    name: string;
+}
+
+export interface MedicineFilterDTO {
+    name: string;
+    category: string;
+    dosageForm: string;
+    manufacturer: string;
+    sortField: string;
+    sortDirection: string;
+    page: number;
+    size: number;
+}
+
+export interface MedicineForListDTO {
+    id: number;
+    name: string;
+    category: string;
+    dosageForm: string;
+    manufacturer: string;
+}
+
+export interface MedicineListDTO {
+    content: MedicineForListDTO[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    last: boolean;
+}
+
+export interface PatientFilterDTO {
+    name: string;
+    email: string;
+    sortField: string;
+    sortDirection: string;
+    page: number;
+    size: number;
+}
+
+export interface PatientForListDTO {
+    id: number;
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+}
+
 export interface PatientInfoDTO extends UserInfoDTO {
     insuranceNumber: string;
+}
+
+export interface PatientListDTO {
+    content: PatientForListDTO[];
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+    last: boolean;
 }
 
 export interface PrescriptionForListDTO {
     id: number;
     medicationId: number;
+    medicationName: string;
+    instruction: string;
+    quantity: string;
+}
+
+export interface PrescriptionResponseDTO {
+    id: number;
+    medicationId: number;
+    appointmentId: number;
+    medicationName: string;
     instruction: string;
     quantity: string;
 }
@@ -267,11 +343,6 @@ export interface UserInfoDTO {
     fullName: string;
 }
 
-export interface MedicineDTO {
-    id: number;
-    name: string;
-}
-
 export interface Appointment extends BaseEntity {
     notes: string;
     description: string;
@@ -293,6 +364,13 @@ export interface Billing extends BaseEntity {
     paid: boolean;
     appointment: Appointment;
     patient: Patient;
+}
+
+export interface Medicine extends BaseEntity {
+    name: string;
+    category: string;
+    dosageForm: string;
+    manufacturer: string;
 }
 
 export interface Prescription extends BaseEntity {
@@ -319,13 +397,6 @@ export interface Doctor extends User {
 
 export interface BaseEntity {
     id: number;
-}
-
-export interface Medicine extends BaseEntity {
-    name: string;
-    category: string;
-    dosageForm: string;
-    manufacturer: string;
 }
 
 export interface Role extends BaseEntity {
@@ -361,12 +432,12 @@ export interface Serializable {
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
+    username: string;
+    password: string;
     authorities: GrantedAuthority[];
     accountNonLocked: boolean;
-    password: string;
-    username: string;
-    credentialsNonExpired: boolean;
     accountNonExpired: boolean;
+    credentialsNonExpired: boolean;
 }
 
 export interface HttpClient {
@@ -431,7 +502,7 @@ export class RestApplicationClient {
      * HTTP GET /api/appointment/appointments/upcoming/{id}
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.upcomingPatientAppointments
      */
-    upcomingPatientAppointments(id: number): RestResponse<AppointmentForListDTO[]> {
+    upcomingPatientAppointments(id: number): RestResponse<AppointmentDTO[]> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/upcoming/${id}` });
     }
 
@@ -508,11 +579,11 @@ export class RestApplicationClient {
     }
 
     /**
-     * HTTP POST /api/billing/details/{id}
+     * HTTP GET /api/billing/details/{id}
      * Java method: uwm.backend.medicalclinic.controller.BillingController.getBillingDetails
      */
     getBillingDetails(id: number): RestResponse<BillingDTO> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/billing/details/${id}` });
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/billing/details/${id}` });
     }
 
     /**
@@ -575,7 +646,7 @@ export class RestApplicationClient {
      * HTTP DELETE /api/health-details/delete/{id}
      * Java method: uwm.backend.medicalclinic.controller.HealthDetailsController.deleteHealthDetails
      */
-    deleteHealthDetails$DELETE$api_healthdetails_delete_id(id: number): RestResponse<void> {
+    deleteHealthDetails(id: number): RestResponse<void> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/health-details/delete/${id}` });
     }
 
@@ -596,11 +667,51 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP DELETE /api/medicine/delete/{id}
+     * Java method: uwm.backend.medicalclinic.controller.MedicineController.deleteMedicine
+     */
+    deleteMedicine(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/medicine/delete/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/medicine/list
+     * Java method: uwm.backend.medicalclinic.controller.MedicineController.getAllMedicine
+     */
+    getAllMedicine(): RestResponse<MedicineDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/medicine/list` });
+    }
+
+    /**
+     * HTTP POST /api/medicine/listFiltered
+     * Java method: uwm.backend.medicalclinic.controller.MedicineController.getFilteredMedicine
+     */
+    getFilteredMedicine(filter: MedicineFilterDTO): RestResponse<MedicineListDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/medicine/listFiltered`, data: filter });
+    }
+
+    /**
+     * HTTP PUT /api/medicine/update/{id}
+     * Java method: uwm.backend.medicalclinic.controller.MedicineController.modifyMedicine
+     */
+    modifyMedicine(id: number, data: CreateMedicineRequestDTO): RestResponse<Medicine> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/medicine/update/${id}`, data: data });
+    }
+
+    /**
      * HTTP GET /api/patients/info/{id}
      * Java method: uwm.backend.medicalclinic.controller.PatientController.getPatientInfo
      */
     getPatientInfo(id: number): RestResponse<PatientInfoDTO> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/patients/info/${id}` });
+    }
+
+    /**
+     * HTTP POST /api/patients/list
+     * Java method: uwm.backend.medicalclinic.controller.PatientController.listFilteredPatients
+     */
+    listFilteredPatients(filter: PatientFilterDTO): RestResponse<PatientListDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/patients/list`, data: filter });
     }
 
     /**
@@ -615,15 +726,15 @@ export class RestApplicationClient {
      * HTTP POST /api/prescriptions/create
      * Java method: uwm.backend.medicalclinic.controller.PrescriptionsController.createPrescription
      */
-    createPrescription(data: CreatePrescriptionRequestDTO): RestResponse<Prescription> {
+    createPrescription(data: CreatePrescriptionRequestDTO): RestResponse<PrescriptionResponseDTO> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/prescriptions/create`, data: data });
     }
 
     /**
      * HTTP DELETE /api/prescriptions/delete/{id}
-     * Java method: uwm.backend.medicalclinic.controller.PrescriptionsController.deleteHealthDetails
+     * Java method: uwm.backend.medicalclinic.controller.PrescriptionsController.deletePrescription
      */
-    deleteHealthDetails$DELETE$api_prescriptions_delete_id(id: number): RestResponse<void> {
+    deletePrescription(id: number): RestResponse<void> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/prescriptions/delete/${id}` });
     }
 

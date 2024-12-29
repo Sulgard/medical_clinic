@@ -7,8 +7,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 import { MatDialog } from '@angular/material/dialog';
-import { AddPrescriptionDialogComponent } from '../add-prescription-dialog/add-prescription-dialog.component';
 import { AppointmentPrescriptionListComponent } from "../appointment-prescription-list/appointment-prescription-list.component";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-manage-appointment',
@@ -33,6 +33,7 @@ export class ManageAppointmentComponent implements OnInit {
     private doctorService: DoctorService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.appointmentForm = this.formBuilder.group({
       notes: ['', Validators.required],
@@ -58,25 +59,37 @@ export class ManageAppointmentComponent implements OnInit {
   }
 
   onSubmit(): void {
-  this.appointment.notes = this.appointmentForm.value.notes;
-  this.doctorService.manageAppointment(this.appointmentId, this.appointment).subscribe({
-    next: (response) => {
-      if (response) { 
-        alert('Appointment updated successfully!');
-        this.router.navigate(['/doctor/dashboard']); 
-      } else {
-        alert('Failed to update appointment. Please try again.');
-        this.router.navigate(['/doctor/dashboard']); 
+    this.appointment.notes = this.appointmentForm.value.notes;
+    console.log("test");
+    this.doctorService.manageAppointment(this.appointmentId, this.appointment.notes).subscribe({
+      next: (response) => {
+        console.log("test2");
+        if (response) {
+          console.log("git");
+          this.snackBar.open('Appointment updated successfully!', 'Close', {
+            duration: 3000,
+          });
+            setTimeout(() => {
+            this.router.navigate(['/doctor/dashboard']);
+          }, 3000);
+        } else {
+          this.snackBar.open('Failed to update appointment. Please try again.', 'Close', {
+            duration: 3000,
+          });
+          this.router.navigate(['/doctor/dashboard']);
+        }
+      },
+      error: (error) => {
+        console.error('Error managing appointment:', error);
+        this.snackBar.open('An error occurred while updating the appointment. Please try again.', 'Close', {
+          duration: 3000,
+        });
+      },
+      complete: () => {
+        console.log('Manage appointment request completed.');
       }
-    },
-    error: (error) => {
-      console.error('Error managing appointment:', error);
-      alert('An error occurred while updating the appointment. Please try again.');
-    },
-    complete: () => {
-      console.log('Manage appointment request completed.');
-    }
-  });
-}
+    });
+  }
+  
 
 }
