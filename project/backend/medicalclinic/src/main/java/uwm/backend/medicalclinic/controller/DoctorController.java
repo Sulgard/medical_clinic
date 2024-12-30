@@ -31,5 +31,30 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.listFilteredDoctors(filter));
     }
 
+    @PostMapping("/contact/{id}/edit")
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    ResponseEntity<UpdateConfirmationDTO> editContactInfo(
+            @RequestBody EditContactDTO editContactDTO,
+            @PathVariable("id") Long doctorId
+    ) {
+        UpdateConfirmationDTO response = doctorService.editContactInfo(editContactDTO, doctorId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("isAvailable/{id}")
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    ResponseEntity<Boolean> checkDoctorAvailability(@PathVariable("id") Long doctorId,
+                                                    @RequestParam(required = false) String date,
+                                                    @RequestParam(required = false) String time) {
+        System.out.println("Test");
+        return ResponseEntity.ok(doctorService.checkDoctorAvailability(doctorId, date, time));
+    }
+
+    @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    ResponseEntity<UpdateConfirmationDTO> deleteDoctor(@PathVariable("id") Long doctorId) {
+        return ResponseEntity.ok(doctorService.deleteDoctor(doctorId));
+    }
+
 
 }

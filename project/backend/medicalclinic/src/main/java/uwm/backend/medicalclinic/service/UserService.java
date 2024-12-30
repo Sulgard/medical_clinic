@@ -28,6 +28,7 @@ public class UserService {
             result.setInsuranceNumber(patient.getInsuranceNumber());
             result.setBirthDate(patient.getBirthDate());
             result.setPhoneNumber(patient.getPhoneNumber());
+            result.setId(patient.getId());
             return result;
         } else if (user instanceof Doctor doctor) {
             DoctorInfoDTO result = new DoctorInfoDTO();
@@ -38,6 +39,7 @@ public class UserService {
             result.setMedicalLicense(doctor.getMedicalLicense());
             result.setBirthDate(doctor.getBirthDate());
             result.setPhoneNumber(doctor.getPhoneNumber());
+            result.setId(doctor.getId());
             return result;
         } else {
             throw new IllegalStateException("Unexpected user role: " + user.getRole());

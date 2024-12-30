@@ -1,0 +1,81 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <mat-card class="user-info-card">
+          <mat-card-header>
+            <mat-card-title>Health Details</mat-card-title>
+            <button mat-icon-button (click)="toggleEdit()">
+              <mat-icon>{{ isEditing ? 'check' : 'edit' }}</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="healthDetailsForm">
+              <div *ngIf="!isEditing">
+                <!-- View Mode -->
+                <p><strong>Blood Type:</strong> {{ healthDetails?.bloodType }}</p>
+                <p><strong>Allergies:</strong> {{ healthDetails?.allergies }}</p>
+                <p><strong>Chronic Conditions:</strong> {{ healthDetails?.chronicConditions }}</p>
+                <p><strong>Medications:</strong> {{ healthDetails?.medications }}</p>
+                <p><strong>Emergency Contact Name:</strong> {{ healthDetails?.emergencyContactName }}</p>
+                <p><strong>Emergency Contact Phone Number:</strong> {{ healthDetails?.emergencyContactPhone }}</p>
+              </div>
+              <div *ngIf="isEditing">
+                <!-- Edit Mode -->
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Blood Type</mat-label>
+                    <input matInput formControlName="bloodType" />
+                    <mat-error *ngIf="healthDetailsForm.get('bloodType')?.hasError('required')">Blood Type is required</mat-error>
+                  </mat-form-field>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Allergies</mat-label>
+                    <input matInput formControlName="allergies" />
+                  </mat-form-field>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Chronic Conditions</mat-label>
+                    <input matInput formControlName="chronicConditions" />
+                  </mat-form-field>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Medications</mat-label>
+                    <input matInput formControlName="medications" />
+                  </mat-form-field>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Emergency Contact Name</mat-label>
+                    <input matInput formControlName="emergencyContactName" />
+                    <mat-error *ngIf="healthDetailsForm.get('emergencyContactName')?.hasError('required')">Emergency Contact Name is required</mat-error>
+                  </mat-form-field>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Emergency Contact Phone Number</mat-label>
+                    <input matInput formControlName="emergencyContactPhone" />
+                    <mat-error *ngIf="healthDetailsForm.get('emergencyContactPhone')?.hasError('required')">Phone number is required</mat-error>
+                    <mat-error *ngIf="healthDetailsForm.get('emergencyContactPhone')?.hasError('pattern')">Please enter a valid phone number</mat-error>
+                  </mat-form-field>
+                </div>
+  
+                <!-- Save Button -->
+                <div class="form-group mb-3 text-center">
+                  <button mat-raised-button color="primary" (click)="saveChanges()">Save</button>
+                </div>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

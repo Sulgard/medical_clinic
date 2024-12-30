@@ -29,6 +29,18 @@ export class DashboardComponent {
     this.router.navigate(['admin/create-doctor']);
   }
 
+  navigateToDoctorOptions(): void {
+    this.router.navigate(['admin/doctors-board']);
+  }
+
+  navigateToPatientOptions(): void {
+    this.router.navigate(['admin/patients-board']);
+  }
+
+  navigateToMedicineOptions(): void {
+    this.router.navigate(['admin/medicine-board']);
+  }
+
   logout():void {
     this.authService.logout();
   }

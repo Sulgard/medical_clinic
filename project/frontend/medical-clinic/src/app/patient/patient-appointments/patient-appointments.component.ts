@@ -79,7 +79,6 @@ export class PatientAppointmentsComponent implements OnInit{
     this.patientService.getAppointments2(patientId, this.filter)
       .subscribe({
         next: (response: any) => {
-          // Zawartość odpowiedzi
           console.log("Response:", response);
           this.appointments = response.content || [];
           this.totalPages = response.totalPages;
@@ -97,7 +96,6 @@ export class PatientAppointmentsComponent implements OnInit{
       });
   }
   
-
   applyFilter(): void {
     this.filter.page = 0;
     this.loadAppointments2();

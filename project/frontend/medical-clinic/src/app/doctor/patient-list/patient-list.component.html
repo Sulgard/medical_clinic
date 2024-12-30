@@ -6,7 +6,7 @@
         </button>
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Filters</h5>
+            <h5 class="card-title">Search</h5>
             <form (ngSubmit)="applyFilter()">
               <div class="form-row">
                 <div class="col-md-4">
@@ -48,7 +48,7 @@
                     <th mat-header-cell *matHeaderCellDef> Email </th>
                     <td mat-cell *matCellDef="let patient">
                         {{ patient.email }}
-                        <!-- <button mat-button (click)="showDoctorDetails(doctor.id)">Contact info</button> -->
+                        <button mat-button (click)="showPatientDetails2(patient.id)">Contact info</button>
                     </td>
                 </ng-container>
             

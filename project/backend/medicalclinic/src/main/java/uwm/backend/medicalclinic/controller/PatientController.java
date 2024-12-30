@@ -17,7 +17,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping("/info/{id}")
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     ResponseEntity<PatientInfoDTO> getPatientInfo(@PathVariable Long id) {
         PatientInfoDTO response = patientService.getPatientInfo(id);
         return ResponseEntity.ok(response);
@@ -27,5 +27,15 @@ public class PatientController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public ResponseEntity<PatientListDTO> listFilteredPatients(@RequestBody PatientFilterDTO filter) {
         return ResponseEntity.ok(patientService.listFilteredPatients(filter));
+    }
+
+    @PostMapping("/contact/{id}/edit")
+    @PreAuthorize("hasAuthority('PATIENT')")
+    ResponseEntity<UpdateConfirmationDTO> editContactInfo(
+            @RequestBody EditContactDTO editContactDTO,
+            @PathVariable("id") Long patientId
+    ) {
+        UpdateConfirmationDTO response = patientService.editContactInfo(editContactDTO, patientId);
+        return ResponseEntity.ok(response);
     }
 }

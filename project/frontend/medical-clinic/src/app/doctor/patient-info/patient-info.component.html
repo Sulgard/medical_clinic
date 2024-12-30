@@ -1,0 +1,29 @@
+<div mat-dialog-content class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Patient Information</h2>
+      <p><strong>Name:</strong> {{ data.patient.fullName }}</p>
+      <p><strong>Phone Number:</strong> {{ data.patient.phoneNumber }}</p>
+      <p><strong>Email:</strong> {{ data.patient.email }}</p>
+      <p><strong>Insurance Number:</strong> {{ data.patient.insuranceNumber }}</p>
+      <p><strong>Id:</strong>{{data.patient.id}}</p>
+    </div>
+
+    <div class="col-md-6">
+      <h2>Health Information</h2>
+      <p><strong>Blood Type:</strong> {{ data.health.bloodType }}</p>
+      <p><strong>Allergies:</strong> {{ data.health.allergies }}</p>
+      <p><strong>Medications:</strong> {{ data.health.medications }}</p>
+      <p><strong>Chronic Conditions:</strong> {{ data.health.chronicConditions }}</p>
+      <p><strong>Emergency Contact Name:</strong> {{ data.health.emergencyContactName }}</p>
+      <p><strong>Emergency Contact Phone:</strong> {{ data.health.emergencyContactPhone }}</p>
+      <p><strong>Notes:</strong> {{ data.health.notes }}</p>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">Close</button>
+  <button mat-button (click)="bookApointment()">Book appointment</button>
+  <button mat-button (click)="editHealthDetails(data.patient.id)">Edit HealthDetails</button>
+</div>

@@ -80,6 +80,49 @@ public class AppointmentService {
 
         return result;
     }
+public AppointmentListDTO listFilteredAppointmentsForDoctor(Long doctorId, AppointmentFilterDTO filter) {
+    Pageable pageable = PageRequest.of(
+            filter.getPage(),
+            filter.getSize(),
+            Sort.by(Sort.Direction.fromString(filter.getSortDirection()), filter.getSortField())
+    );
+
+    Specification<Appointment> specification = (root, query, criteriaBuilder) -> {
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(criteriaBuilder.equal(root.get("doctor").get("id"), doctorId));
+
+        if (filter.getAppointmentStatus() != null && !filter.getAppointmentStatus().isEmpty()) {
+            predicates.add(criteriaBuilder.equal(root.get("status"), filter.getAppointmentStatus()));
+        }
+
+        if (filter.getStartDate() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("appointmentDate"), filter.getStartDate()));
+        }
+        if (filter.getEndDate() != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("appointmentDate"), filter.getEndDate()));
+        }
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    };
+
+    Page<Appointment> appointmentPage = appointmentRepository.findAll(specification, pageable);
+    List<Appointment> contents = appointmentPage.getContent();
+    List<AppointmentForListDTO> contentDTO = new ArrayList<>();
+    for (Appointment content : contents ) {
+        AppointmentForListDTO element = new AppointmentForListDTO(content);
+        contentDTO.add(element);
+    }
+
+    AppointmentListDTO result = new AppointmentListDTO();
+    result.setContent(contentDTO);
+    result.setPageNumber(appointmentPage.getNumber());
+    result.setPageSize(appointmentPage.getSize());
+    result.setTotalPages(appointmentPage.getTotalPages());
+    result.setTotalElements(appointmentPage.getTotalElements());
+    return result;
+
+}
 
 public AppointmentListDTO listFilteredAppointmentsForPatientTwo(Long patientId, AppointmentFilterDTO filter) {
     Pageable pageable = PageRequest.of(

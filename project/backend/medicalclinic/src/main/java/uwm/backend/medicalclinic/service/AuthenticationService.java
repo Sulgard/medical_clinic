@@ -9,9 +9,11 @@ import uwm.backend.medicalclinic.dto.AuthRequestDTO;
 import uwm.backend.medicalclinic.dto.CreatePatientResponseDTO;
 import uwm.backend.medicalclinic.dto.RegisterPatientDto;
 import uwm.backend.medicalclinic.model.Address;
+import uwm.backend.medicalclinic.model.HealthDetails;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.model.Role;
 import uwm.backend.medicalclinic.repository.AddressRepository;
+import uwm.backend.medicalclinic.repository.HealthDetailsRepository;
 import uwm.backend.medicalclinic.repository.PatientRepository;
 import uwm.backend.medicalclinic.repository.RoleRepository;
 
@@ -23,6 +25,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
     private final AddressRepository addressRepository;
+    private final HealthDetailsRepository healthDetailsRepository;
 
 
     public CreatePatientResponseDTO signup(RegisterPatientDto input) {
@@ -64,6 +67,17 @@ public class AuthenticationService {
         result.setSecondeName(input.getLastName());
         result.setCorrect(true);
         patientRepository.saveAndFlush(patient);
+
+        HealthDetails healthDetails = new HealthDetails();
+        healthDetails.setPatient(patient);
+        healthDetails.setAllergies("None");
+        healthDetails.setChronicConditions("None");
+        healthDetails.setMedications("None");
+        healthDetails.setNotes("None");
+        healthDetails.setEmergencyContactName("None");
+        healthDetails.setEmergencyContactPhone("None");
+        healthDetails.setBloodType('N');
+        healthDetailsRepository.save(healthDetails);
 
         return result;
     }

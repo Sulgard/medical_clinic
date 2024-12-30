@@ -25,7 +25,7 @@
               <ng-template #billingsList>
                 <ul class="list-group">
                   <li *ngFor="let billing of billings" class="list-group-item">
-                    <strong>{{ billing.billingDate | date }} - {{ billing.amount }}</strong>
+                    <strong>{{ billing.billingDate | date: 'yyyy-MM-dd HH:mm' }} - {{ billing.amount }}</strong>
                     <button mat-button (click)="showBillingDetails(billing.id)">Show details</button><br />
                   </li>
                 </ul>

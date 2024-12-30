@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PatientService } from '../patient.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BillingDTO, BillingForListDTO } from '../../api/rest-api';
+import { BillingDTO } from '../../api/rest-api';
 
 @Component({
   selector: 'app-billing-details-dialog',

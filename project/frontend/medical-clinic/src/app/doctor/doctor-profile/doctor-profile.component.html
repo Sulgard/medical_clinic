@@ -1,1 +1,37 @@
-<p>doctor-profile works!</p>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <mat-card class="user-info-card">
+        <button mat-stroked-button color="accent" (click)="navDashboard()">
+            Back to Dashboard
+        </button>
+          <mat-card-header>
+            <mat-card-title>User Information</mat-card-title>
+            <button mat-button *ngIf="!isEditing" (click)="toggleEdit()">Edit</button>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="!isEditing">
+              <p><strong>Name:</strong> {{ doctorInfo?.fullName }}</p>
+              <p><strong>Email:</strong> {{ doctorInfo?.email }}</p>
+              <p><strong>Phone:</strong> {{ doctorInfo?.phoneNumber }}</p>
+              <p><strong>Birthdate:</strong> {{ doctorInfo?.birthDate | date }}</p>
+            </div>
+  
+            <form *ngIf="isEditing" [formGroup]="contactForm" (ngSubmit)="saveContactInfo()">
+              <p>
+                <label for="email"><strong>Email:</strong></label>
+                <input id="email" formControlName="email" type="email" />
+              </p>
+              <p>
+                <label for="phone"><strong>Phone:</strong></label>
+                <input id="phone" formControlName="phoneNumber" type="text" />
+              </p>
+              <button mat-button type="submit" [disabled]="contactForm.invalid">Save</button>
+              <button mat-button type="button" (click)="toggleEdit()">Cancel</button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

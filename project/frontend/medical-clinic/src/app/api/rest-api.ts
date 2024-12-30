@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-28 20:46:42.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-30 21:39:59.
 
 export interface AddressResponseDTO {
     country: string;
@@ -39,6 +39,7 @@ export interface AppointmentForListDTO {
     date: Date;
     time: Date;
     doctorFullName: string;
+    patientFullName: string;
     status: string;
 }
 
@@ -66,6 +67,8 @@ export interface BillingDTO {
     amount: number;
     appointmentId: number;
     paid: boolean;
+    appointmentDate: string;
+    appointmentTime: string;
 }
 
 export interface BillingFilterDTO {
@@ -102,11 +105,11 @@ export interface CancelAppointmentDTO {
 
 export interface CreateAddressRequestDTO {
     country: string;
-    city: string;
     zipCode: string;
+    city: string;
     street: string;
-    province: string;
     localNumber: string;
+    province: string;
 }
 
 export interface CreateAppointmentRequestDTO {
@@ -210,6 +213,11 @@ export interface DoctorListDTO {
 export interface DoctorResponseDTO {
     correct: boolean;
     name: string;
+}
+
+export interface EditContactDTO {
+    email: string;
+    phoneNumber: string;
 }
 
 export interface HealthDetailsResponseDTO {
@@ -334,6 +342,11 @@ export interface RegisterPatientDto {
     localNumber: string;
 }
 
+export interface UpdateConfirmationDTO {
+    message: string;
+    updatedFields: string[];
+}
+
 export interface UserInfoDTO {
     firstName: string;
     lastName: string;
@@ -341,6 +354,7 @@ export interface UserInfoDTO {
     phoneNumber: string;
     birthDate: Date;
     fullName: string;
+    id: number;
 }
 
 export interface Appointment extends BaseEntity {
@@ -432,10 +446,10 @@ export interface Serializable {
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
+    accountNonLocked: boolean;
+    authorities: GrantedAuthority[];
     username: string;
     password: string;
-    authorities: GrantedAuthority[];
-    accountNonLocked: boolean;
     accountNonExpired: boolean;
     credentialsNonExpired: boolean;
 }
@@ -472,6 +486,14 @@ export class RestApplicationClient {
      */
     getAvailableDoctors(queryParams?: { date?: string; time?: string; }): RestResponse<DoctorForListResponseDTO[]> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/appointment/appointments/available-doctors`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP POST /api/appointment/appointments/doctor/{id}
+     * Java method: uwm.backend.medicalclinic.controller.AppointmentController.listFilteredAppointmentsForDoctor
+     */
+    listFilteredAppointmentsForDoctor(id: number, filter: AppointmentFilterDTO): RestResponse<AppointmentListDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/doctor/${id}`, data: filter });
     }
 
     /**
@@ -534,8 +556,8 @@ export class RestApplicationClient {
      * HTTP POST /api/appointment/appointments/{id}/manage
      * Java method: uwm.backend.medicalclinic.controller.AppointmentController.manageAppointment
      */
-    manageAppointment(id: number, data: AppointmentDTO): RestResponse<Appointment> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/${id}/manage`, data: data });
+    manageAppointment(id: number, notes: string): RestResponse<Appointment> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/appointment/appointments/${id}/manage`, data: notes });
     }
 
     /**
@@ -611,6 +633,14 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP POST /api/doctors/contact/{id}/edit
+     * Java method: uwm.backend.medicalclinic.controller.DoctorController.editContactInfo
+     */
+    editContactInfo$POST$api_doctors_contact_id_edit(id: number, editContactDTO: EditContactDTO): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/doctors/contact/${id}/edit`, data: editContactDTO });
+    }
+
+    /**
      * HTTP POST /api/doctors/create
      * Java method: uwm.backend.medicalclinic.controller.DoctorController.createDoctor
      */
@@ -619,11 +649,27 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP DELETE /api/doctors/delete/{id}
+     * Java method: uwm.backend.medicalclinic.controller.DoctorController.deleteDoctor
+     */
+    deleteDoctor(id: number): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/doctors/delete/${id}` });
+    }
+
+    /**
      * HTTP GET /api/doctors/info/{id}
      * Java method: uwm.backend.medicalclinic.controller.DoctorController.getDoctorInfo
      */
     getDoctorInfo(id: number): RestResponse<DoctorInfoDTO> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/doctors/info/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/doctors/isAvailable/{id}
+     * Java method: uwm.backend.medicalclinic.controller.DoctorController.checkDoctorAvailability
+     */
+    checkDoctorAvailability(id: number, queryParams?: { date?: string; time?: string; }): RestResponse<boolean> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/doctors/isAvailable/${id}`, queryParams: queryParams });
     }
 
     /**
@@ -662,7 +708,7 @@ export class RestApplicationClient {
      * HTTP PUT /api/health-details/update/{id}
      * Java method: uwm.backend.medicalclinic.controller.HealthDetailsController.updateHealthDetails
      */
-    updateHealthDetails(id: number, data: CreateHealthDetailsRequestDTO): RestResponse<any> {
+    updateHealthDetails(id: number, data: CreateHealthDetailsRequestDTO): RestResponse<UpdateConfirmationDTO> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`api/health-details/update/${id}`, data: data });
     }
 
@@ -696,6 +742,14 @@ export class RestApplicationClient {
      */
     modifyMedicine(id: number, data: CreateMedicineRequestDTO): RestResponse<Medicine> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`api/medicine/update/${id}`, data: data });
+    }
+
+    /**
+     * HTTP POST /api/patients/contact/{id}/edit
+     * Java method: uwm.backend.medicalclinic.controller.PatientController.editContactInfo
+     */
+    editContactInfo$POST$api_patients_contact_id_edit(id: number, editContactDTO: EditContactDTO): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/patients/contact/${id}/edit`, data: editContactDTO });
     }
 
     /**

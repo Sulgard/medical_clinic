@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uwm.backend.medicalclinic.dto.CreateHealthDetailsRequestDTO;
 import uwm.backend.medicalclinic.dto.HealthDetailsResponseDTO;
+import uwm.backend.medicalclinic.dto.UpdateConfirmationDTO;
 import uwm.backend.medicalclinic.model.HealthDetails;
 import uwm.backend.medicalclinic.service.HealthDetailsService;
 
@@ -27,8 +28,8 @@ public class HealthDetailsController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyAuthority('DOCTOR', 'ADMIN')")
-    ResponseEntity<?> updateHealthDetails(@PathVariable("id") Long id, @RequestBody CreateHealthDetailsRequestDTO data) {
-        HealthDetails response = healthDetailsService.modifyHealthDetails(id, data);
+    ResponseEntity<UpdateConfirmationDTO> updateHealthDetails(@PathVariable("id") Long id, @RequestBody CreateHealthDetailsRequestDTO data) {
+        UpdateConfirmationDTO response = healthDetailsService.modifyHealthDetails(id, data);
         return ResponseEntity.ok(response);
     }
 

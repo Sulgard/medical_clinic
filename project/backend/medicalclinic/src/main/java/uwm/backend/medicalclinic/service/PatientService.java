@@ -15,6 +15,7 @@ import uwm.backend.medicalclinic.repository.PatientRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -34,6 +35,8 @@ public class PatientService {
         result.setInsuranceNumber(patient.getInsuranceNumber());
         result.setBirthDate(patient.getBirthDate());
         result.setPhoneNumber(patient.getPhoneNumber());
+        result.setFullName(patient.getFullName());
+        result.setId(patient.getId());
 
         return result;
     }
@@ -76,6 +79,35 @@ public class PatientService {
         result.setPageSize(patientPage.getSize());
         result.setTotalPages(patientPage.getTotalPages());
         result.setTotalElements(patientPage.getTotalElements());
+        return result;
+    }
+
+    public UpdateConfirmationDTO editContactInfo(EditContactDTO request, Long patientId) {
+        Optional<Patient> patient = patientRepository.findById(patientId);
+
+        if(!patient.isPresent()) {
+            throw new EntityNotFoundException("Patient not found");
+        }
+
+        Patient patientOB = patient.get();
+        List<String> updatedFields = new ArrayList<>();
+
+        if(request.getEmail() != null && !request.getEmail().isEmpty()) {
+            patientOB.setEmail(request.getEmail());
+            updatedFields.add("email");
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().isEmpty()) {
+            patientOB.setPhoneNumber(request.getPhoneNumber());
+            updatedFields.add("phoneNumber");
+        }
+
+        patientRepository.save(patientOB);
+
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Contact information updated successfully", updatedFields
+        );
+
         return result;
     }
 }

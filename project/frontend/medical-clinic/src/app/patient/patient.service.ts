@@ -1,4 +1,4 @@
-import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, HealthDetailsResponseDTO, PatientInfoDTO, PrescriptionForListDTO } from './../api/rest-api';
+import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, EditContactDTO, HealthDetailsResponseDTO, PatientInfoDTO, PrescriptionForListDTO, UpdateConfirmationDTO } from './../api/rest-api';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -26,10 +26,22 @@ export class PatientService {
     return this.http.get<AddressResponseDTO>(`http://localhost:8080/api/address/patient/${patientId}`, { headers });
   }
 
+  editContactInfo(patientId: number, payload: EditContactDTO): Observable<UpdateConfirmationDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<UpdateConfirmationDTO>(`http://localhost:8080/api/patients/contact/${patientId}/edit`, payload, { headers });
+  }
+
   getPatientHealthDetails(patientId: number): Observable<HealthDetailsResponseDTO> {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<HealthDetailsResponseDTO>(`http://localhost:8080/api/health-details/details/${patientId}`, { headers });
+  }
+
+  editPatientHealthDetails(patientId: number, data: any): Observable<any> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<HealthDetailsResponseDTO>(`http://localhost:8080/api/health-details/update/${patientId}`, data, { headers });
   }
   
   listAppointmentsForPatient(patientId: number): Observable<any> {

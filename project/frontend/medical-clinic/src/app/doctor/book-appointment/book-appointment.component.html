@@ -1,0 +1,71 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <button mat-stroked-button color="accent" (click)="navDashboard()">
+          Back to Dashboard
+        </button>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Book Appointment</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form (ngSubmit)="bookAppointment()">
+              <div class="form-group mb-3">
+                <p><strong>Patient:</strong> {{ patient.firstName }} {{ patient.lastName }}</p>
+                <p><strong>Insurance Number:</strong> {{ patient.insuranceNumber }}</p>
+              </div>
+  
+              <!-- Appointment Type -->
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Appointment Type</mat-label>
+                  <mat-select [(ngModel)]="appointment.appointmentTypeId" name="appointmentTypeId" required>
+                    <mat-option *ngFor="let type of appointmentTypes" [value]="type.id">
+                      {{ type.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+  
+              <!-- Appointment Date -->
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Appointment Date</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="appointment.appointmentDate" 
+                         name="appointmentDate" required (ngModelChange)="onAppointmentDateChange()">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+  
+              <!-- Appointment Time -->
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Appointment Time</mat-label>
+                  <mat-select [(ngModel)]="appointment.appointmentTime" (ngModelChange)="onAppointmentTimeChange()" name="appointmentTime" required>
+                    <mat-option *ngFor="let time of availableTimes" [value]="time">{{ time }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+  
+              <!-- Appointment Reason -->
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Appointment Reason</mat-label>
+                  <textarea matInput rows="3" [(ngModel)]="appointment.appointmentReason" name="appointmentReason"></textarea>
+                </mat-form-field>
+              </div>
+  
+              <!-- Submit Button -->
+              <div class="form-group mb-3 text-center">
+                <button mat-raised-button color="primary" type="submit">
+                  Book Appointment
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

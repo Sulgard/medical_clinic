@@ -11,12 +11,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.*;
+import uwm.backend.medicalclinic.enums.StatusType;
 import uwm.backend.medicalclinic.model.Appointment;
 import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.model.Role;
+import uwm.backend.medicalclinic.repository.AppointmentRepository;
 import uwm.backend.medicalclinic.repository.DoctorRepository;
 import uwm.backend.medicalclinic.repository.RoleRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +31,7 @@ public class DoctorService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final DoctorRepository doctorRepository;
+    private final AppointmentRepository appointmentRepository;
 
 
     public DoctorResponseDTO createDoctor(CreateDoctorRequestDTO input) {
@@ -112,5 +117,68 @@ public class DoctorService {
     result.setTotalPages(doctorsPage.getTotalPages());
     result.setTotalElements(doctorsPage.getTotalElements());
     return result;
+    }
+
+    public UpdateConfirmationDTO editContactInfo(EditContactDTO request, Long doctorId) {
+        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
+
+        if(!doctor.isPresent()) {
+            throw new EntityNotFoundException("Doctor not found");
+        }
+
+        Doctor doctorOB = doctor.get();
+        List<String> updatedFields = new ArrayList<>();
+
+        if(request.getEmail() != null && !request.getEmail().isEmpty()) {
+            doctorOB.setEmail(request.getEmail());
+            updatedFields.add("email");
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().isEmpty()) {
+            doctorOB.setPhoneNumber(request.getPhoneNumber());
+            updatedFields.add("phoneNumber");
+        }
+
+        doctorRepository.save(doctorOB);
+
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Contact information updated successfully", updatedFields
+        );
+
+        return result;
+    }
+
+    public boolean checkDoctorAvailability(Long doctorId, String dataStr, String timeStr) {
+        LocalDate date = LocalDate.parse(dataStr);
+        LocalTime time = LocalTime.parse(timeStr);
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndAppointmentDate(doctorId, date);
+
+        for (Appointment appointment : appointments) {
+            if (appointment.getAppointmentTime().equals(time)) {
+                if (appointment.getStatus().equals(StatusType.CANCELLED)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public UpdateConfirmationDTO deleteDoctor(Long doctorId) {
+        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
+
+        if(!doctor.isPresent()) {
+            throw new EntityNotFoundException("Doctor not found");
+        }
+
+        Doctor doctorOB = doctor.get();
+
+        doctorRepository.delete(doctorOB);
+        List<String> changes = new ArrayList<>();
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Doctor deleted successfully", changes
+        );
+        return result;
     }
 }

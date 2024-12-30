@@ -13,12 +13,14 @@ public class AppointmentForListDTO {
     private LocalDate date;
     private LocalTime time;
     private String doctorFullName;
+    private String patientFullName;
     private String status;
 
     public AppointmentForListDTO(Appointment appointment) {
         this.id = appointment.getId();
         this.date = appointment.getAppointmentDate();
         this.doctorFullName = appointment.getDoctor().getFullName();
+        this.patientFullName = appointment.getPatient().getFullName();
         this.status = appointment.getStatus();
         this.time = appointment.getAppointmentTime();
     }

@@ -13,4 +13,5 @@ public class UserInfoDTO {
     String phoneNumber;
     LocalDate birthDate;
     String fullName;
+    Long id;
 }

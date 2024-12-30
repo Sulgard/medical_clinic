@@ -104,6 +104,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.listFilteredAppointmentsForPatientTwo(id, filter));
     }
 
+    @PostMapping("appointments/doctor/{id}")
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    public ResponseEntity<AppointmentListDTO> listFilteredAppointmentsForDoctor(@PathVariable("id") Long id, @RequestBody AppointmentFilterDTO filter) {
+        return ResponseEntity.ok(appointmentService.listFilteredAppointmentsForDoctor(id, filter));
+    }
+
     @PostMapping("appointments/{id}/manage")
     @PreAuthorize("hasAuthority('DOCTOR')")
     public ResponseEntity<Appointment> manageAppointment(@PathVariable("id") Long id, @RequestBody String notes) {

@@ -21,6 +21,7 @@ interface CalendarEvent {
   start: string;
   end: string;
   description?: string;
+  status: string;
 }
 
 @Component({
@@ -117,7 +118,9 @@ export class DoctorDashboardComponent implements OnInit {
           title: `${appointment.patientName}`,
           start: this.combineDateAndTime(appointment.appointmentDate, appointment.appointmentTime),
           end: this.calculateEndTime(appointment.appointmentDate, appointment.appointmentTime),
-          description: appointment.visitDescription
+          description: appointment.visitDescription,
+          status: appointment.status,
+          color: this.getEventColor(appointment.status)
         }));
         this.appointments = data;
 
@@ -131,6 +134,19 @@ export class DoctorDashboardComponent implements OnInit {
         console.error('Error fetching appointments:', err);
       }
     });
+  }
+
+  getEventColor(status: string): string {
+    switch (status) {
+      case 'CANCELLED':
+        return 'red';
+      case 'PENDING':
+        return 'orange';
+      case 'COMPLETED':
+        return 'green';
+      default:
+        return 'blue';
+    }
   }
 
   combineDateAndTime(date: string, time: string): string {

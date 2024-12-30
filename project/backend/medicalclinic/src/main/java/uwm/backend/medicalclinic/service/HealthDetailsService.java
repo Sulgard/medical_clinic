@@ -4,11 +4,14 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.CreateHealthDetailsRequestDTO;
 import uwm.backend.medicalclinic.dto.HealthDetailsResponseDTO;
+import uwm.backend.medicalclinic.dto.UpdateConfirmationDTO;
 import uwm.backend.medicalclinic.model.HealthDetails;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.repository.HealthDetailsRepository;
 import uwm.backend.medicalclinic.repository.PatientRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -66,56 +69,86 @@ public class HealthDetailsService {
         return healthDetailsRepository.save(healthDetails);
     }
 
-    public HealthDetails modifyHealthDetails(Long healthDetailsId, CreateHealthDetailsRequestDTO request) {
-        Optional<HealthDetails> healthDetails = healthDetailsRepository.findById(healthDetailsId);
+    public UpdateConfirmationDTO modifyHealthDetails(Long patientId, CreateHealthDetailsRequestDTO request) {
+        Optional<Patient> patient = patientRepository.findPatientById(patientId);
+
+        if (!patient.isPresent()) {
+            throw new EntityNotFoundException("Patient not found");
+        }
+
+        Patient patientOB = patient.get();
+
+        Optional<HealthDetails> healthDetails = healthDetailsRepository.findByPatient(patientOB);
 
         if (!healthDetails.isPresent()) {
             throw new EntityNotFoundException("HealthDetails not found");
         }
 
         HealthDetails healthDetailsOB = healthDetails.get();
+        List<String> updatedFields = new ArrayList<>();
 
         if (!request.getAllergies().isEmpty()) {
             healthDetailsOB.setAllergies(request.getAllergies());
+            updatedFields.add("Allergies");
         }
 
         if (request.getBloodType() != 0) {
             healthDetailsOB.setBloodType(request.getBloodType());
+            updatedFields.add("BloodType");
         }
 
         if (!request.getChronicConditions().isEmpty()) {
             healthDetailsOB.setChronicConditions(request.getChronicConditions());
+            updatedFields.add("ChronicConditions");
         }
 
         if (!request.getMedications().isEmpty()) {
             healthDetailsOB.setMedications(request.getMedications());
+            updatedFields.add("Medications");
         }
 
         if (!request.getNotes().isEmpty()) {
             healthDetailsOB.setNotes(request.getNotes());
+            updatedFields.add("Notes");
         }
 
         if (!request.getEmergencyContactName().isEmpty()) {
             healthDetailsOB.setEmergencyContactName(request.getEmergencyContactName());
+            updatedFields.add("EmergencyContactName");
         }
 
         if (!request.getEmergencyContactPhone().isEmpty()) {
             healthDetailsOB.setEmergencyContactPhone(request.getEmergencyContactPhone());
+            updatedFields.add("EmergencyContactPhone");
         }
 
-        return healthDetailsRepository.save(healthDetailsOB);
+        healthDetailsRepository.save(healthDetailsOB);
+
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Health Details information updated successfully", updatedFields
+        );
+
+        return result;
     }
 
-    public HealthDetailsResponseDTO getHealthDetails(Long id) {
-        HealthDetailsResponseDTO result = new HealthDetailsResponseDTO();
+    public HealthDetailsResponseDTO getHealthDetails(Long patientId) {
+        Optional<Patient> patient = patientRepository.findPatientById(patientId);
 
-        Optional<HealthDetails> healthDetails = healthDetailsRepository.findById(id);
+        if (!patient.isPresent()) {
+            throw new EntityNotFoundException("Patient not found");
+        }
 
-        if (!healthDetails.isPresent()) {
-            throw new EntityNotFoundException("Health Details not foud");
+        Patient patientOB = patient.get();
+
+        Optional<HealthDetails> healthDetails = healthDetailsRepository.findByPatient(patientOB);
+
+        if(!healthDetails.isPresent()) {
+            throw new EntityNotFoundException("HealthDetails not found");
         }
 
         HealthDetails healthDetailsOB = healthDetails.get();
+
+        HealthDetailsResponseDTO result = new HealthDetailsResponseDTO();
 
         result.setId(healthDetailsOB.getId());
         result.setBloodType(healthDetailsOB.getBloodType());

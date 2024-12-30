@@ -21,6 +21,7 @@ interface CalendarEvent {
   start: string;
   end: string;
   description?: string;
+  status: string;
 }
 
 @Component({
@@ -103,14 +104,16 @@ export class DashboardComponent implements OnInit {
 
   viewUpcomingAppointments(): void {
     const patientId: number = this.authService.getUserId();
-    this.patientService.getUpcoming(patientId).subscribe({
+    this.patientService.listAppointmentsForPatient(patientId).subscribe({
       next: (data: AppointmentDTO[]) => {
         this.calendarEvents = data.map(appointment => ({
           id: appointment.appointmentId.toString(),
           title: `${appointment.appointmentType}`,
           start: this.combineDateAndTime(appointment.appointmentDate, appointment.appointmentTime),
           end: this.calculateEndTime(appointment.appointmentDate, appointment.appointmentTime),
-          description: appointment.visitDescription
+          description: appointment.visitDescription,
+          status: appointment.status,
+          color: this.getEventColor(appointment.status)
         }));
         this.appointments = data;
 
@@ -127,6 +130,19 @@ export class DashboardComponent implements OnInit {
         console.error('Error fetching appointments:', err);
       }
     });
+  }
+
+  getEventColor(status: string): string {
+    switch (status) {
+      case 'CANCELLED':
+        return 'red';
+      case 'PENDING':
+        return 'orange';
+      case 'COMPLETED':
+        return 'green';
+      default:
+        return 'blue';
+    }
   }
 
   handleEventClick(arg: any): void {
