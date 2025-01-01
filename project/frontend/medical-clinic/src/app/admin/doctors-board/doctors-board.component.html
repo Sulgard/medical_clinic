@@ -11,11 +11,11 @@
               <div class="form-row">
                 <div class="col-md-4">
                   <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Doctors specialization</mat-label>
-                    <mat-select [(ngModel)]="filter.specialization" name="specialization" (selectionChange)="applyFilter()">
-                      <mat-option value="">All</mat-option>
-                      <mat-option value="Dentist">Dentist</mat-option>
-                      <mat-option value="Surgeon">Surgeon</mat-option>
+                    <mat-label>Specialization</mat-label>
+                    <mat-select formControlName="specialization">
+                      <mat-option *ngFor="let specialization of specializationOptions" [value]="specialization">
+                        {{ specialization }}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -40,7 +40,7 @@
             <div class="col-md-12 d-flex justify-content-between align-items-center">
             <h4 class="card-title">Doctors list</h4>
             <button mat-raised-button color="primary" (click)="navigateCreateDoctor()">
-                <mat-icon>person_add</mat-icon> Create Doctor
+                <mat-icon>person_add</mat-icon> Add Doctor
               </button>
             </div>
             <div *ngIf="isLoading" class="text-center">
@@ -77,7 +77,7 @@
                         <button mat-icon-button color="primary" (click)="showDoctorDetails(doctor.id)">
                             <mat-icon>info</mat-icon>
                         </button>
-                        <button mat-icon-button color="accent" (click)="showDoctorDetails(doctor.id)">
+                        <button mat-icon-button color="accent" (click)="navigateToEditDoctor(doctor.id)">
                             <mat-icon>edit</mat-icon>
                         </button>
                         <button mat-icon-button color="warn" (click)="deleteDoctorDialog(doctor.id)">

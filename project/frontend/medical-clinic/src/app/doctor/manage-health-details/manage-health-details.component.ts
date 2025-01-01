@@ -29,8 +29,6 @@ export class ManageHealthDetailsComponent implements OnInit{
   
 
   constructor(
-    private authService: AuthService,
-    private doctorService: DoctorService,
     private patientService: PatientService,
     private route: ActivatedRoute,
     private router: Router,

@@ -5,13 +5,19 @@ import { CreateDoctorComponent } from './create-doctor/create-doctor.component';
 import { DoctorsBoardComponent } from './doctors-board/doctors-board.component';
 import { PatientsBoardComponent } from './patients-board/patients-board.component';
 import { MedicineBoardComponent } from './medicine-board/medicine-board.component';
+import { DoctorEditComponent } from './doctor-edit/doctor-edit.component';
+import { MedicineEditComponent } from './medicine-edit/medicine-edit.component';
+import { MedicineAddComponent } from './medicine-add/medicine-add.component';
 
 const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent},
   {path: 'create-doctor', component: CreateDoctorComponent},
   {path: 'doctors-board', component: DoctorsBoardComponent},
   {path: 'patients-board', component: PatientsBoardComponent},
-  {path: 'medicine-board', component: MedicineBoardComponent}
+  {path: 'medicine-board', component: MedicineBoardComponent},
+  {path: 'doctor-edit/:id', component: DoctorEditComponent},
+  {path: 'medicine-edit/:id', component: MedicineEditComponent},
+  {path: 'medicine-add', component: MedicineAddComponent}
 ];
 
 @NgModule({

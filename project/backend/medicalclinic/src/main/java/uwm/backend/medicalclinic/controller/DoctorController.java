@@ -51,10 +51,15 @@ public class DoctorController {
     }
 
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasAuthority('DOCTOR')")
-    ResponseEntity<UpdateConfirmationDTO> deleteDoctor(@PathVariable("id") Long doctorId) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    ResponseEntity<?> deleteDoctor(@PathVariable("id") Long doctorId) {
         return ResponseEntity.ok(doctorService.deleteDoctor(doctorId));
     }
 
-
+    @PostMapping("edit/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    ResponseEntity<UpdateConfirmationDTO> editDoctor(@PathVariable("id") Long doctorId,
+                                                     @RequestBody DoctorInfoDTO editDoctorInfoDTO){
+        return ResponseEntity.ok(doctorService.editDoctorInfo(doctorId, editDoctorInfoDTO));
+    }
 }

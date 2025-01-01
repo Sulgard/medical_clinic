@@ -1,0 +1,12 @@
+<div mat-dialog-content class="container">
+    <h2>Medicine Information</h2>
+    <p><strong>Name:</strong> {{ medicineDetails.name }}</p>
+    <p><strong>Category:</strong> {{ medicineDetails.category }}</p>
+    <p><strong>Dosage:</strong> {{ medicineDetails.dosageForm }}</p>
+    <p><strong>Manufacturer:</strong> {{ medicineDetails.manufacturer }}</p>
+</div>
+  
+<div mat-dialog-actions>
+<button mat-button (click)="close()">Close</button>
+</div>
+  

@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import uwm.backend.medicalclinic.dto.CreateMedicineRequestDTO;
-import uwm.backend.medicalclinic.dto.MedicineDTO;
-import uwm.backend.medicalclinic.dto.MedicineFilterDTO;
-import uwm.backend.medicalclinic.dto.MedicineForListDTO;
-import uwm.backend.medicalclinic.dto.MedicineListDTO;
+import uwm.backend.medicalclinic.dto.*;
+import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.model.Medicine;
 import uwm.backend.medicalclinic.repository.MedicineRepository;
 
@@ -73,8 +70,10 @@ public class MedicineService {
         List<Medicine> contents = medicinePage.getContent();
         List<MedicineForListDTO> contentDTO = new ArrayList<>();
         for (Medicine content : contents ) {
-            MedicineForListDTO element = new MedicineForListDTO(content);
-            contentDTO.add(element);
+            if(content.isArchived() == false){
+                MedicineForListDTO element = new MedicineForListDTO(content);
+                contentDTO.add(element);
+            }
         }
     
         MedicineListDTO result = new MedicineListDTO();
@@ -86,7 +85,7 @@ public class MedicineService {
         return result;
     }
 
-    Medicine createMedicine(CreateMedicineRequestDTO request) {
+    public Medicine createMedicine(CreateMedicineRequestDTO request) {
         Medicine result = new Medicine();
         result.setName(request.getName());
         result.setCategory(request.getCategory());
@@ -95,11 +94,30 @@ public class MedicineService {
         return medicineRepository.save(result);
     }
 
-    public void deleteMedicine(Long medicineId) {
-        medicineRepository.deleteById(medicineId);
+    public UpdateConfirmationDTO deleteMedicine(Long medicineId) {
+        Optional<Medicine> medicine = medicineRepository.findById(medicineId);
+
+        if(!medicine.isPresent()) {
+            throw new EntityNotFoundException("Medicine not found");
+        }
+
+        Medicine medicineOB = medicine.get();
+
+        medicineOB.setArchived(true);
+        medicineRepository.save(medicineOB);
+
+        List<String> changes = new ArrayList<>();
+
+        changes.add("archived");
+
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Medicine deleted successfully", changes
+        );
+
+        return result;
     }
 
-    public Medicine modifyMedicine(Long medicineId, CreateMedicineRequestDTO changes) {
+    public UpdateConfirmationDTO modifyMedicine(Long medicineId, CreateMedicineRequestDTO data) {
         Optional<Medicine> medicine = medicineRepository.findById(medicineId);
 
         if(!medicine.isPresent())
@@ -108,23 +126,49 @@ public class MedicineService {
         }
 
         Medicine medicineOB = medicine.get();
+        List<String> changes = new ArrayList<>();
 
-        if (changes.getName() != null) {
-            medicineOB.setName(changes.getName());
+        if (data.getName() != null) {
+            medicineOB.setName(data.getName());
+            changes.add("name");
         }
 
-        if (changes.getCategory() != null) {
-            medicineOB.setCategory(changes.getCategory());
+        if (data.getCategory() != null) {
+            medicineOB.setCategory(data.getCategory());
+            changes.add("category");
         }
 
-        if (changes.getManufacturer() != null) {
-            medicineOB.setManufacturer(changes.getManufacturer());
+        if (data.getManufacturer() != null) {
+            medicineOB.setManufacturer(data.getManufacturer());
+            changes.add("manufacturer");
+
         }
 
-        if (changes.getDosageForm() != null) {
-            medicineOB.setDosageForm(changes.getDosageForm());
+        if (data.getDosageForm() != null) {
+            medicineOB.setDosageForm(data.getDosageForm());
+            changes.add("Dosage Form");
         }
+        medicineRepository.save(medicineOB);
 
-        return medicineRepository.save(medicineOB);
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Medicine updated successfully", changes
+        );
+
+        return result;
     }
+
+    public MedicineForListDTO getMedicineInfo(Long medicineId) {
+        Optional<Medicine> medicine = medicineRepository.findById(medicineId);
+
+        if(!medicine.isPresent()) {
+            throw new EntityNotFoundException("Medicine not found");
+        }
+
+        Medicine medicineOB = medicine.get();
+        MedicineForListDTO result = new MedicineForListDTO(medicineOB);
+
+        return result;
+    }
+
+
 }

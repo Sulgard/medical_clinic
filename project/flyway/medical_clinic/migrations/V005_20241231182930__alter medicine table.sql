@@ -1,0 +1,1 @@
+ALTER TABLE medical.medicines ADD COLUMN archived BOOLEAN DEFAULT FALSE;

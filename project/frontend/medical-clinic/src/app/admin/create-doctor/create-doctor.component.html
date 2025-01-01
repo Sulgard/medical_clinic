@@ -1,82 +1,116 @@
-<div class="container">
-    <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
-    <div class = row>
-        <div class="col">
-            <mat-form-field appearance="fill">
-                <mat-label>First Name</mat-label>
-                <input matInput formControlName="firstName" />
-                <mat-error *ngIf="doctorForm.get('firstName')?.invalid">This field is required.</mat-error>
-              </mat-form-field>
-        </div>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <button mat-stroked-button color="accent" (click)="navigateToBoard()">
+        <mat-icon>arrow_back</mat-icon> Back to Dashboard
+      </button>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Create Doctor</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
 
-        <div class="col">
-            <mat-form-field appearance="fill">
-                <mat-label>Last Name</mat-label>
-                <input matInput formControlName="lastName" />
-                <mat-error *ngIf="doctorForm.get('lastName')?.invalid">This field is required.</mat-error>
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="firstName" />
+                  <mat-error *ngIf="doctorForm.get('firstName')?.invalid">This field is required.</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="lastName" />
+                  <mat-error *ngIf="doctorForm.get('lastName')?.invalid">This field is required.</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" />
+                <mat-error *ngIf="doctorForm.get('email')?.invalid">Enter a valid email address.</mat-error>
               </mat-form-field>
-        </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" formControlName="password" />
+                <mat-error *ngIf="doctorForm.get('password')?.invalid">
+                  Password needs to have at least 6 characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="birthDate" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="doctorForm.get('birthDate')?.invalid">This field is required.</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Gender</mat-label>
+                <mat-select formControlName="gender">
+                  <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+                    {{ gender }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="doctorForm.get('gender')?.invalid">This field is required.</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="phoneNumber" />
+                <mat-error *ngIf="doctorForm.get('phoneNumber')?.invalid">This field is required.</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Specialization</mat-label>
+                  <mat-select formControlName="specialization">
+                    <mat-option *ngFor="let specialization of specializationOptions" [value]="specialization">
+                      {{ specialization }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="doctorForm.get('specialization')?.invalid">This field is required.</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Medical License</mat-label>
+                <input matInput formControlName="medicalLicense" />
+                <mat-error *ngIf="doctorForm.get('medicalLicense')?.invalid">This field is required.</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3 text-center">
+              <button mat-raised-button color="primary" type="submit" [disabled]="doctorForm.invalid">
+                Register
+              </button>
+            </div>
+
+            <div class="form-group text-center">
+              <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+              <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
     </div>
-
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" />
-        <mat-error *ngIf="doctorForm.get('email')?.invalid">Enter a valid email address.</mat-error>
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" />
-        <mat-error *ngIf="doctorForm.get('password')?.invalid">
-          Password needs to have at least 6 characters.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Date of Birth</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="birthDate" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="doctorForm.get('birthDate')?.invalid">This field is required.</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="col-4">
-        <mat-label>Gender</mat-label>
-        <mat-select formControlName="gender">
-            <mat-option *ngFor="let gender of genderOptions" [value]="gender">
-                {{ gender }}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="doctorForm.get('gender')?.invalid">This field is required.</mat-error>
-    </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Phone Number</mat-label>
-        <input matInput type="phoneNumber" formControlName="phoneNumber" />
-        <mat-error *ngIf="doctorForm.get('phoneNumber')?.invalid">
-          Password needs to have at least 6 characters.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Specialization</mat-label>
-        <input matInput type="specialization" formControlName="specialization" />
-        <mat-error *ngIf="doctorForm.get('specialization')?.invalid">
-          Password needs to have at least 6 characters.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Medical License</mat-label>
-        <input matInput type="medicalLicense" formControlName="medicalLicense" />
-        <mat-error *ngIf="doctorForm.get('medicalLicense')?.invalid">
-          Password needs to have at least 6 characters.
-        </mat-error>
-      </mat-form-field>
-  
-      <button mat-raised-button color="primary" type="submit" [disabled]="doctorForm.invalid">Register</button>
-      <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
-      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
-    </form>
   </div>
+</div>

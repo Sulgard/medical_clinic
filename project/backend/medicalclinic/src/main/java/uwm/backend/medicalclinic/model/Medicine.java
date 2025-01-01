@@ -26,4 +26,7 @@ public class Medicine extends BaseEntity{
 
     @Column(name = "manufacturer", nullable = false)
     private String manufacturer;
+
+    @Column(name = "archived", nullable = false)
+    private boolean archived;
 }

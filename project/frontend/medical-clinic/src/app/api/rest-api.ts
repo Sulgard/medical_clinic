@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-30 21:39:59.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-31 20:24:25.
 
 export interface AddressResponseDTO {
     country: string;
@@ -105,11 +105,11 @@ export interface CancelAppointmentDTO {
 
 export interface CreateAddressRequestDTO {
     country: string;
+    province: string;
+    localNumber: string;
+    street: string;
     zipCode: string;
     city: string;
-    street: string;
-    localNumber: string;
-    province: string;
 }
 
 export interface CreateAppointmentRequestDTO {
@@ -199,6 +199,7 @@ export interface DoctorForListResponseDTO {
 export interface DoctorInfoDTO extends UserInfoDTO {
     specialization: string;
     medicalLicense: string;
+    password: string;
 }
 
 export interface DoctorListDTO {
@@ -385,6 +386,7 @@ export interface Medicine extends BaseEntity {
     category: string;
     dosageForm: string;
     manufacturer: string;
+    archived: boolean;
 }
 
 export interface Prescription extends BaseEntity {
@@ -446,12 +448,12 @@ export interface Serializable {
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
-    accountNonLocked: boolean;
-    authorities: GrantedAuthority[];
     username: string;
     password: string;
-    accountNonExpired: boolean;
     credentialsNonExpired: boolean;
+    accountNonExpired: boolean;
+    authorities: GrantedAuthority[];
+    accountNonLocked: boolean;
 }
 
 export interface HttpClient {
@@ -652,8 +654,16 @@ export class RestApplicationClient {
      * HTTP DELETE /api/doctors/delete/{id}
      * Java method: uwm.backend.medicalclinic.controller.DoctorController.deleteDoctor
      */
-    deleteDoctor(id: number): RestResponse<UpdateConfirmationDTO> {
+    deleteDoctor(id: number): RestResponse<any> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/doctors/delete/${id}` });
+    }
+
+    /**
+     * HTTP POST /api/doctors/edit/{id}
+     * Java method: uwm.backend.medicalclinic.controller.DoctorController.editDoctor
+     */
+    editDoctor(id: number, editDoctorInfoDTO: DoctorInfoDTO): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/doctors/edit/${id}`, data: editDoctorInfoDTO });
     }
 
     /**
@@ -713,11 +723,27 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP POST /api/medicine/add
+     * Java method: uwm.backend.medicalclinic.controller.MedicineController.addMedicine
+     */
+    addMedicine(data: CreateMedicineRequestDTO): RestResponse<Medicine> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/medicine/add`, data: data });
+    }
+
+    /**
      * HTTP DELETE /api/medicine/delete/{id}
      * Java method: uwm.backend.medicalclinic.controller.MedicineController.deleteMedicine
      */
-    deleteMedicine(id: number): RestResponse<void> {
+    deleteMedicine(id: number): RestResponse<UpdateConfirmationDTO> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/medicine/delete/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/medicine/info/{id}
+     * Java method: uwm.backend.medicalclinic.controller.MedicineController.getMedicineInfo
+     */
+    getMedicineInfo(id: number): RestResponse<MedicineForListDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/medicine/info/${id}` });
     }
 
     /**
@@ -737,11 +763,11 @@ export class RestApplicationClient {
     }
 
     /**
-     * HTTP PUT /api/medicine/update/{id}
+     * HTTP POST /api/medicine/update/{id}
      * Java method: uwm.backend.medicalclinic.controller.MedicineController.modifyMedicine
      */
-    modifyMedicine(id: number, data: CreateMedicineRequestDTO): RestResponse<Medicine> {
-        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/medicine/update/${id}`, data: data });
+    modifyMedicine(id: number, data: CreateMedicineRequestDTO): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/medicine/update/${id}`, data: data });
     }
 
     /**

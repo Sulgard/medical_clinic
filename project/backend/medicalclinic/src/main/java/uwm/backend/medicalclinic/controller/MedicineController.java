@@ -1,14 +1,12 @@
 package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import uwm.backend.medicalclinic.dto.CreateMedicineRequestDTO;
-import uwm.backend.medicalclinic.dto.MedicineDTO;
-import uwm.backend.medicalclinic.dto.MedicineFilterDTO;
-import uwm.backend.medicalclinic.dto.MedicineListDTO;
+import uwm.backend.medicalclinic.dto.*;
 import uwm.backend.medicalclinic.model.Medicine;
 import uwm.backend.medicalclinic.service.MedicineService;
 
@@ -29,22 +27,33 @@ public class MedicineController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/info/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR', 'PATIENT')")
+    public ResponseEntity<MedicineForListDTO> getMedicineInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(medicineService.getMedicineInfo(id));
+    }
+
     @PostMapping("/listFiltered")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public ResponseEntity<MedicineListDTO> getFilteredMedicine(@RequestBody MedicineFilterDTO filter) {
         return ResponseEntity.ok(medicineService.listFilteredMedicine(filter));
     }
 
-    @PutMapping("/update/{id}")
-    @PreAuthorize("hasAuthority('DOCTOR')")
-    ResponseEntity<Medicine> modifyMedicine(@PathVariable("id") Long id, @RequestBody CreateMedicineRequestDTO data) {
-        Medicine response = medicineService.modifyMedicine(id, data);
-        return ResponseEntity.ok(response);
+    @PostMapping("/update/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    ResponseEntity<UpdateConfirmationDTO> modifyMedicine(@PathVariable("id") Long id, @RequestBody CreateMedicineRequestDTO data) {
+        return ResponseEntity.ok(medicineService.modifyMedicine(id, data));
     }
 
-    @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
-    void deleteMedicine(@PathVariable("id") Long id) {
-        medicineService.deleteMedicine(id);
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<UpdateConfirmationDTO> deleteMedicine(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(medicineService.deleteMedicine(id));
+    }
+
+    @PostMapping("/add")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<Medicine> addMedicine(@RequestBody CreateMedicineRequestDTO data) {
+        return ResponseEntity.ok(medicineService.createMedicine(data));
     }
 }

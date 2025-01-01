@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../admin.service';
 import { CreateDoctorRequestDTO } from '../../api/rest-api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-doctor',
@@ -22,9 +23,22 @@ export class CreateDoctorComponent {
   errorMessage: string | null = null;
   genderOptions = ["MALE", "FEMALE", "NONE"];
 
+  specializationOptions: string[] = [
+  'Cardiology',
+  'Neurology',
+  'Orthopedics',
+  'Pediatrics',
+  'Dermatology',
+  'General Medicine',
+  'Psychiatry'
+  ];
+
+  filteredSpecializations: string[] = this.specializationOptions;
+
   constructor(
     private fb: FormBuilder,
-     private adminService: AdminService
+    private adminService: AdminService,
+    private router: Router
     ){
       this.doctorForm = this.fb.group({
         firstName: ['', Validators.required],
@@ -63,6 +77,10 @@ export class CreateDoctorComponent {
           }
         });
       }
+    }
+
+    navigateToBoard(): void { 
+      this.router.navigate(['admin/doctors-board']);
     }
 
 }

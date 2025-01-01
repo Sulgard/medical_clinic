@@ -2,6 +2,7 @@ package uwm.backend.medicalclinic.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import uwm.backend.medicalclinic.model.Role;
 import uwm.backend.medicalclinic.repository.AppointmentRepository;
 import uwm.backend.medicalclinic.repository.DoctorRepository;
 import uwm.backend.medicalclinic.repository.RoleRepository;
+import uwm.backend.medicalclinic.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,6 +34,7 @@ public class DoctorService {
     private final PasswordEncoder passwordEncoder;
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
+    private final UserRepository userRepository;
 
 
     public DoctorResponseDTO createDoctor(CreateDoctorRequestDTO input) {
@@ -165,6 +168,60 @@ public class DoctorService {
         return true;
     }
 
+    public UpdateConfirmationDTO editDoctorInfo(Long doctorId, DoctorInfoDTO request) {
+        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
+
+        if(!doctor.isPresent()) {
+            throw new EntityNotFoundException("Doctor not found");
+        }
+
+        Doctor doctorOB = doctor.get();
+        List<String> updatedFields = new ArrayList<>();
+
+        if(request.getFirstName() != null && !request.getFirstName().isEmpty()) {
+            doctorOB.setFirstName(request.getFirstName());
+            updatedFields.add("firstName");
+        }
+
+        if(request.getLastName() != null && !request.getLastName().isEmpty()) {
+            doctorOB.setLastName(request.getLastName());
+            updatedFields.add("lastName");
+        }
+
+        if(request.getEmail() != null && !request.getEmail().isEmpty()) {
+            doctorOB.setEmail(request.getEmail());
+            updatedFields.add("email");
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().isEmpty()) {
+            doctorOB.setPhoneNumber(request.getPhoneNumber());
+            updatedFields.add("phoneNumber");
+        }
+
+        if(request.getMedicalLicense() != null && !request.getMedicalLicense().isEmpty()) {
+            doctorOB.setMedicalLicense(request.getMedicalLicense());
+            updatedFields.add("medicalLicense");
+        }
+
+        if(request.getSpecialization() != null && !request.getSpecialization().isEmpty()) {
+            doctorOB.setSpecialization(request.getSpecialization());
+            updatedFields.add("specialization");
+        }
+
+        if(request.getPassword() != null && !request.getPassword().isEmpty()) {
+            doctorOB.setPassword(passwordEncoder.encode(request.getPassword()));
+            updatedFields.add("password");
+        }
+
+        doctorRepository.save(doctorOB);
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Doctor information updated successfully", updatedFields
+        );
+
+        return result;
+    }
+
+    @Transactional
     public UpdateConfirmationDTO deleteDoctor(Long doctorId) {
         Optional<Doctor> doctor = doctorRepository.findById(doctorId);
 
@@ -175,6 +232,7 @@ public class DoctorService {
         Doctor doctorOB = doctor.get();
 
         doctorRepository.delete(doctorOB);
+        userRepository.delete(doctorOB);
         List<String> changes = new ArrayList<>();
         UpdateConfirmationDTO result = new UpdateConfirmationDTO(
                 "Doctor deleted successfully", changes

@@ -25,10 +25,6 @@ export class DashboardComponent {
     private adminService: AdminService
   ){}
 
-  navigateCreateDoctor():void {
-    this.router.navigate(['admin/create-doctor']);
-  }
-
   navigateToDoctorOptions(): void {
     this.router.navigate(['admin/doctors-board']);
   }

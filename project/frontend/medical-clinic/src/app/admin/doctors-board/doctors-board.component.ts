@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { DoctorInfoComponent } from '../../patient/doctor-info/doctor-info.component';
 import { DoctorInfoDTO } from '../../api/rest-api';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
+import { AdminService } from '../admin.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-doctors-board',
@@ -28,7 +30,9 @@ export class DoctorsBoardComponent {
     private router: Router,
     private authService: AuthService,
     private doctorService: DoctorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private adminService: AdminService,
+    private snackBar: MatSnackBar
   ) {}
 
   doctors: any[] = [];
@@ -37,7 +41,18 @@ export class DoctorsBoardComponent {
   currentPage: number = 0;
   isLoading: boolean = false;
 
+  specializationOptions: string[] = [
+    'All',
+    'Cardiology',
+    'Neurology',
+    'Orthopedics',
+    'Pediatrics',
+    'Dermatology',
+    'General Medicine',
+    'Psychiatry'
+    ];
   
+    filteredSpecializations: string[] = this.specializationOptions;
 
   filter = {
     name: '',
@@ -59,9 +74,8 @@ export class DoctorsBoardComponent {
     this.doctorService.listDoctors(this.filter)
       .subscribe({
         next: (response: any) => {
-          // Zawartość odpowiedzi
           console.log("Response:", response);
-          this.doctors = response.content || []; // Lista wizyt
+          this.doctors = response.content || [];
           this.totalPages = response.totalPages;
           console.log("total Pages:", this.totalPages);
           this.totalElements = response.totalElements
@@ -106,6 +120,11 @@ export class DoctorsBoardComponent {
     this.router.navigate(['admin/create-doctor']);
   }
 
+  navigateToEditDoctor(doctorId: number): void {
+    this.router.navigate([`/admin/doctor-edit/${doctorId}`]);
+  }
+  
+
   deleteDoctorDialog(doctorId: number): void {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: {
@@ -115,9 +134,27 @@ export class DoctorsBoardComponent {
     });
   }
 
-  confirmDeleteDoctor(doctorId: number) {
-    
+  confirmDeleteDoctor(doctorId: number): void {
+    this.isLoading = true;
+    this.adminService.deleteDoctor(doctorId).subscribe({
+      next: (response) => {
+        if (response.message) {
+          this.snackBar.open('Account deleted successfully!', 'Close', { duration: 3000 });
+          this.loadDoctorList();
+        } else {
+          this.snackBar.open('Failed to delete account. Please try again.', 'Close', { duration: 3000 });
+        }
+      },
+      error: (err) => {
+        console.error('Failed to delete doctor:', err);
+        this.snackBar.open('An error occurred. Please try again later.', 'Close', { duration: 3000 });
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
+  
 
   logout(): void {
     this.authService.logout();

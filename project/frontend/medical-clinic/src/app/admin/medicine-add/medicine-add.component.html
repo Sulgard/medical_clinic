@@ -1,0 +1,64 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <button mat-stroked-button color="accent" (click)="navigateToBoard()">
+          <mat-icon>arrow_back</mat-icon> Back to Dashboard
+        </button>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Create Doctor</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="medicineForm" (ngSubmit)="onSubmit()">
+  
+              <div class="form-row">
+                <div class="col-md-6 mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" />
+                    <mat-error *ngIf="medicineForm.get('name')?.invalid">This field is required.</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Category</mat-label>
+                    <input matInput formControlName="category" />
+                    <mat-error *ngIf="medicineForm.get('category')?.invalid">This field is required.</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Dosage Form</mat-label>
+                  <input matInput type="dosageForm" formControlName="dosageForm" />
+                  <mat-error *ngIf="medicineForm.get('email')?.invalid">Enter a valid email address.</mat-error>
+                </mat-form-field>
+              </div>
+  
+              <div class="form-group mb-3">
+                <mat-form-field appearance="fill" class="w-100">
+                  <mat-label>Manufacturer</mat-label>
+                  <input matInput type="dosageForm" formControlName="manufacturer" />
+                  <mat-error *ngIf="medicineForm.get('manufacturer')?.invalid">Enter a valid email address.</mat-error>
+                </mat-form-field>
+              </div>
+  
+  
+              <div class="form-group mb-3 text-center">
+                <button mat-raised-button color="primary" type="submit" [disabled]="medicineForm.invalid">
+                  Add
+                </button>
+              </div>
+  
+              <div class="form-group text-center">
+                <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+                <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  
