@@ -47,5 +47,4 @@ export class PatientInfoComponent{
     this.dialogRef.close();
   }
 
-
 }

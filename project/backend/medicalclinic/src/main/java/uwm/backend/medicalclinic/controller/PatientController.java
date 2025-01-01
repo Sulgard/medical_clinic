@@ -17,7 +17,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping("/info/{id}")
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR', 'ADMIN')")
     ResponseEntity<PatientInfoDTO> getPatientInfo(@PathVariable Long id) {
         PatientInfoDTO response = patientService.getPatientInfo(id);
         return ResponseEntity.ok(response);
@@ -30,12 +30,18 @@ public class PatientController {
     }
 
     @PostMapping("/contact/{id}/edit")
-    @PreAuthorize("hasAuthority('PATIENT')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'ADMIN')")
     ResponseEntity<UpdateConfirmationDTO> editContactInfo(
             @RequestBody EditContactDTO editContactDTO,
             @PathVariable("id") Long patientId
     ) {
         UpdateConfirmationDTO response = patientService.editContactInfo(editContactDTO, patientId);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    ResponseEntity<?> deletePatient(@PathVariable("id") Long patientId) {
+        return ResponseEntity.ok(patientService.deleteDoctor(patientId));
     }
 }

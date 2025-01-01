@@ -1,25 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { MaterialModule } from '../../../shared/material.module';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PatientInfoDTO } from '../../../api/rest-api';
-import { PatientService } from '../../patient.service';
-import { AuthService } from '../../../auth/auth.service';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PatientService } from '../../patient/patient.service';
+import { AuthService } from '../../auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MaterialModule } from '../../shared/material.module';
+import { CommonModule } from '@angular/common';
+import { PatientInfoDTO } from '../../api/rest-api';
 
 @Component({
-  selector: 'app-patient-details',
+  selector: 'app-patient-edit',
   standalone: true,
   imports: [
     MaterialModule,
-    CommonModule,
-    ReactiveFormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule
   ],
-  templateUrl: './patient-details.component.html',
-  styleUrl: './patient-details.component.css'
+  templateUrl: './patient-edit.component.html',
+  styleUrl: './patient-edit.component.css'
 })
-export class PatientDetailsComponent implements OnInit{
+export class PatientEditComponent implements OnInit{
+  patientId!: number;
   patientInfo: PatientInfoDTO | null = null;
   isLoading: boolean = true;
   errorMessage: string = '';
@@ -31,7 +33,8 @@ export class PatientDetailsComponent implements OnInit{
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
   ) {
     this.contactForm = this.fb.group({
       firstName: [this.patientInfo?.firstName, [Validators.required]],
@@ -42,6 +45,7 @@ export class PatientDetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.patientId = +this.route.snapshot.paramMap.get('id')!;
     this.viewPatientInfo();
   }
 
@@ -60,8 +64,7 @@ export class PatientDetailsComponent implements OnInit{
 
   saveContactInfo(): void {
     if(this.contactForm.valid) {
-      const id = this.authService.getUserId();
-      this.patientService.editContactInfo(id, this.contactForm.value).subscribe(
+      this.patientService.editContactInfo(this.patientId, this.contactForm.value).subscribe(
         (response) =>  {
           this.isEditing = false;
           this.patientInfo!.firstName = this.contactForm.value.firstName;
@@ -83,8 +86,7 @@ export class PatientDetailsComponent implements OnInit{
   }
 
   viewPatientInfo(): any {
-    const patientId: number = this.authService.getUserId();
-    this.patientService.getPatientInfo(patientId).subscribe({
+    this.patientService.getPatientInfo(this.patientId).subscribe({
       next: (data: PatientInfoDTO) => {
         this.patientInfo = data;
         this.isLoading = false;
@@ -97,4 +99,7 @@ export class PatientDetailsComponent implements OnInit{
     });
   }
 
+  navigateToBoard(): void { 
+    this.router.navigate(['admin/patients-board']);
+  }
 }

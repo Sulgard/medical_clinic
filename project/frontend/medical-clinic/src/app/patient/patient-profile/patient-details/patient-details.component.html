@@ -16,6 +16,14 @@
 
           <form *ngIf="isEditing" [formGroup]="contactForm" (ngSubmit)="saveContactInfo()">
             <p>
+              <label for="firstName"><strong>First Name:</strong></label>
+              <input id="firstName" formControlName="firstName" type="firstName" />
+            </p>
+            <p>
+              <label for="lastName"><strong>Last Name:</strong></label>
+              <input id="lastName" formControlName="lastName" type="lastName" />
+            </p>
+            <p>
               <label for="email"><strong>Email:</strong></label>
               <input id="email" formControlName="email" type="email" />
             </p>

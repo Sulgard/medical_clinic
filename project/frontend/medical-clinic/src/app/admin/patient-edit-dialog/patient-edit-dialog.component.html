@@ -1,0 +1,39 @@
+<div mat-dialog-content class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Patient Information</h2>
+        <p><strong>Name:</strong> {{ data.patient.fullName }}</p>
+        <p><strong>Phone Number:</strong> {{ data.patient.phoneNumber }}</p>
+        <p><strong>Email:</strong> {{ data.patient.email }}</p>
+        <p><strong>Insurance Number:</strong> {{ data.patient.insuranceNumber }}</p>
+      </div>
+  
+      <div class="col-md-6">
+        <h2>Address</h2>
+        <p><strong>Country:</strong> {{ data.address.country }}</p>
+        <p><strong>Province:</strong> {{ data.address.province }}</p>
+        <p><strong>City:</strong> {{ data.address.city }}</p>
+        <p><strong>ZipCode:</strong> {{ data.address.zipCode }}</p>
+        <p><strong>Street:</strong>{{data.address.street}}</p>
+        <p><strong>Local Number:</strong>{{data.address.localNumber}}</p>
+      </div>
+  
+      <div class="col-md-6">
+        <h2>Health Information</h2>
+        <p><strong>Blood Type:</strong> {{ data.health.bloodType }}</p>
+        <p><strong>Allergies:</strong> {{ data.health.allergies }}</p>
+        <p><strong>Medications:</strong> {{ data.health.medications }}</p>
+        <p><strong>Chronic Conditions:</strong> {{ data.health.chronicConditions }}</p>
+        <p><strong>Emergency Contact Name:</strong> {{ data.health.emergencyContactName }}</p>
+        <p><strong>Emergency Contact Phone:</strong> {{ data.health.emergencyContactPhone }}</p>
+        <p><strong>Notes:</strong> {{ data.health.notes }}</p>
+      </div>
+    </div>
+  </div>
+  
+  <div mat-dialog-actions>
+    <button mat-button (click)="close()">Close</button>
+    <button mat-button (click)="editPersonalInfo(data.patient.id)">Edit Personal Info</button>
+    <button mat-button (click)="editAddressInfo(data.patient.id)">Edit Address Info</button>
+  </div>
+  

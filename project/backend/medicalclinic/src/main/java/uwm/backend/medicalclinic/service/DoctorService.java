@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.*;
@@ -131,6 +132,16 @@ public class DoctorService {
 
         Doctor doctorOB = doctor.get();
         List<String> updatedFields = new ArrayList<>();
+
+        if(request.getFirstName() != null && !request.getFirstName().isEmpty()) {
+            doctorOB.setFirstName(request.getFirstName());
+            updatedFields.add("firstName");
+        }
+
+        if(request.getLastName() != null && !request.getLastName().isEmpty()) {
+            doctorOB.setLastName(request.getLastName());
+            updatedFields.add("lastName");
+        }
 
         if(request.getEmail() != null && !request.getEmail().isEmpty()) {
             doctorOB.setEmail(request.getEmail());

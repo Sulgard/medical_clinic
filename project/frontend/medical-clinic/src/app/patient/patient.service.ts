@@ -1,4 +1,4 @@
-import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, EditContactDTO, HealthDetailsResponseDTO, PatientInfoDTO, PrescriptionForListDTO, UpdateConfirmationDTO } from './../api/rest-api';
+import { AddressResponseDTO, Appointment, AppointmentDTO, AppointmentFilterDTO, Billing, BillingDTO, BillingFilterDTO, BillingForListDTO, BillingListDTO, CreateAddressRequestDTO, CreateAppointmentRequestDTO, CreateAppointmentResponseDTO, DoctorForListResponseDTO, EditContactDTO, HealthDetailsResponseDTO, PatientInfoDTO, PrescriptionForListDTO, UpdateConfirmationDTO } from './../api/rest-api';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,6 +24,12 @@ export class PatientService {
     const token = this.authService.loadToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<AddressResponseDTO>(`http://localhost:8080/api/address/patient/${patientId}`, { headers });
+  }
+
+  editPatientAddress(patientId: number, payload: CreateAddressRequestDTO): Observable<UpdateConfirmationDTO> {
+    const token = this.authService.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<UpdateConfirmationDTO>(`http://localhost:8080/api/address/patient/${patientId}/edit`, payload, { headers });
   }
 
   editContactInfo(patientId: number, payload: EditContactDTO): Observable<UpdateConfirmationDTO> {

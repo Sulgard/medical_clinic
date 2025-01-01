@@ -88,7 +88,8 @@ export class PatientListComponent {
   showPatientDetails2(id: number) {
     forkJoin({
       patient: this.patientService.getPatientInfo(id),
-      health: this.patientService.getPatientHealthDetails(id)
+      health: this.patientService.getPatientHealthDetails(id),
+      address: this.patientService.getPatientAddress(id)
     }).subscribe({
       next: (data) => {
         this.dialog.open(PatientInfoComponent, {

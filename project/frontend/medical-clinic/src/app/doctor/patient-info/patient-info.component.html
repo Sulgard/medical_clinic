@@ -6,7 +6,16 @@
       <p><strong>Phone Number:</strong> {{ data.patient.phoneNumber }}</p>
       <p><strong>Email:</strong> {{ data.patient.email }}</p>
       <p><strong>Insurance Number:</strong> {{ data.patient.insuranceNumber }}</p>
-      <p><strong>Id:</strong>{{data.patient.id}}</p>
+    </div>
+
+    <div class="col-md-6">
+      <h2>Address</h2>
+      <p><strong>Country:</strong> {{ data.address.country }}</p>
+      <p><strong>Province:</strong> {{ data.address.province }}</p>
+      <p><strong>City:</strong> {{ data.address.city }}</p>
+      <p><strong>ZipCode:</strong> {{ data.address.zipCode }}</p>
+      <p><strong>Street:</strong>{{data.address.street}}</p>
+      <p><strong>Local Number:</strong>{{data.address.localNumber}}</p>
     </div>
 
     <div class="col-md-6">

@@ -2,6 +2,7 @@ package uwm.backend.medicalclinic.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,8 +11,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import uwm.backend.medicalclinic.dto.*;
+import uwm.backend.medicalclinic.model.Doctor;
 import uwm.backend.medicalclinic.model.Patient;
 import uwm.backend.medicalclinic.repository.PatientRepository;
+import uwm.backend.medicalclinic.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.Optional;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final UserRepository userRepository;
 
     public PatientInfoDTO getPatientInfo(Long id) {
         Patient patient = patientRepository.findPatientById(id)
@@ -92,6 +96,16 @@ public class PatientService {
         Patient patientOB = patient.get();
         List<String> updatedFields = new ArrayList<>();
 
+        if(request.getFirstName() != null && !request.getFirstName().isEmpty()) {
+            patientOB.setFirstName(request.getFirstName());
+            updatedFields.add("firstName");
+        }
+
+        if(request.getLastName() != null && !request.getLastName().isEmpty()) {
+            patientOB.setLastName(request.getLastName());
+            updatedFields.add("lastName");
+        }
+
         if(request.getEmail() != null && !request.getEmail().isEmpty()) {
             patientOB.setEmail(request.getEmail());
             updatedFields.add("email");
@@ -108,6 +122,25 @@ public class PatientService {
                 "Contact information updated successfully", updatedFields
         );
 
+        return result;
+    }
+
+    @Transactional
+    public UpdateConfirmationDTO deleteDoctor(Long patientId) {
+        Optional<Patient> patient = patientRepository.findById(patientId);
+
+        if(!patient.isPresent()) {
+            throw new EntityNotFoundException("Doctor not found");
+        }
+
+        Patient patientOB = patient.get();
+
+        patientRepository.delete(patientOB);
+        userRepository.delete(patientOB);
+        List<String> changes = new ArrayList<>();
+        UpdateConfirmationDTO result = new UpdateConfirmationDTO(
+                "Patient deleted successfully", changes
+        );
         return result;
     }
 }

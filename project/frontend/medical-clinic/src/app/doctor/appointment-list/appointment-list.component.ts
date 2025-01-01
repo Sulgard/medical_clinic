@@ -77,15 +77,15 @@ export class AppointmentListComponent implements OnInit{
       });
   }
 
-    showAppointmentDetails(id: number) {
-      console.log("ID: ", id);
-        this.patientService.getAppointmentDetails(id).subscribe((details: AppointmentDTO) => {
-          this.dialog.open(AppointmentDetailsDialogComponent, {
-            data: details,
-            width: '400px',
-          });
+  showAppointmentDetails(id: number) {
+    console.log("ID: ", id);
+      this.patientService.getAppointmentDetails(id).subscribe((details: AppointmentDTO) => {
+        this.dialog.open(AppointmentDetailsDialogComponent, {
+          data: details,
+          width: '400px',
         });
-    }
+      });
+  }
 
   showPrescriptionListOfAppointment(id: number) {
     console.log("ID: ", id);

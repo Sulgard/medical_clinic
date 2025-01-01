@@ -1,5 +1,4 @@
 <div class="container mt-5">
-    <!-- Filtry -->
     <div class="row mb-4">
       <div class="col-md-12">
         <button mat-stroked-button color="accent" (click)="navDashboard()">
@@ -101,7 +100,6 @@
                     </td>
                 </ng-container>
             
-                <!-- Wiersze tabeli -->
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
@@ -111,7 +109,6 @@
       </div>
     </div>
   
-    <!-- Paginacja -->
     <div class="row">
       <div class="col-md-12 text-center">
         <mat-paginator 

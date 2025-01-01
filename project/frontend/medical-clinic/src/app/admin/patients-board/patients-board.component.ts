@@ -1,12 +1,133 @@
 import { Component } from '@angular/core';
+import { PatientInfoComponent } from '../../doctor/patient-info/patient-info.component';
+import { DoctorService } from '../../doctor/doctor.service';
+import { PatientService } from '../../patient/patient.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { MaterialModule } from '../../shared/material.module';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { PatientInfoDTO } from '../../api/rest-api';
+import { PatientEditDialogComponent } from '../patient-edit-dialog/patient-edit-dialog.component';
 
 @Component({
   selector: 'app-patients-board',
   standalone: true,
-  imports: [],
+  imports: [
+    MaterialModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './patients-board.component.html',
   styleUrl: './patients-board.component.css'
 })
 export class PatientsBoardComponent {
+  patients: any[] = [];
+  totalPages: number = 0;
+  totalElements: number = 0;
+  currentPage: number = 0;
+  isLoading: boolean = false;
 
+  
+
+  filter = {
+    name: '',
+    email: '',
+    sortField: 'email',
+    sortDirection: 'ASC',
+    page: 0,
+    size: 10
+  };
+
+  displayedColumns: string[] = ['fullName', 'email', 'actions'];
+
+  constructor(
+    private doctorService: DoctorService,
+    private patientService: PatientService,
+    private dialog: MatDialog,
+    private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadPatientList();
+    console.log("Patients: ", this.patients);
+
+  }
+
+  loadPatientList(): void {
+    this.isLoading = true;
+    this.doctorService.listPatients(this.filter)
+      .subscribe({
+        next: (response: any) => {
+          console.log("Response:", response);
+          this.patients = response.content || [];
+          this.totalPages = response.totalPages;
+          console.log("total Pages:", this.totalPages);
+          this.totalElements = response.totalElements
+          console.log("total Elements:", this.totalElements);
+          this.currentPage = response.currentPage
+          console.log("current Page:", this.currentPage);
+          this.isLoading = false;
+        },
+        error: (error: any) => {
+          console.error('Error fetching appointments:', error);
+          this.isLoading = false;
+        }
+      });
+  }
+
+  showPatientDetails(id: number) {
+      this.patientService.getPatientInfo(id).subscribe((details: PatientInfoDTO) => {
+        this.dialog.open(PatientInfoComponent, {
+          data: details,
+          width: '800px',
+        });
+      });
+  }
+
+  showPatientDetails2(id: number) {
+    forkJoin({
+      patient: this.patientService.getPatientInfo(id),
+      health: this.patientService.getPatientHealthDetails(id),
+      address: this.patientService.getPatientAddress(id)
+    }).subscribe({
+      next: (data) => {
+        this.dialog.open(PatientEditDialogComponent, {
+          data: data,
+          width: '800px',
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching patient details:', err);
+      }
+    });
+  }
+  
+  applyFilter(): void {
+    this.filter.page = 0;
+    this.loadPatientList();
+  }
+
+  onPageChange(event: any): void {
+    this.filter.page = event.pageIndex;
+    this.filter.size = event.pageSize;
+    this.loadPatientList();
+  }
+
+  editPatientDialog(patientId: number): void { 
+
+  }
+
+  deletePatientDialog(patientId: number): void {
+
+  }
+
+  navigateCreatePatient(): void {
+    this.router.navigate(['/admin/patient-add']);
+  }
+
+  navDashboard(): void {
+    this.router.navigate(['/admin/dashboard']);
+  }
 }

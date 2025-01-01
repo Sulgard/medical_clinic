@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-31 20:24:25.
+// Generated using typescript-generator version 3.2.1263 on 2025-01-01 20:17:52.
 
 export interface AddressResponseDTO {
     country: string;
@@ -105,11 +105,11 @@ export interface CancelAppointmentDTO {
 
 export interface CreateAddressRequestDTO {
     country: string;
-    province: string;
-    localNumber: string;
-    street: string;
     zipCode: string;
+    street: string;
     city: string;
+    localNumber: string;
+    province: string;
 }
 
 export interface CreateAppointmentRequestDTO {
@@ -217,6 +217,8 @@ export interface DoctorResponseDTO {
 }
 
 export interface EditContactDTO {
+    firstName: string;
+    lastName: string;
     email: string;
     phoneNumber: string;
 }
@@ -450,10 +452,10 @@ export interface UserDetails extends Serializable {
     enabled: boolean;
     username: string;
     password: string;
-    credentialsNonExpired: boolean;
-    accountNonExpired: boolean;
     authorities: GrantedAuthority[];
     accountNonLocked: boolean;
+    accountNonExpired: boolean;
+    credentialsNonExpired: boolean;
 }
 
 export interface HttpClient {
@@ -472,6 +474,14 @@ export class RestApplicationClient {
      */
     getPatientAddress(id: number): RestResponse<AddressResponseDTO> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/patient/${id}` });
+    }
+
+    /**
+     * HTTP POST /api/address/patient/{id}/edit
+     * Java method: uwm.backend.medicalclinic.controller.AddressController.editPatientAddress
+     */
+    editPatientAddress(id: number): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/address/patient/${id}/edit` });
     }
 
     /**
@@ -776,6 +786,14 @@ export class RestApplicationClient {
      */
     editContactInfo$POST$api_patients_contact_id_edit(id: number, editContactDTO: EditContactDTO): RestResponse<UpdateConfirmationDTO> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/patients/contact/${id}/edit`, data: editContactDTO });
+    }
+
+    /**
+     * HTTP DELETE /api/patients/delete/{id}
+     * Java method: uwm.backend.medicalclinic.controller.PatientController.deletePatient
+     */
+    deletePatient(id: number): RestResponse<any> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/patients/delete/${id}` });
     }
 
     /**

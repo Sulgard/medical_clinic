@@ -1,0 +1,78 @@
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <mat-card class="user-info-card col-md-8">
+      <div class="d-flex justify-content-start mb-3">
+        <button mat-stroked-button color="accent" (click)="navigateToBoard()">
+          <mat-icon>arrow_back</mat-icon> Back to Patients
+        </button>
+      </div>
+  
+      <mat-card-header>
+        <mat-card-title>Address Info</mat-card-title>
+        <button mat-icon-button (click)="toggleEdit()">
+          <mat-icon>{{ isEditing ? 'check' : 'edit' }}</mat-icon>
+        </button>
+      </mat-card-header>
+  
+      <mat-card-content>
+        <form [formGroup]="addressForm">
+          <div *ngIf="!isEditing">
+            <p><strong>Country:</strong> {{ addressDetails?.country }}</p>
+            <p><strong>Province:</strong> {{ addressDetails?.province }}</p>
+            <p><strong>City:</strong> {{ addressDetails?.city }}</p>
+            <p><strong>Zip Code:</strong> {{ addressDetails?.zipCode }}</p>
+            <p><strong>Street:</strong> {{ addressDetails?.street }}</p>
+            <p><strong>Local Number:</strong> {{ addressDetails?.localNumber }}</p>
+
+          </div>
+          <div *ngIf="isEditing">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Country</mat-label>
+                <input matInput formControlName="country" />
+              </mat-form-field>
+            </div>
+  
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Province</mat-label>
+                <input matInput formControlName="province" />
+              </mat-form-field>
+            </div>
+  
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Zip Code</mat-label>
+                <input matInput formControlName="zipCode" />
+            </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Street</mat-label>
+                <input matInput formControlName="street" />
+            </mat-form-field>
+            </div>
+
+            <div class="form-group mb-3">
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Local Number</mat-label>
+                <input matInput formControlName="localNumber" />
+            </mat-form-field>
+            </div>
+  
+            <div class="form-group mb-3 text-center">
+              <button mat-raised-button color="primary" type="button" (click)="submitChanges()">Save</button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
