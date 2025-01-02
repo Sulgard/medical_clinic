@@ -1,21 +1,19 @@
-
 <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-4">
-        <mat-card class="user-info-card">
-          <mat-card-header>
-            <mat-card-title>Health Details</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <mat-card class="health-details-card">
+        <mat-card-header>
+          <mat-card-title>Health Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
             <p><strong>Blood Type:</strong> {{ healthDetails?.bloodType }}</p>
             <p><strong>Allergies:</strong> {{ healthDetails?.allergies }}</p>
             <p><strong>Chronic Conditions:</strong> {{ healthDetails?.chronicConditions }}</p>
             <p><strong>Medications:</strong> {{ healthDetails?.medications }}</p>
             <p><strong>Emergency Contact Name:</strong> {{ healthDetails?.emergencyContactName }}</p>
             <p><strong>Emergency Contact Phone Number:</strong> {{ healthDetails?.emergencyContactPhone }}</p>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
+</div>

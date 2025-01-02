@@ -40,7 +40,16 @@ export class DoctorsListComponent implements OnInit{
     size: 10
   };
 
-  displayedColumns: string[] = ['fullName', 'specialization'];
+  displayedColumns: string[] = ['fullName', 'specialization', 'actions'];
+  specializationOptions: string[] = [
+    'Cardiology',
+    'Neurology',
+    'Orthopedics',
+    'Pediatrics',
+    'Dermatology',
+    'General Medicine',
+    'Psychiatry'
+    ];
 
   constructor(
     private doctorService: DoctorService,

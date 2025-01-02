@@ -82,4 +82,8 @@ export class ManageHealthDetailsComponent implements OnInit{
     this.isEditing = !this.isEditing;
   }
 
+  navigateToPatients(): void {
+    this.router.navigate(['doctor/patient-list']);
+  }
+
 }

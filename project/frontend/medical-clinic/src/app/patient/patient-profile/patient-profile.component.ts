@@ -6,6 +6,7 @@ import { PatientDetailsComponent } from "./patient-details/patient-details.compo
 import { PatientAddressComponent } from "./patient-address/patient-address.component";
 import { HealthDetailsComponent } from "./health-details/health-details.component";
 import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-patient-profile',
@@ -24,7 +25,10 @@ import { Router } from '@angular/router';
 export class PatientProfileComponent {
   activeTab: string = 'info';
 
-  constructor(private router: Router){}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ){}
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
@@ -33,4 +37,30 @@ export class PatientProfileComponent {
   navDashboard(): void {
     this.router.navigate(['/patient/dashboard']);
   }
+
+  bookAppointment(): void {
+    this.router.navigate(['/patient/book-appointment']);
+  }
+
+  viewDoctors(): void {
+    this.router.navigate(['/patient/doctors-list']);
+  }
+
+  viewBillings(): void {
+    this.router.navigate(['/patient/billing-list']);
+  }
+
+  viewAppointments(): void {
+    this.router.navigate(['/patient/patient-appointments']);
+  }
+
+  viewProfile(): void {
+    this.router.navigate(['/patient/patient-profile']);
+  }
+
+
+  logout(): void {
+    this.authService.logout();
+  }
+
 }

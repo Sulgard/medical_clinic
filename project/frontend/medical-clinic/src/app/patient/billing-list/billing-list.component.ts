@@ -38,7 +38,7 @@ export class BillingListComponent implements OnInit{
     size: 10
   };
   
-  displayedColumns: string[] = ['billingDate', 'paymentDate', 'amount', 'paymentStatus'];
+  displayedColumns: string[] = ['billingDate', 'paymentDate', 'amount', 'paymentStatus', 'actions'];
   
   constructor(
     private patientService: PatientService,

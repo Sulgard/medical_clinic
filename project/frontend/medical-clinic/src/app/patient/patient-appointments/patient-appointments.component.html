@@ -10,7 +10,7 @@
           <h5 class="card-title">Filtry</h5>
           <form (ngSubmit)="applyFilter()">
             <div class="form-row">
-              <!-- Status wizyty -->
+
               <div class="col-md-4">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Appointment status</mat-label>
@@ -22,7 +22,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <!-- Data początkowa -->
+
               <div class="col-md-4">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Start date</mat-label>
@@ -31,7 +31,7 @@
                   <mat-datepicker #startDate></mat-datepicker>
                 </mat-form-field>
               </div>
-              <!-- Data końcowa -->
+
               <div class="col-md-4">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>End date</mat-label>
@@ -48,14 +48,13 @@
     </div>
   </div>
 
-  <!-- Tabela wizyt -->
   <div class="row mb-4">
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Your appointments</h4>
           <div *ngIf="isLoading" class="text-center">
-            <mat-spinner></mat-spinner> <!-- Spinner do ładowania -->
+            <mat-spinner></mat-spinner> 
           </div>
           <div *ngIf="!isLoading && appointments.length === 0">
             <p>No appointments that meet required criteria.</p>
@@ -76,23 +75,26 @@
                 </td>
             </ng-container>
           
-              <!-- Kolumna status -->
               <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef> Status </th>
                   <td mat-cell *matCellDef="let appointment"> {{ appointment.status }} </td>
               </ng-container>
           
-              <!-- Kolumna doktor -->
               <ng-container matColumnDef="doctor">
                   <th mat-header-cell *matHeaderCellDef> Doctor </th>
                   <td mat-cell *matCellDef="let appointment">
                       {{ appointment.doctorFullName }}
-                      <button mat-button (click)="showAppointmentDetails(appointment.id)">Show details</button>
-                      <button mat-button *ngIf="appointment.status === 'COMPLETED'"  (click)="showPrescriptionListOfAppointment(appointment.id)">Show prescription</button>
                   </td>
               </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let appointment">
+                  <button mat-button (click)="showAppointmentDetails(appointment.id)">Show details</button>
+                  <button mat-button *ngIf="appointment.status === 'COMPLETED'"  (click)="showPrescriptionListOfAppointment(appointment.id)">Show prescription</button>
+                </td>
+              </ng-container>
           
-              <!-- Wiersze tabeli -->
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
@@ -102,7 +104,6 @@
     </div>
   </div>
 
-  <!-- Paginacja -->
   <div class="row">
     <div class="col-md-12 text-center">
       <mat-paginator 

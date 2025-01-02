@@ -82,7 +82,6 @@ fetchPatientInfo(): void{
 
 onAppointmentDateChange(): void {
   if (this.appointment.appointmentDate && this.appointment.appointmentTime) {
-    //this.fetchAvailableDoctors();
   }
 }
 
@@ -125,6 +124,7 @@ bookAppointment(): void {
   this.patientService.bookAppointment(this.appointment).subscribe((response) => {
     if (response.correct) {
       alert('Appointment booked successfully!');
+      this.router.navigate(['doctor/patient-list']);
     } else {
       alert('Failed to book appointment. Please try again.');
     }

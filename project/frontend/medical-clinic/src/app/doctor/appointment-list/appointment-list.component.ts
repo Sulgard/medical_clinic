@@ -40,7 +40,7 @@ export class AppointmentListComponent implements OnInit{
     size: 10
   };
 
-  displayedColumns: string[] = ['appointmentDate', 'appointmentTime', 'status', 'patient'];
+  displayedColumns: string[] = ['appointmentDate', 'appointmentTime', 'status', 'patient', 'actions'];
 
   constructor(
     private doctorService: DoctorService,

@@ -11,11 +11,12 @@
               <div class="form-row">
                 <div class="col-md-4">
                   <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Doctors specialization</mat-label>
+                    <mat-label>Specialization</mat-label>
                     <mat-select [(ngModel)]="filter.specialization" name="specialization" (selectionChange)="applyFilter()">
-                      <mat-option value="">All</mat-option>
-                      <mat-option value="Dentist">Dentist</mat-option>
-                      <mat-option value="Surgeon">Surgeon</mat-option>
+                      <mat-option [value]="''">All</mat-option>
+                      <mat-option *ngFor="let specialization of specializationOptions" [value]="specialization">
+                        {{ specialization }}
+                      </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -56,8 +57,15 @@
                     <th mat-header-cell *matHeaderCellDef> Specialization </th>
                     <td mat-cell *matCellDef="let doctor">
                         {{ doctor.specialization }}
-                        <button mat-button (click)="showDoctorDetails(doctor.id)">Contact info</button>
-                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> </th>
+                  <td mat-cell *matCellDef="let doctor">
+                      <button mat-icon-button color="primary" (click)="showDoctorDetails(doctor.id)">
+                          <mat-icon>info</mat-icon>
+                      </button>
+                  </td>
                 </ng-container>
             
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

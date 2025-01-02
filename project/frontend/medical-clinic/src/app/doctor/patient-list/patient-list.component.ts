@@ -40,7 +40,7 @@ export class PatientListComponent {
     size: 10
   };
 
-  displayedColumns: string[] = ['fullName', 'email'];
+  displayedColumns: string[] = ['fullName', 'email', 'actions'];
 
   constructor(
     private doctorService: DoctorService,

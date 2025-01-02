@@ -96,7 +96,7 @@ export class DoctorEditComponent implements OnInit{
     }
   }
 
-  navigateToBoard(): void { 
+  navigateToDoctors(): void { 
     this.router.navigate(['admin/doctors-board']);
   }
 }

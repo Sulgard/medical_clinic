@@ -14,6 +14,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 interface CalendarEvent {
   id: string,
@@ -31,8 +32,8 @@ interface CalendarEvent {
     MaterialModule,
     CommonModule,
     ReactiveFormsModule,
-    FullCalendarModule
-  ],
+    FullCalendarModule,
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

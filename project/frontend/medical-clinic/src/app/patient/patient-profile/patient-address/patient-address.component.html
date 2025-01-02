@@ -1,53 +1,53 @@
-
 <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-4">
-        <mat-card class="user-info-card">
-          <mat-card-header>
-            <mat-card-title>Address</mat-card-title>
-            <button mat-button *ngIf="!isEditing" (click)="toggleEdit()">Edit</button>
-          </mat-card-header>
-          <mat-card-content>
-            <div *ngIf="!isEditing">
-              <p><strong>Country:</strong> {{ patientAddress?.country }}</p>
-              <p><strong>Province:</strong> {{ patientAddress?.province }}</p>
-              <p><strong>City:</strong> {{ patientAddress?.city }}</p>
-              <p><strong>Zip Code:</strong> {{ patientAddress?.zipCode }}</p>
-              <p><strong>Street:</strong> {{ patientAddress?.street }}</p>
-              <p><strong>Local Number:</strong> {{ patientAddress?.localNumber }}</p>
-            </div>
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <mat-card class="address-card">
+        <mat-card-header>
+          <mat-card-title>Address</mat-card-title>
+          <button mat-button *ngIf="!isEditing" (click)="toggleEdit()">Edit</button>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="!isEditing">
+            <p><strong>Country:</strong> {{ patientAddress?.country }}</p>
+            <p><strong>Province:</strong> {{ patientAddress?.province }}</p>
+            <p><strong>City:</strong> {{ patientAddress?.city }}</p>
+            <p><strong>Zip Code:</strong> {{ patientAddress?.zipCode }}</p>
+            <p><strong>Street:</strong> {{ patientAddress?.street }}</p>
+            <p><strong>Local Number:</strong> {{ patientAddress?.localNumber }}</p>
+          </div>
 
-            <form *ngIf="isEditing" [formGroup]="addressForm" (ngSubmit)="submitChanges()">
-              <p>
-                <label for="country"><strong>Country:</strong></label>
-                <input id="country" formControlName="country" type="country" />
-              </p>
-              <p>
-                <label for="province"><strong>Province:</strong></label>
-                <input id="province" formControlName="province" type="province" />
-              </p>
-              <p>
-                <label for="city"><strong>City:</strong></label>
-                <input id="city" formControlName="city" type="city" />
-              </p>
-              <p>
-                <label for="zipCode"><strong>Zip Code:</strong></label>
-                <input id="zipCode" formControlName="zipCode" type="zipCode" />
-              </p>
-              <p>
-                <label for="street"><strong>Street:</strong></label>
-                <input id="street" formControlName="street" type="street" />
-              </p>
-              <p>
-                <label for="localNumber"><strong>Local Number:</strong></label>
-                <input id="localNumber" formControlName="localNumber" type="localNumber" />
-              </p>
-              <button mat-button type="submit" [disabled]="addressForm.invalid">Save</button>
+          <form *ngIf="isEditing" [formGroup]="addressForm" (ngSubmit)="submitChanges()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Country</mat-label>
+              <input matInput id="country" formControlName="country" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Province</mat-label>
+              <input matInput id="province" formControlName="province" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>City</mat-label>
+              <input matInput id="city" formControlName="city" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Zip Code</mat-label>
+              <input matInput id="zipCode" formControlName="zipCode" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Street</mat-label>
+              <input matInput id="street" formControlName="street" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Local Number</mat-label>
+              <input matInput id="localNumber" formControlName="localNumber" />
+            </mat-form-field>
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" [disabled]="addressForm.invalid">Save</button>
               <button mat-button type="button" (click)="toggleEdit()">Cancel</button>
-            </form>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
+</div>

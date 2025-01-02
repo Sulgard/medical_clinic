@@ -42,7 +42,6 @@ export class DoctorsBoardComponent {
   isLoading: boolean = false;
 
   specializationOptions: string[] = [
-    'All',
     'Cardiology',
     'Neurology',
     'Orthopedics',

@@ -1,10 +1,11 @@
 <div class="container-fluid">
     <div class="row">
-      <div class="col-md-4">
-        <mat-card class="user-info-card">
+      <div class="col-md-4">        
         <button mat-stroked-button color="accent" (click)="navDashboard()">
             Back to Dashboard
         </button>
+        <mat-card class="user-info-card">
+
           <mat-card-header>
             <mat-card-title>User Information</mat-card-title>
             <button mat-button *ngIf="!isEditing" (click)="toggleEdit()">Edit</button>

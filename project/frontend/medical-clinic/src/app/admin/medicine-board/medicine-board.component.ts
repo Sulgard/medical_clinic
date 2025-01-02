@@ -30,7 +30,25 @@ export class MedicineBoardComponent {
   currentPage: number = 0;
   isLoading: boolean = false;
 
-  
+  manufacturerOptions: string[] = [
+    'Pharmaceuticals',
+    'AllergyFree Meds',
+    'CardioCare',
+    'Diabeto Inc.',
+    'GastroHealth Pharma',
+    'Medico Labs',
+    'NutriPlus Labs'
+    ];
+
+  categoryOptions: string[] = [
+    'Supplement',
+    'Antibiotic',
+    'Proton Pump Inhibitor',
+    'Antidiabetic',
+    'Antihypertensive',
+    'Antihistamine',
+    'Analgesic/Antipyretic'
+    ];
 
   filter = {
     name: '',

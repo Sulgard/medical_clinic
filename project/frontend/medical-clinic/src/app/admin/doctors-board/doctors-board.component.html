@@ -12,7 +12,8 @@
                 <div class="col-md-4">
                   <mat-form-field appearance="fill" class="w-100">
                     <mat-label>Specialization</mat-label>
-                    <mat-select formControlName="specialization">
+                    <mat-select [(ngModel)]="filter.specialization" name="specialization" (selectionChange)="applyFilter()">
+                      <mat-option [value]="''">All</mat-option>
                       <mat-option *ngFor="let specialization of specializationOptions" [value]="specialization">
                         {{ specialization }}
                       </mat-option>

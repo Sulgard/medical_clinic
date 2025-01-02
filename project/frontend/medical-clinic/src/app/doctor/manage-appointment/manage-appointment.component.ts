@@ -90,6 +90,10 @@ export class ManageAppointmentComponent implements OnInit {
       }
     });
   }
+
+  navigateToPatients(): void { 
+    this.router.navigate(['doctor/patient-list']);
+  }
   
 
 }

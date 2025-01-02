@@ -1,64 +1,74 @@
-<div class="container">
-  <h2>Manage Appointment</h2>
-  <div class="row">
-    <!-- Sekcja główna z formularzem -->
-    <div class="col-md-8">
-      <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-        <!-- Appointment Date (non-editable) -->
-        <div class="form-group">
-          <label for="appointmentDate">Appointment Date:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="appointmentDate"
-            [value]="appointment.appointmentDate | date"
-            disabled
-          />
-        </div>
-    
-        <!-- Visit Description (non-editable) -->
-        <div class="form-group">
-          <label for="visitDescription">Visit Description:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="visitDescription"
-            [value]="appointment.visitDescription"
-            disabled
-          />
-        </div>
-    
-        <!-- Status (non-editable) -->
-        <div class="form-group">
-          <label for="status">Status:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="status"
-            [value]="appointment.status"
-            disabled
-          />
-        </div>
-    
-        <!-- Notes (editable) -->
-        <div class="form-group">
-          <label for="notes">Notes:</label>
-          <textarea class="form-control" id="notes" formControlName="notes"></textarea>
-        </div>
-    
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="!appointmentForm.valid"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
+<div class="container mt-5">
 
-    <div class="col-md-4">
-      <app-appointment-prescription-list [appointmentId]="appointmentId"></app-appointment-prescription-list>
-    </div>
-  </div>
+  <h2 class="text-center mb-4">Manage Appointment</h2>
+  <button mat-stroked-button color="accent" (click)="navigateToPatients()">
+    Back to Patients
+  </button>
+  <mat-card class="appointment-card">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
+          <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Appointment Date</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  [value]="appointment.appointmentDate | date"
+                  disabled
+                />
+              </mat-form-field>
+            </div>
+    
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Visit Description</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  [value]="appointment.visitDescription"
+                  disabled
+                />
+              </mat-form-field>
+            </div>
+    
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Status</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  [value]="appointment.status"
+                  disabled
+                />
+              </mat-form-field>
+            </div>
+    
+            <div class="form-group mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Notes</mat-label>
+                <textarea matInput formControlName="notes"></textarea>
+              </mat-form-field>
+            </div>
+    
+            <div class="text-center">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!appointmentForm.valid"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+    
+        <div class="col-md-4">
+          <app-appointment-prescription-list [appointmentId]="appointmentId"></app-appointment-prescription-list>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

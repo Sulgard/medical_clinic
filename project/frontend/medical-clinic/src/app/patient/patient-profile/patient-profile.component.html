@@ -1,11 +1,14 @@
-<div class="user-profile-container">
-    <mat-toolbar color="primary">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <div class="sidenav-content">
       <button mat-button (click)="setActiveTab('info')">User Info</button>
       <button mat-button (click)="setActiveTab('address')">Address</button>
-      <button mat-button (click)="setActiveTab('health-details')">HealthDetails</button>
-      <button mat-button (click)="navDashboard()">Go Back</button>
-    </mat-toolbar>
-  
+      <button mat-button (click)="setActiveTab('health-details')">Health Details</button>
+      <button mat-button (click)="navDashboard()">Dashboard</button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
     <div class="main-content">
       <ng-container *ngIf="activeTab === 'info'">
         <app-patient-details></app-patient-details>
@@ -19,5 +22,5 @@
         <app-health-details></app-health-details>
       </ng-container>
     </div>
-  </div>
-  
+  </mat-sidenav-content>
+</mat-sidenav-container>

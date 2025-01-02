@@ -11,28 +11,28 @@
               <div class="form-row">
 
                 <div class="col-md-4">
-                  <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Manufacturer</mat-label>
-                    <mat-select [(ngModel)]="filter.category" name="Manufacturer" (selectionChange)="applyFilter()">
-                      <mat-option value="">All</mat-option>
-                      <mat-option value="COMPLETED">Completed</mat-option>
-                      <mat-option value="PENDING">Pending</mat-option>
-                      <mat-option value="CANCELLED">Cancelled</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                  <mat-form-field>
+                  <mat-label>Manufacturer </mat-label>
+                  <mat-select [(ngModel)]="filter.manufacturer" name="manufacturer" (selectionChange)="applyFilter()">
+                    <mat-option [value]="''">All</mat-option>
+                    <mat-option *ngFor="let manufacturer of manufacturerOptions" [value]="manufacturer">
+                      {{ manufacturer }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
                 </div>
 
                 <div class="col-md-4">
-                    <mat-form-field appearance="fill" class="w-100">
-                      <mat-label>Category</mat-label>
-                      <mat-select [(ngModel)]="filter.category" name="Category" (selectionChange)="applyFilter()">
-                        <mat-option value="">All</mat-option>
-                        <mat-option value="COMPLETED">Completed</mat-option>
-                        <mat-option value="PENDING">Pending</mat-option>
-                        <mat-option value="CANCELLED">Cancelled</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
+                  <mat-form-field>
+                  <mat-label>Category </mat-label>
+                  <mat-select [(ngModel)]="filter.category" name="category" (selectionChange)="applyFilter()">
+                    <mat-option [value]="''">All</mat-option>
+                    <mat-option *ngFor="let category of categoryOptions" [value]="category">
+                      {{ category }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                </div>
 
                   <div class="col-md-4">
                     <mat-form-field appearance="fill" class="w-100">
