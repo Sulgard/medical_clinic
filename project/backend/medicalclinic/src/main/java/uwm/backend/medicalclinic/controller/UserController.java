@@ -2,10 +2,9 @@ package uwm.backend.medicalclinic.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import uwm.backend.medicalclinic.dto.PasswordChangeRequestDTO;
+import uwm.backend.medicalclinic.dto.UpdateConfirmationDTO;
 import uwm.backend.medicalclinic.dto.UserInfoDTO;
 import uwm.backend.medicalclinic.service.UserService;
 
@@ -19,5 +18,10 @@ public class UserController {
     ResponseEntity<?> getUserInfo(@PathVariable Long id) {
         UserInfoDTO user = userService.getUserInfo(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/editPassword/{id}")
+    ResponseEntity<UpdateConfirmationDTO> changePassword(@PathVariable("id") Long id, @RequestBody PasswordChangeRequestDTO data) {
+        return ResponseEntity.ok(userService.changePassword(id, data));
     }
 }

@@ -7,6 +7,7 @@ import { PatientAddressComponent } from "./patient-address/patient-address.compo
 import { HealthDetailsComponent } from "./health-details/health-details.component";
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { ChangePasswordComponent } from "./change-password/change-password.component";
 
 @Component({
   selector: 'app-patient-profile',
@@ -17,7 +18,8 @@ import { AuthService } from '../../auth/auth.service';
     ReactiveFormsModule,
     PatientDetailsComponent,
     PatientAddressComponent,
-    HealthDetailsComponent
+    HealthDetailsComponent,
+    ChangePasswordComponent
 ],
   templateUrl: './patient-profile.component.html',
   styleUrl: './patient-profile.component.css'

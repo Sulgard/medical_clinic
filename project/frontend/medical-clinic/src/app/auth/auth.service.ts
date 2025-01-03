@@ -1,8 +1,8 @@
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
-import { AuthRequestDTO, CreatePatientResponseDTO, JwtResponseDTO, RegisterPatientDto } from '../api/rest-api';
+import { AuthRequestDTO, CreatePatientResponseDTO, JwtResponseDTO, PasswordChangeRequestDTO, RegisterPatientDto, UpdateConfirmationDTO } from '../api/rest-api';
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
 
@@ -71,6 +71,12 @@ export class AuthService {
   getUserId(): number{
     const decoded = this.getDecodedToken();
     return decoded ? decoded.userId: null;
+  }
+
+  changeUserPassword(userId: number, changeUserPassword: PasswordChangeRequestDTO): Observable<UpdateConfirmationDTO> {
+    const token = this.loadToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<UpdateConfirmationDTO>(`http://localhost:8080/api/users/editPassword/${userId}`, changeUserPassword, { headers });
   }
 
   redirectToDashboard(): void {

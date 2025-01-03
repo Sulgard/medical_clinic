@@ -4,6 +4,7 @@
       <button mat-button (click)="setActiveTab('info')">User Info</button>
       <button mat-button (click)="setActiveTab('address')">Address</button>
       <button mat-button (click)="setActiveTab('health-details')">Health Details</button>
+      <button mat-button (click)="setActiveTab('change-password')">Change Password</button>
       <button mat-button (click)="navDashboard()">Dashboard</button>
     </div>
   </mat-sidenav>
@@ -20,6 +21,10 @@
 
       <ng-container *ngIf="activeTab === 'health-details'">
         <app-health-details></app-health-details>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'change-password'">
+        <app-change-password></app-change-password>
       </ng-container>
     </div>
   </mat-sidenav-content>

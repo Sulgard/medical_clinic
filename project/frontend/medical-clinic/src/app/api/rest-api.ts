@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-01-01 20:17:52.
+// Generated using typescript-generator version 3.2.1263 on 2025-01-03 12:05:27.
 
 export interface AddressResponseDTO {
     country: string;
@@ -105,11 +105,11 @@ export interface CancelAppointmentDTO {
 
 export interface CreateAddressRequestDTO {
     country: string;
-    zipCode: string;
-    street: string;
-    city: string;
     localNumber: string;
     province: string;
+    city: string;
+    street: string;
+    zipCode: string;
 }
 
 export interface CreateAppointmentRequestDTO {
@@ -273,6 +273,12 @@ export interface MedicineListDTO {
     totalElements: number;
     totalPages: number;
     last: boolean;
+}
+
+export interface PasswordChangeRequestDTO {
+    password: string;
+    newPassword: string;
+    confirmPassword: string;
 }
 
 export interface PatientFilterDTO {
@@ -450,12 +456,12 @@ export interface Serializable {
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
-    username: string;
-    password: string;
-    authorities: GrantedAuthority[];
-    accountNonLocked: boolean;
-    accountNonExpired: boolean;
     credentialsNonExpired: boolean;
+    accountNonExpired: boolean;
+    password: string;
+    username: string;
+    accountNonLocked: boolean;
+    authorities: GrantedAuthority[];
 }
 
 export interface HttpClient {
@@ -480,8 +486,8 @@ export class RestApplicationClient {
      * HTTP POST /api/address/patient/{id}/edit
      * Java method: uwm.backend.medicalclinic.controller.AddressController.editPatientAddress
      */
-    editPatientAddress(id: number): RestResponse<UpdateConfirmationDTO> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/address/patient/${id}/edit` });
+    editPatientAddress(id: number, data: CreateAddressRequestDTO): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/address/patient/${id}/edit`, data: data });
     }
 
     /**
@@ -850,6 +856,14 @@ export class RestApplicationClient {
      */
     modifyPrescription(id: number, data: CreatePrescriptionRequestDTO): RestResponse<Prescription> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`api/prescriptions/update/${id}`, data: data });
+    }
+
+    /**
+     * HTTP PUT /api/users/editPassword/{id}
+     * Java method: uwm.backend.medicalclinic.controller.UserController.changePassword
+     */
+    changePassword(id: number, data: PasswordChangeRequestDTO): RestResponse<UpdateConfirmationDTO> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/users/editPassword/${id}`, data: data });
     }
 
     /**
