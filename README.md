@@ -1,6 +1,6 @@
 # medical_clinic
-Pracownia dyplomowa - Praca Inżynierska
+This project was part of my engineering thesis, it has some areas for improvement that I might address in the near future.
 
-### Model bazy danych
+### Database scheema
 
-![Schemat Bazy danych](medical_clinic.png)
+![DB scheema](medical_clinic.png)
